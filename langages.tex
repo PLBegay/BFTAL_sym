@@ -1,0 +1,458 @@
+
+\chapter{Langages}
+\label{langages}
+
+On définit d'abord la notion de mot, nécessaire à celle de langage. On verra ensuite comment décrire efficacement des langages à l'aide d'expressions régulières.
+
+\section{Mots}
+
+\begin{definition}{Mot}{}Un \textbf{mot} est une suite de lettres tirées d'un alphabet donné.
+\end{definition}
+
+\begin{example}
+Etant donné $\Sigma = \{a,b,c\}$, on peut construire une infinité de mots parmi lesquels 
+
+\begin{itemize}
+    \item $abc$
+    \item $aab$
+    \item $cc$
+    \item $abcabcacbacbacbacbabcabcabcabcabcabcabc$
+    \item $a$
+\end{itemize}
+
+\end{example}
+
+
+\paragraph{Remarque} On va s'intéresser ici à des langages et mots complètement abstraits, en général composés uniquement de $a$, $b$ et $c$.
+
+\begin{definition}{Mot vide}{}
+Une suite de lettres peut être de longueur zéro, formant alors \textbf{le mot vide}. Quel que soit l'alphabet, ce dernier sera noté $\epsilon$.
+\end{definition}
+
+\begin{definition}{Concaténation}{}
+\label{concat}
+L'opération de \textbf{concaténation}, notée $.$, consiste tout simplement à "coller" deux mots.
+\end{definition}
+
+\begin{example}{Quelques concaténations :}
+
+\begin{itemize}
+    \item $ab.c = abc$
+    \item $ab.ba = abba$
+\end{itemize}
+\end{example}
+
+ De plus, pour tout mot $w$, 
+
+\[
+    w.\epsilon = \epsilon.w = w
+\]
+
+\paragraph{Remarque} Les algébristes enthousiastes remarqueront que, pour tout alphabet $\Sigma$, $(\Sigma,.,\epsilon)$ forme un monoïde libre de base $\Sigma$
+
+
+\begin{definition}{Longueur d'un mot}{}
+Etant donné un mot $w$, on note sa \textbf{longueur} $|w|$.
+\end{definition}
+
+\begin{example}
+Tout naturellement,
+\begin{itemize}
+    \item $|abc| = 3$
+    \item $|abba| = 4$
+    \item $|c| = 1$
+    \item $|\epsilon| = 0$
+\end{itemize}
+\end{example}
+
+\paragraph{Remarque} Vous devriez pouvoir vous convaincre que, pour tous mots $w_1$ et $w_2$, $|w_1.w_2| = |w_1| + |w_2|$. 
+
+\begin{definition}{Nombre d'occurrences d'une lettre}{}
+Etant donné un mot $w$ et une lettre $a$, on note $\mathbf{|w|_a}$ le nombre de $a$ dans $w$.
+\end{definition}
+
+\begin{example}
+On a 
+\begin{itemize}
+    \item $|abc|_a = 1$
+    \item $|abba|_b = 2$
+    \item $|c|_a = 0$
+    \item $|\epsilon|_a = 0$
+\end{itemize}
+\end{example}
+
+\begin{definition}{Préfixe}{}
+Un mot $p$ est un \textbf{préfixe} du mot $w$ ssi $\exists v, w = p.v$, cad. ssi $w$ \textit{commence} par $p$.
+\end{definition}
+
+\begin{definition}{Suffixe}{}
+Un mot $s$ est un \textbf{suffixe} du mot $w$ ssi $\exists v, w = v.s$, cad. ssi $w$ \textit{finit} par $p$.
+\end{definition}
+
+\begin{example}
+Le mot $abba$ admet comme préfixes $\epsilon$, $a$, $ab$, $abb$ et $abba$. Ses suffixes sont, quant à eux, $\epsilon$, $a$, $ba$, $bba$ et $abba$.
+\end{example}
+
+\begin{exercice}\label{expref}
+Combien de préfixes et suffixes admet un mot $w$ quelconque ?
+\end{exercice}
+
+\begin{definition}{Facteur}{}
+Un mot $f$ est un \textbf{facteur} du mot $w$ ssi $\exists v_1 v_2, w = v_1.f.v_2$, cad. ssi $f$ apparaît dans $w$.
+\end{definition}
+
+\begin{example}
+Les facteurs du mot $abba$ sont $\epsilon$, $a$, $b$, $ab$, $ba$, $abb$, $bba$ et $abba$. 
+\end{example}
+
+
+\begin{exercice}
+Donner l'ensemble des facteurs du mot $abbba$.
+\end{exercice}
+
+\begin{exercice} \label{exfact}(*)
+Donner la borne la plus basse possible du nombre de facteurs d'un mot $w$. Donner un mot dont le nombre de facteurs est exactement la borne donnée.
+\end{exercice}
+
+\begin{definition}{Sous-mot}{}
+Un mot $s$ est un \textbf{sous-mot} du mot $w$ ssi $w = v_0s_0v_1s_1v_2...s_nv_n$ et $s = s_0s_1...s_n$, cad. ssi $w$ est "$s$ avec (potentiellement) des lettres en plus".
+\end{definition}
+
+\begin{example}\label{ex5} On \underline{souligne} les lettres originellement présentes dans le sous-mot :
+\begin{itemize}
+   \item $ab$ est un sous-mot de $b\underline{a}a\underline{b}$, qu'on pourrait aussi voir comme $ba\underline{ab}$
+   \item $abba$ est un sous-mot de $ba\underline{a}abaa\underline{bb}a\underline{a}$.
+   \item $ba$ \underline{n}'est \underline{pas} un sous-mot de $aaabbb$ (l'ordre du sous-mot doit être préservé dans le mot) 
+\end{itemize}
+\end{example}
+
+
+\begin{exercice}
+Montrer que tout facteur d'un mot en est également un sous-mot. A l'inverse, montrer qu'un sous-mot n'est pas forcément un facteur. 
+\end{exercice}
+
+\begin{exercice}
+Donner toutes les façons de voir $abba$ comme sous-mot de $baaabaabbaa$ (cf. exemple \ref{ex5}).
+\end{exercice}
+
+\begin{exercice}
+Donner l'ensemble des sous-mots de $abba$
+\end{exercice}
+
+\begin{exercice}\label{exssmot} (*)
+Donner la borne la plus basse possible du nombre de sous-mots d'un mot $w$. Donner un mot dont le nombre de sous-mots est exactement la borne donnée.
+\end{exercice}
+
+\begin{exercice} (*) Dans l'exercice \ref{expref}, on demande le nombre exact de préfixes et suffixes d'un mot, alors que dans les exercices \ref{exfact} et \ref{exssmot}, on demande une borne, pourquoi ?
+
+\end{exercice}
+
+\paragraph{Remarque} A l'exception d'$\epsilon$\footnote{Il n'est bien sûr pas interdit de faire une analogie avec $1$, seul entier à n'admettre qu'un diviseur.}, tout mot admet au moins deux préfixes / suffixes / facteurs / sous-mots : $\epsilon$ et lui-même. 
+
+
+\section{Langage}
+
+
+ Un langage, c'est tout simplement un ensemble de mots. La question, c'est de savoir comment on définit, comment on parle d'un langage précis. En tout généralité, les ensembles peuvent être définis de façon \textbf{extensionnelle} ou \textbf{intentionnelle}. 
+
+\begin{definition}{Définition extensionnelle d'un ensemble}{}
+On \textbf{définit extensionnellement un ensemble} en en donnant la liste des éléments. L'ensemble vide se note quant à lui $\emptyset$.
+\end{definition}
+
+\begin{example} On définit par exemple l'ensemble (sans intérêt) suivant :
+\[
+    A = \{b, aca, abba\}
+\]
+\end{example}
+
+ Les définitions extensionnelles ont le mérite d'être pour le moins simples, mais pas super pratiques quand il s'agit de définir des ensembles avec un nombre infini d'éléments, comme l'ensemble des mots de longueur pair. Les définitions intentionnelles permettent elles de gérer ça, en utilisant des prédicats.
+
+\begin{definition}{Prédicat}{}
+Un prédicat est une propriété, sur un ou plusieurs\footnote{Ou zéro, mais bon} éléments. On note les prédicats comme des fonctions, par exemple $P(x)$ un prédicat unaire et $Q(x,y)$ un prédicat binaire.
+\end{definition}
+
+\begin{example}
+On pose $P(x) \equiv$ x est de longueur paire. On a alors $P(ab)$ ou $P(\epsilon)$, mais pas $P(a)$ (ce qu'on note $\neg P(a)$). 
+\end{example}
+
+\begin{example}
+\label{predL}
+On pose $L(x,y) \equiv$ $|x| = |y|$. On a alors $L(ab,ba)$, $L(aaaa,bbbb)$ et $\neg L(aba,ba)$.
+\end{example}
+
+\begin{exercice}
+Donnez l'ensemble des mots $w$ tels que $L(w,\epsilon)$. 
+\end{exercice}
+
+\begin{exercice}
+Donnez l'ensemble des mots $w$ tels que $L(aba,w)$. 
+\end{exercice}
+
+\paragraph{Remarque} Notez que le prédicat $L$ est défini formellement (dans le sens "mathématiquement"), contrairement à $P$. Utiliser, coder, outils formels blabla.
+
+\begin{definition}{Définition intensionnelle d'un ensemble}{}
+On \textbf{définit intensionnellement un ensemble} à l'aide d'une propriété que tous ses éléments satisfont. Étant donnés un prédicat $Q(x)$ et un ensemble $A$, on note $\{x \in A~|~Q(x)\}$ l'ensemble des éléments de $A$ qui satisfont $P$. Si l'ensemble $A$ est évident dans le contexte, on peut s'abstenir de le préciser.
+\end{definition}
+
+\begin{example}
+On peut définir l'ensemble des mots de longueur paire $\{x \in \Sigma^*~|~P(x)\}$, ou plus simplement $\{x ~|~P(x)\}$.
+\end{example}
+
+\begin{exercice}
+Donnez une définition de l'ensemble des mots de longueur 3 en utilisant le prédicat $L$ défini dans l'exemple \ref{predL}. 
+\end{exercice}
+
+Si les définitions intentionnelles permettent, contrairement aux extensionnelles, de dénoter des ensembles contenant une infinité de mots, elles sont avant tout un outil théorique. En effet, une propriété comme "le mot $w$ a une longueur paire" ne dit rien à un ordinateur en soi, et doit donc être définie formellement. Se pose alors la question d'un langage pour les propriétés.
+
+ Si plusieurs logiques équipées des bonnes primitives peuvent être utilisés, les traductions sont rarement très agréables. Certaines propriétés nécessitent en effet de ruser contre le langage, voire sont impossibles à formaliser dans certaines logiques. Il existe heureusement un outil qui va nous aider, avec le premier problème du moins.
+
+\chapter{Expressions régulières}
+\label{regex}
+Les expressions régulières permettent définir de façon finie - et relativement intuitive - "la forme" d'un ensemble, potentiellement infini. On en présentera d'abord le lexique et l'idée générale à l'aide d'exemples, puis on en définira formellement la syntaxe et la sémantique.
+
+\section{Lexique et idée générale}
+
+Une expression rationnelle (ou \textit{regex}, pour \textit{regular expression}\footnote{On se trompera sans doute souvent en parlant d'"expression régulière"}) est, en gros, une \textit{forme de mot}, écrite à l'aide de lettres et des symboles $.$, $*$ et $+$.
+
+\subsection{Les lettres et $\epsilon$, la base}
+
+Les regex sont construites récursivement, en partant bien sûr des cas de base. Étant donné un alphabet $\Sigma$, ces derniers sont les différentes lettres de $\Sigma$, ainsi que $\epsilon$. Ces regex dénotent chacune un seul mot, la lettre utilisée dans le premier cas, et le mot vide dans le second.
+
+\subsection{$.$, la concaténation}
+
+On peut heureusement concaténer des regex en utilisant à nouveau le symbole $.$\footnote{avec cependant un type légèrement différent, comme on le verra en \ref{resem}}. La concaténation de deux expressions rationnelles $e_1$ et $e_2$, notée $e_1.e_2$ donc, dénote l'ensemble des mots qui peuvent se décomposer en une première partie "de $e_1$" et une deuxième "de $e_2$".
+
+\paragraph{Remarque} En pratique, on ne notera pas les $.$ dans les regex, mais quelque chose comme $abbc$ devrait en théorie être lu comme $a.b.b.c$
+
+\subsection{*, l'itération}
+
+Le symbole $*$ permet de dire qu'une regex peut être répétée autant de fois que voulu (y compris 0). 
+
+\begin{example}
+La regex $ab^*c$ dénote l'ensemble des mots de la forme "un $a$, puis une série (éventuellement vide) de $b$, puis un $c$", c'est-à-dire $\{ac, abc, abbc, abbbc, ...\}$
+\end{example}
+
+En utilisant des parenthèses, on peut appliquer $*$ à des facteurs entiers :
+
+\begin{example}
+La regex $(aa)^*$ dénote l'ensemble des mots de la forme "une série (éventuellement vide) de deux $a$", c'est-à-dire $\{\epsilon, aa, aaaa, aaaaaa, ...\}$, ou encore les mots composés uniquement de $a$ et de longueur paire.
+\end{example}
+
+On peut bien sûr utiliser plusieurs $*$ dans une même expression. Dans ce cas, les nombres de "copies" des facteurs concernés ne sont pas liés, comme l'illustre l'exemple suivant :
+
+\begin{example}
+\label{ex1}
+La regex $ab(bab)^*b(ca)^*b$ dénote l'ensemble des mots de la forme "$ab$, puis une série (éventuellement vide) de $bab$, puis un $b$, puis une série (éventuellement vide) de $ca$, puis un $b$", contenant notamment $abbb$, $abbabbb$, $abbcab$ ou $abbabbabbabbcab$.
+\end{example}
+
+\begin{exercice}
+Donner 5 autres mots appartenant au langage dénotée par l'expression de l'exemple \ref{ex1}. 
+\end{exercice}
+
+\begin{exercice}
+Pourquoi le changement de formulation dans l'exemple \ref{ex1} par rapport aux exemples précédents ("c'est à dire $\{x, y, z ... \}$" qui devient "contenant notamment $x$, $y$ ou $z$") ?
+\end{exercice}
+
+On peut même faire encore plus rigolo, en enchâssant les étoiles:
+
+
+\begin{example}
+\label{ex2}
+La regex $(a^*b^*)^*$ dénote l'ensemble des mots de la forme "une série (éventuellement vide) de [(une série (éventuellement vide) de a] puis [une série (éventuellement vide) de b]]", contenant notamment $\epsilon$, $abba$; $baba$ ou $abbbabba$. 
+\end{example}
+
+\paragraph{Remarque} Certaines regex peuvent générer des mots de plusieurs façons. Si on prend l'expression de l'exemple \ref{ex2} et le mot $abbbabba$, on peut la voir comme 
+
+\begin{itemize}
+    \item $\underbrace{\underbrace{\underbrace{a}_\text{$a^1$}\underbrace{bbb}_\text{$b^3$}}_\text{$a^1b^3$}\underbrace{\underbrace{a}_\text{$a^1$}\underbrace{bb}_\text{$b^2$}}_\text{$a^1b^2$}\underbrace{\underbrace{a}_\text{$a^1$}\underbrace{ }_\text{$b^0$}}_\text{$a^1b^0$}}_\text{$(a^*b^*)^3$}$   
+    \item $\underbrace{\underbrace{\underbrace{a}_\text{$a^1$}\underbrace{b}_\text{$b^1$}}_\text{$a^1b^1$}\underbrace{\underbrace{ }_\text{$a^0$}\underbrace{bb}_\text{$b^2$}}_\text{$a^0b^2$}\underbrace{\underbrace{a}_\text{$a^1$}\underbrace{b }_\text{$b^1$}}_\text{$a^1b^1$}\underbrace{\underbrace{ }_\text{$a^0$}\underbrace{b }_\text{$b^1$}}_\text{$a^0b^1$}\underbrace{\underbrace{a}_\text{$a^1$}\underbrace{  }_\text{$b^0$}}_\text{$a^1b^0$}}_\text{$(a^*b^*)^5$}$
+   
+    \item $\underbrace{\underbrace{\underbrace{a}_\text{$a^1$}\underbrace{b}_\text{$b^1$}}_\text{$a^1b^1$}\underbrace{\underbrace{ }_\text{$a^0$}\underbrace{ }_\text{$b^0$}}_\text{$a^0b^0$}\underbrace{\underbrace{ }_\text{$a^0$}\underbrace{b}_\text{$b^1$}}_\text{$a^0b^1$}\underbrace{\underbrace{ }_\text{$a^0$}\underbrace{b}_\text{$b^1$}}_\text{$a^0b^1$}\underbrace{\underbrace{a}_\text{$a^1$}\underbrace{b }_\text{$b^1$}}_\text{$a^1b^1$}\underbrace{\underbrace{ }_\text{$a^0$}\underbrace{b }_\text{$b^1$}}_\text{$a^0b^1$}\underbrace{\underbrace{a}_\text{$a^1$}\underbrace{  }_\text{$b^0$}}_\text{$a^1b^0$}}_\text{$(a^*b^*)^7$}$
+\end{itemize}
+
+Le premier déroulement (on parlera de \textbf{dérivation}) semble bien sûr plus "naturel" et optimal que les deux autres. Ils sont pourtant tout aussi valides, et il sera utile en pratique d'éviter des expressions fortement ambiguës comme celle-ci.
+
+
+\subsection{$+$, la disjonction}
+
+Le symbole $+$ permet quant à lui de signifier qu'on a le choix entre plusieurs sous-regex.
+
+\begin{example}
+La regex $aa+bb$ dénote l'ensemble $\{aa,bb\}$
+\end{example}
+
+Il peut bien sûr se combiner avec $*$ :
+
+\begin{example}
+\label{ex3}
+La regex $(aa)^*+(bb)^*$ dénote l'ensemble des mots composés uniquement de a et de longueur paire, ou uniquement de b et de longueur également paire, par exemple $\epsilon$, $aa$, $bb$, $aaaa$ ou $bbbbbb$. La dérivation du dernier mot serait alors de la forme 
+
+\[
+\underbrace{\underbrace{\underbrace{bb~bb~bb~bb}_\text{$(bb)^4$}}_\text{$(bb)^*$}}_\text{$(aa)^*+(bb)^*$}
+\]
+\end{example}
+
+\begin{example}
+\label{ex4}
+La regex $(aa+bb)^*$ dénote l'ensemble des mots de la forme "une série  (éventuellement vide) de $aa$ et $bb$", par exemple $aabb$, $aaaaaaaaaaaa$ ou $bbaabbbbbbaa$. La dérivation du dernier mot ressemblerait alors à 
+
+\[
+\underbrace{\underbrace{bb}_\text{$aa+bb$}~~\underbrace{aa}_\text{$aa+bb$}~~\underbrace{bb}_\text{$aa+bb$}~~\underbrace{bb}_\text{$aa+bb$}~~\underbrace{bb}_\text{$aa+bb$}~~\underbrace{aa}_\text{$aa+bb$}}_\text{$(aa+bb)^6$}
+\]
+\end{example}
+
+\begin{exercice}
+Donner un mot acceptant deux dérivations avec la regex de l'exemple \ref{ex3} (justifier en donnant les dérivations). Existe-t-il un autre mot admettant plusieurs dérivations ?
+\end{exercice}
+
+\begin{exercice}
+Existe-t-il un mot acceptant plusieurs dérivations pour la regex de l'exemple \ref{ex4} ?
+\end{exercice}
+
+\begin{exercice}
+Donner un mot accepté par la regex de l'exemple \ref{ex4} mais pas celle de l'exemple \ref{ex3}. Est-il possible de trouver un mot qui, à l'inverse, est accepté par la deuxième mais pas la première ?
+\end{exercice}
+
+
+\begin{exercice} (*)
+Exprimer, en langue naturelle et de façon concise, le langage dénoté par la regex de l'exemple \ref{ex2}. Traduire ensuite ce langage en une regex non-ambiguë, c'est-à-dire où il n'y aura qu'une dérivation pour chaque mot.
+\end{exercice}
+
+
+Notez que dans l'exemple \ref{ex3}, on choisit d'abord de composer le mot de $a$ ou de $b$, puis la longueur. A l'inverse, on choisit dans la regex de l'exemple \ref{ex4} la longueur, puis $a$ ou $b$ pour chaque "morceau", et ce, individuellement. Pour mieux comprendre cette différence, il faut s'intéresser à la véritable mécanique des regex, c'est-à-dire leur syntaxe, puis leur sémantique.
+
+\section{Syntaxe}
+
+%Avant de parler de syntaxe, il faut d'abord s'arrêter sur un lexique, c'est-à-dire l'ensemble des symboles qui entreront en jeu. Comme on l'a dit précédemment, les expressions régulières se composent des lettres d'un alphabet donné, de $+$ et de $*$. On utilisera de plus les méta-symboles $($ et $)$ pour en coder la structure linéairement.
+
+Les expressions rationnelles ont, comme à peu près tout langage, une structure. Elles sont définies à l'aide de 5 règles, dont 3 récursives, qui correspondent au lexique décrit précédemment : 
+
+\begin{figure}[h]
+    \centering
+\begin{tabular}{cccl}
+$e$ & $\textcolor{black}{::=}$ & & $\epsilon$\\
+& & $|$&  $a \in \Sigma$\\
+& & $|$&  $e_1.e_2$\\
+& & $|$&  $e_1+e_2$\\
+& & $|$&  $e_1^*$\\
+\end{tabular}
+\caption{Syntaxe des expression régulières}
+    \label{resynfig}
+\end{figure}
+
+La figure \ref{resynfig} se lit "une expression rationnelle $e$ est 
+
+\begin{itemize}
+    \item[\textbf{soit}] le symbole $\epsilon$
+    \item[\textbf{soit}] une lettre appartenant à l'alphabet $\Sigma$
+    \item[\textbf{soit}] une expression rationnelle $e_1$ (définie à l'aide des mêmes règles), suivie de $.$, puis d'une expression rationnelle $e_2$
+    \item[\textbf{soit}] une expression rationnelle $e_1$, suivie de $+$, puis d'une expression rationnelle $e_2$
+    \item[\textbf{soit}] une expression rationnelle $e_1$ auréolée d'un $*$
+\end{itemize}
+
+et rien d'autre".
+
+Ces règles de dérivation nous permettent de \textit{parser} des expressions rationnelles. En notant $t()$ la fonction qui prend une regex et renvoie son arbre syntaxique, on peut la définir à l'aide des 5 règles de la figure \ref{resynfig} :
+
+$t(\epsilon)$ (resp. $t(a)$) renvoie une feuille annotée par $\epsilon$ (resp. $a$).
+
+$t(e_1.e_2)$ renvoie un noeud $.$ dont les descendants sont les arbres de $e_1$ et $e_2$, comme sur la figure \ref{parseconcat}
+
+\begin{figure}[h]
+    \centering
+ \raisebox{-2.2\height}{$t(e_1.e_2) =$} \raisebox{-0.5\height}{\Tree[.{.} $t(e_1)$ $t(e_2)$ ]}
+    \caption{Analyse syntaxique de la concaténation}
+    \label{parseconcat}
+\end{figure}
+
+De la même façon, $t(e_1+e_2)$ renvoie un noeud $+$ dont les descendants sont les arbres de $e_1$ et $e_2$, comme sur la figure \ref{parsedisj}
+
+\begin{figure}[h]
+    \centering
+ \raisebox{-2.2\height}{$t(e_1+e_2) =$} \raisebox{-0.5\height}{\Tree[.{+} $t(e_1)$ $t(e_2)$ ]}
+    \caption{Analyse syntaxique de la disjonction}
+    \label{parsedisj}
+\end{figure}
+
+Enfin, $t(e_1^*)$ renvoie un noeud $*$ avec un seul descendant, l'arbre de $e_1$
+
+
+\begin{figure}[h]
+    \centering
+ \raisebox{-2.2\height}{$t(e_1^*) =$} \raisebox{-0.5\height}{\Tree[.{*} $t(e_1)$ ]}
+    \caption{Analyse syntaxique de l'étoile}
+    \label{parsedisj}
+\end{figure}
+
+\textcolor{red}{Mettre toutes les règles dans un espace réservé ?}
+
+Les règles décrites ci-avant ne disent pas comment parser une expression comme $a.b+c$. En effet, rien ne dit si elle doit être lue comme $(ab)+c$ ou $a.(b+c)$. Pour éviter d'avoir à mettre des parenthèses absolument partout, on va donc devoir définir les priorités entre les différentes opérations :
+
+\begin{figure}[h]
+    \centering
+    $+ < . < *$
+    \caption{Priorités pour les opérateurs d'expressions rationnelles}
+    \label{prio}
+\end{figure}
+
+Concrètement, $+ < .$ veut dire qu'une expression comme $a.b+c$ doit être interprétée comme $(a.b)+c$\footnote{De la même façon que $a \times b + c$ se comprend comme $(a \times b) + c$}. De même, $a.b^*$ se lit $a.(b^*)$, et $a+b^*$ comme $a+(b^*)$.
+
+Maintenant qu'on a les règles de dérivation et les priorités associées, on peut commencer à jouer avec quelques exemples.
+
+\begin{example}
+\label{parsefig}
+L'expression rationnelle $(aa)^*+(bb)^*$ peut être parsée comme 
+\hspace{-5cm}
+\begin{figure}[h!]
+    \centering
+    \hspace*{-2cm}\begin{tabularx}{\textwidth}{ccccccccc}
+         $t((aa)^*+(bb)^*)$& $ = $ & \noindent\parbox[c]{3cm}{\Tree[.{$+$} $t((aa)^*)$ $t((bb)^*)$ ]} & $ = $ & \noindent\parbox[c]{2cm}{\Tree[.{$+$} [.{$*$} $t(aa)$ ] [.{$*$} $t(bb)$ ] ]} & $=$ & \noindent\parbox[c]{3.35cm}{\Tree[.{$+$} [.{$*$} [.{$.$} $t(a)$ $t(a)$ ] ] [.{$*$} [.{$.$} $t(b)$ $t(b)$ ] ] ]} & $ = $ & \noindent\parbox[c]{3cm}{\Tree[.{$+$} [.{$*$} [.{$.$} $a$ $a$ ] ] [.{$*$} [.{$.$} $b$ $b$ ] ] ]}
+    \end{tabularx}
+    \caption{Analyse syntaxique de $(aa)^*+(bb)^*$}
+    \label{}
+\end{figure}
+\end{example}
+
+On remarquera bien sûr l'absence habile dans l'exemple \ref{parsefig} de formes encore problématiques : $a+b+c$ et $a.b.c$. En effet, rien ne nous dit pour l'instant auquel des arbres de la figure \ref{ambfig} la première regex correspond.
+
+
+\begin{figure*}[h!]
+    \centering
+    \begin{subfigure}[b]{0.5\textwidth}
+        \centering
+\Tree[.{$+$} [.{$+$} $a$ $b$ ] $c$ ]
+\caption{version $(a+b)+c$}
+    \end{subfigure}%
+    ~ 
+    \begin{subfigure}[b]{0.5\textwidth}
+        \centering
+\Tree[.{$+$} $a$ [.{$+$} $b$ $c$ ] ]
+\caption{version $a+(b+c)$}
+    \end{subfigure}
+    \caption{Ambiguïté syntaxique de $a+b+c$}
+        \label{ambfig}
+    \end{figure*}
+
+Comme on le verra dans la partie sémantique, les symboles $+$ et $.$ sont \textbf{associatifs}, ce qui veut dire que, pour toutes expressions $e_1$, $e_2$ et $e_3$, $(e_1 + e_2) + e_3$ et $e_1 + (e_2 + e_3)$ ont le même sens\footnote{Notez qu'en arithmétique, $+$ et $\times$ sont également associatives}, et pareil avec la concaténation. Malgré une méfiance justifiée des arbres ternaires et plus, on se permettra donc d'écrire des expressions ambiguës comme $e_1 + e_2 + e_3$ ou $e_1e_2e_3$, et de les parser comme dans la figure \ref{ambpasfig}
+
+\begin{figure}[h!]
+    \centering
+    \Tree[.{$+$} $t(e_1)$ $t(e_2)$ $t(e_3)$ ]
+    \caption{Ambiguïté syntaxique assumée de $a+b+c$}
+    \label{ambpasfig}
+\end{figure}
+
+\begin{example}
+L'expression rationnelle $(aa(a+b)^*bb)^*$ s'analyse comme 
+
+\begin{figure}[h!]
+    \centering
+    \Tree[.{$*$} $a$ $a$ [.{$*$} [.{$+$} $a$ $b$ ] ] $b$ $b$ ]
+    \label{rien}
+\end{figure}
+\end{example}
+
+
+
+\section{Sémantique}
+\label{resem}

@@ -1,0 +1,34 @@
+
+\chapter{Notion de calculabilité}
+
+Pour une version plus détaillée de cette section, voir \cite{dowek}. Pour une excellente présentation orientée programmation, voir aussi \href{https://www.college-de-france.fr/site/xavier-leroy/inaugural-lecture-2018-11-15-18h00.htm}{la leçon inaugurale de Xavier Leroy au Collège de France}.
+
+\section{Différents modèles de calcul}
+
+Avant d'automatiser les calculs, définir de quoi il s'agit.
+
+Du point de vue programmation, 2 grands modèles : \textbf{machines de Turing} et  \textbf{$\lambda$-calcul}. Langages pas utilisables en pratique (\href{http://www.ens-lyon.fr/actualite/lecole/la-machine-de-turing-en-legos}{encore que ...}), mais posent les fondamentaux de ce qu'est un langage de programmation.
+
+\paragraph{Machines de Turing} Etat + mémoire modifiable, programmation impérative.
+
+\paragraph{$\lambda$-calcul} Tout n'est que fonction, et ces dernières sont d'ailleurs des objets passables en arguments comme les autres. Exemple classique : une fonction qui reçoit une fonction de tri et une liste, et renvoie la liste triée selon la fonction fournie.
+
+\paragraph{Note} Penser au typage d'une telle fonction. 
+
+\paragraph{Note}On peut rajouter des trucs plus exotiques, comme les fonctions $\mu$-récursives ou les automates cellulaires.
+
+\paragraph{Thèse de Church} Tout ça calcule les mêmes choses, de façons très différentes.
+
+Le $\lambda$-calcul est utilisé en NLP, cours dédié l'an prochain. Les machines de Turing en soi n'ont pas d'intérêt pour la linguistique, mais on peut les affaiblir pour les rendre paradoxalement plus pertinentes.
+
+\section{Décidabilité}
+
+La calculabilité a découle de l'\textbf{Entscheidungsproblem}, soit la question de savoir si on pouvait vérifier les propriétés d'algorithmes (sans les éxécuter). Invention de notion de calcul pour bien poser la question, créations parallèles de lambda et TM, tout ça tout ça.
+
+La réponse est non, intuitivement parce que les TM et lambda sont "trop puissants". La démonstration originale est assez rigolote : la rappeler (introduction raisonnement par l'absurde).
+
+Théorème de Rice.
+
+Commence alors un jeu consistant à affaiblir les modèles pour qu'on puisse décider des propriétés à leur sujet sans qu'ils deviennent trivial. Ce cours va partir du bas avec un modèle faible mais particulièrement adapté à l'analyse linguistique : les automates finis. %De cette recherche découle notamment un modèle qui 1) est plus faible 2) concerne les langages, et donc les linguistes : les automates finis. 
+
+Puisqu'on veut les analyser, on va d'abord définir la notion de langages - et donc de mots dans la section \ref{langages}. On étudiera dans la section \ref{regex} un outil pour les décrireet manipuler, les expressions régulières. On pourra ensuite s'intéresser aux automates dans la section \ref{automates}, ainsi qu'à la notion connexe de grammaires formelles en \ref{grammaires}. Enfin, on étudiera en \ref{hierarchie} la façon dont ces différents outils s'imbriquent, et on \textit{teasera} la suite du cours, en évoquant des extensions des automates.

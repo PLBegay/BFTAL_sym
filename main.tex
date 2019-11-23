@@ -1,0 +1,86 @@
+\documentclass{report}
+\usepackage[utf8]{inputenc}
+
+\title{Bases formelles du TAL}
+\author{Pierre-Léo Bégay}
+%\date{October 2019}
+
+\usepackage{natbib}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{tikz}
+\usepackage{subcaption}
+\usepackage{tikz-qtree}
+\usepackage{tikz-qtree-compat}
+\usepackage{graphbox}
+\usepackage{tabularx}
+
+\usepackage[a4paper]{geometry}
+
+
+\hypersetup{
+    colorlinks=true,       % false: boxed links; true: colored links
+    linkcolor=blue,          % color of internal links (change box color with linkbordercolor)
+    citecolor=blue,        % color of links to bibliography
+    filecolor=magenta,      % color of file links
+    urlcolor=cyan           % color of external links
+}
+\usepackage{parskip}
+\setlength{\parskip}{\baselineskip}%
+\setlength{\parindent}{0pt}%
+\usepackage{amsthm}
+\usepackage{epigraph}
+\setlength{\epigraphwidth}{0.6\textwidth}
+%\theoremstyle{definition}
+%\newtheorem{definition}{Définition}[section]
+ 
+\theoremstyle{example}
+\newtheorem{example}{Exemple}[section]
+ 
+\theoremstyle{example}
+\newtheorem{exercice}{Exercice}[section]
+ 
+ 
+\theoremstyle{remark}
+\newtheorem*{remark}{Remarque}
+
+\usepackage{tcolorbox}
+\tcbuselibrary{theorems}
+
+
+\newtcbtheorem[number within=section]{definition}{Définition}%
+{colback=blue!5,colframe=blue!30!black,fonttitle=\bfseries}{th}
+
+\begin{document}
+
+\maketitle
+
+\epigraph{La théorie des automates est l'algèbre linéaire de l'informatique [...], connaissance de base, fondamentale, connue de tous et utilisée par tous, qui fait partie du paysage intellectuel depuis si longtemps qu'on ne l'y remarquerait plus}{Jacques Sakarovitch, dans l'avant-propos de Eléments de théorie des automates}
+%\begin{abstract}
+%    Initiation à la théorie des langages formels à destination des linguistes, se concentrant sur le troisième niveau de la hiérarchie de Chomsky. 
+%\end{abstract}
+
+\tableofcontents
+
+\input{calcu.tex}
+\input{langages.tex}
+
+\chapter{Automates}
+\label{automates}
+
+\chapter{Grammaires formelles}
+\label{grammaires}
+
+\chapter{Théorème de Kleene et hiérarchie de Chomsky}
+\label{hierarchie}
+
+\bibliographystyle{plain}
+\bibliography{references}
+
+\appendix
+
+\input{lexique.tex}
+
+
+\end{document}
