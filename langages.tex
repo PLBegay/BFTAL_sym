@@ -452,7 +452,33 @@ L'expression rationnelle $(aa(a+b)^*bb)^*$ s'analyse comme
 \end{figure}
 \end{example}
 
+%\begin{exercice}
+%Donner les arbres de syntaxe des expressions $e_1 = $
+%\end{exercice}
 
+On a pour l'instant uniquement défini le lexique et la syntaxe des expressions régulières, mais les beaux arbres qu'on est désormais en mesure de constuire n'ont en soi aucun sens, et donc aucun intérêt. Il s'agit donc désormais d'en définir une sémantique.
 
 \section{Sémantique}
 \label{resem}
+
+Avant de regarder la tuyauterie d'une fonction, il s'agit d'en définir le type. La sémantique des expressions rationnelles, notée $\llbracket \_ \rrbracket$, prend en argument une expression et renvoie un langage, donc un ensemble de mots. Comme pour le parsing, il suffit de définir la sémantique sur les 5 constructeurs des expressions rationnelles pour pouvoir toutes les traiter :
+
+
+\subsection{Les cas de base}
+
+Ici, pas de surprise, $\llbracket \epsilon \rrbracket \{\epsilon\}$ et $\llbracket a \rrbracket = \{a\}$. 
+
+\subsection{Sémantique de la concaténation}
+
+Formellement, on a 
+
+\[\mt{\Tree[.{.} $e_1$ $e_2$ ]} = \llbracket e_1 \rrbracket \times \llbracket e_2 \rrbracket = \bigcup_{\substack{u \in \llbracket e_1 \rrbracket \\ v \in \llbracket e_2 \rrbracket}} u.v \]
+
+Concrètement, ça veut dire que la sémantique de la concaténation de deux regex ($\llbracket e_1.e_2 \rrbracket$) est le produit cartésien ($\times$) des sémantiques de $e_1$ ($\llbracket e_1 \rrbracket$) et $e_2$ ($\llbracket e_2 \rrbracket$), dans cet ordre. Par la définition du produit cartésien (cf \ref{cartesien}, ça correspond à l'ensemble des combinaisons d'un mot de $\llbracket e_1 \rrbracket$ concaténé à un mot de $\llbracket e_2 \rrbracket$.
+
+\begin{example}
+La sémantique de $ab$ est 
+
+\[\mt{\Tree[.{.} a b ]} = \bigcup_{\substack{u \in \llbracket a \rrbracket \\ v \in \llbracket b \rrbracket}} u.v = \bigcup_{\substack{u \in \{a\} \\ v \in \{b\}}} u.v = \{a.b\} = \{ab\}\]
+\end{example}
+
