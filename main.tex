@@ -31,22 +31,31 @@
     urlcolor=cyan           % color of external links
 }
 \usepackage{parskip}
-\setlength{\parskip}{\baselineskip}%
+\setlength{\parskip}{0.5em}
 \setlength{\parindent}{0pt}%
 \usepackage{amsthm}
 \usepackage{epigraph}
 \setlength{\epigraphwidth}{0.6\textwidth}
 %\theoremstyle{definition}
 %\newtheorem{definition}{Définition}[section]
- 
-\theoremstyle{example}
+
+\newtheoremstyle{slanted}
+  {1em plus .2em minus .1em}%   Space above
+  {1em plus .2em minus .1em}%   Space below
+  {\slshape}%  Body font
+  {}%          Indent amount (empty = no indent, \parindent = para indent)
+  {\bfseries}% Thm head font
+  {.}%         Punctuation after thm head
+  {0.5em}%     Space after thm head: " " = normal interword space;
+     %         \newline = linebreak
+  {}%          Thm head spec (can be left empty, meaning `normal')
+
+\theoremstyle{slanted}
+
 \newtheorem{example}{Exemple}[section]
  
-\theoremstyle{example}
 \newtheorem{exercice}{Exercice}[section]
  
- 
-\theoremstyle{remark}
 \newtheorem*{remark}{Remarque}
 
 \usepackage{tcolorbox}
