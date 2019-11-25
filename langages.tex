@@ -476,9 +476,39 @@ Formellement, on a
 
 Concrètement, ça veut dire que la sémantique de la concaténation de deux regex ($\llbracket e_1.e_2 \rrbracket$) est le produit cartésien ($\times$) des sémantiques de $e_1$ ($\llbracket e_1 \rrbracket$) et $e_2$ ($\llbracket e_2 \rrbracket$), dans cet ordre. Par la définition du produit cartésien (cf \ref{cartesien}, ça correspond à l'ensemble des combinaisons d'un mot de $\llbracket e_1 \rrbracket$ concaténé à un mot de $\llbracket e_2 \rrbracket$.
 
+
 \begin{example}
-La sémantique de $ab$ est 
+En appliquant les règles de la concaténation et des lettres vues précédemment, la sémantique de l'expression $ab$ est 
 
 \[\mt{\Tree[.{.} a b ]} = \bigcup_{\substack{u \in \llbracket a \rrbracket \\ v \in \llbracket b \rrbracket}} u.v = \bigcup_{\substack{u \in \{a\} \\ v \in \{b\}}} u.v = \{a.b\} = \{ab\}\]
 \end{example}
+
+L'exemple n'est pas foufou, mais permet d'illustrer l'aspect purement systémique et récursif de la sémantique. Pour des exemples plus rigolos, on va avoir besoin d'ajouter des constructeurs à la sémantique.
+
+\subsection{Sémantique de la disjonction}
+
+Formellement, on a 
+
+\[\mt{\Tree[.{+} $e_1$ $e_2$ ]} = \llbracket e_1 \rrbracket \cup \llbracket e_2 \rrbracket \]
+
+Concrètement, ça veut dire que la sémantique de la disjonction de deux regex ($\llbracket e_1 + e_2 \rrbracket$) est l'union ($\cup$) des sémantiques de $e_1$ ($\llbracket e_1 \rrbracket$) et $e_2$ ($\llbracket e_2 \rrbracket$), c'est-à-dire l'ensemble des mots qui apparaissent dans $\llbracket e_1 \rrbracket$ ou (inclusif) $\llbracket e_2 \rrbracket$.
+
+\paragraph*{Remarque} A partir d'ici et pour des raisons de mise en page, on ne mettra pas forcément tout sous forme d'arbres dans les exemples, et on comptera sur la capacité du lecteur ou de la lectrice à \textit{parser} automatiquement toute expression rationnelle qu'il ou elle lit. Ne vous y trompez pas cependant : l'analyse sémantique s'opère bien sur un arbre plutôt que sur une expression "plate". 
+
+\begin{example}
+En appliquant les règles de la concaténation et des lettres vues précédemment, la sémantique de l'expression $a(b+c)$ est 
+
+\[\mt{\Tree[.{.} a [.{+} b c ] ]} = \bigcup_{\substack{u \in \llbracket a \rrbracket \\ v \in \llbracket b + c \rrbracket }} u.v = \bigcup_{\substack{u \in \{a\} \\ v \in \llbracket b \rrbracket \cup \llbracket c \rrbracket}} = \bigcup_{\substack{u \in \{a\} \\ v \in \{b,c\} }} u.v = \{a.b, a.c\} = \{ab, ac\}\]
+\end{example}
+
+\begin{example}
+En appliquant les règles de la concaténation et des lettres vues précédemment, la sémantique de l'expression $(a+b)(b+a)$ est 
+
+\[\mt{\Tree[.{.} [.{+} a b ] [.{+} b a ] ]} = \bigcup_{\substack{u \in \llbracket a + b \rrbracket \\ v \in \llbracket b + a \rrbracket }} u.v = \bigcup_{\substack{u \in \llbracket a \rrbracket \cup \llbracket b \rrbracket \\ v \in \llbracket b \rrbracket \cup \llbracket a \rrbracket}} = \bigcup_{\substack{u \in \{a,b\} \\ v \in \{b,a\} }} u.v = \{a.b, a.a, b.b, b.a\} = \{ab, aa, bb, ba\}\]
+\end{example}
+
+Il ne nous manque maintenant plus que le plus ésotérique des constructeurs.
+
+\subsection{Sémantique de l'itération}
+
 
