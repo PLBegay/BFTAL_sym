@@ -2,7 +2,7 @@
 \chapter{Langages}
 \label{langages}
 
-On définit d'abord la notion de mot, nécessaire à celle de langage. On verra ensuite comment décrire efficacement des langages à l'aide d'expressions régulières.
+On définit d'abord la notion de mot, nécessaire à celle de langage. On verra ensuite comment décrire des langages à l'aide de notations ensemblistes.
 
 \section{Mots}
 
@@ -10,7 +10,7 @@ On définit d'abord la notion de mot, nécessaire à celle de langage. On verra 
 \end{definition}
 
 \begin{example}
-Etant donné $\Sigma = \{a,b,c\}$, on peut construire une infinité de mots parmi lesquels 
+Etant donné l'alphabet $\Sigma = \{a,b,c\}$, on peut construire une infinité de mots parmi lesquels 
 
 \begin{itemize}
     \item $abc$
@@ -111,7 +111,7 @@ Donner l'ensemble des facteurs du mot $abbba$.
 \end{exercice}
 
 \begin{exercice} \label{exfact}(*)
-Donner la borne la plus basse possible du nombre de facteurs d'un mot $w$. Donner un mot dont le nombre de facteurs est exactement la borne donnée.
+Donner la borne la plus basse possible du nombre de facteurs d'un mot $w$. Donner un mot d'au moins 3 lettres dont le nombre de facteurs est exactement la borne donnée.
 \end{exercice}
 
 \begin{definition}{Sous-mot}{}
@@ -153,7 +153,19 @@ Donner la borne la plus basse possible du nombre de sous-mots d'un mot $w$. Donn
 \section{Langage}
 
 
- Un langage, c'est tout simplement un ensemble de mots. La question, c'est de savoir comment on définit, comment on parle d'un langage précis. En tout généralité, les ensembles peuvent être définis de façon \textbf{extensionnelle} ou \textbf{intentionnelle}. 
+Un langage, c'est tout simplement un ensemble de mots. On distingue d'entrée deux langages un peu spéciaux, pour ne pas dire pathologiques.
+
+\begin{definition}{Langage plein}{}
+Etant donné un alphabet $\Sigma$, on note \mathbf{$\Sigma^*$} l'ensemble de tous les mots formés à partir de $\Sigma$.
+\end{definition}
+
+
+\begin{definition}{Ensemble/Langage vide}{}
+On note $\emptyset$ l'ensemble vide, ou langage vide en ce qui nous concerne, qui se caractèrise comme ne contenant aucun élément.
+\end{definition}
+
+
+Ces deux ensembles sont bien gentils, mais un peu radicaux. La question maintenant est donc de savoir comment on définit et parle de langages précis et plus "intermédiaires". En tout généralité, les ensembles peuvent être définis de façon \textbf{extensionnelle} ou \textbf{intentionnelle}. 
 
 \begin{definition}{Définition extensionnelle d'un ensemble}{}
 On \textbf{définit extensionnellement un ensemble} en en donnant la liste des éléments. L'ensemble vide se note quant à lui $\emptyset$.
@@ -165,7 +177,7 @@ On \textbf{définit extensionnellement un ensemble} en en donnant la liste des �
 \]
 \end{example}
 
- Les définitions extensionnelles ont le mérite d'être pour le moins simples, mais pas super pratiques quand il s'agit de définir des ensembles avec un nombre infini d'éléments, comme l'ensemble des mots de longueur pair. Les définitions intentionnelles permettent elles de gérer ça, en utilisant des prédicats.
+Les définitions extensionnelles ont le mérite d'être pour le moins simples, mais pas super pratiques quand il s'agit de définir des ensembles avec un nombre infini d'éléments, comme l'ensemble des mots de longueur pair. Les définitions intentionnelles permettent elles de gérer ça, en utilisant des prédicats.
 
 \begin{definition}{Prédicat}{}
 Un prédicat est une propriété, sur un ou plusieurs\footnote{Ou zéro, mais bon} éléments. On note les prédicats comme des fonctions, par exemple $P(x)$ un prédicat unaire et $Q(x,y)$ un prédicat binaire.
@@ -181,17 +193,15 @@ On pose $L(x,y) \equiv$ $|x| = |y|$. On a alors $L(ab,ba)$, $L(aaaa,bbbb)$ et $\
 \end{example}
 
 \begin{exercice}
-Donnez l'ensemble des mots $w$ tels que $L(w,\epsilon)$. 
+Donner l'ensemble des mots $w$ tels que $L(w,\epsilon)$. 
 \end{exercice}
 
 \begin{exercice}
-Donnez l'ensemble des mots $w$ tels que $L(aba,w)$. 
+Soit $\Sigma = \{a,b\}$, donner l'ensemble des mots $w$ tels que $L(aba,w)$. 
 \end{exercice}
 
-\paragraph{Remarque} Notez que le prédicat $L$ est défini formellement (dans le sens "mathématiquement"), contrairement à $P$. Utiliser, coder, outils formels blabla.
-
 \begin{definition}{Définition intensionnelle d'un ensemble}{}
-On \textbf{définit intensionnellement un ensemble} à l'aide d'une propriété que tous ses éléments satisfont. Étant donnés un prédicat $Q(x)$ et un ensemble $A$, on note $\{x \in A~|~Q(x)\}$ l'ensemble des éléments de $A$ qui satisfont $P$. Si l'ensemble $A$ est évident dans le contexte, on peut s'abstenir de le préciser.
+On \textbf{définit intensionnellement un ensemble} à l'aide d'une propriété que tous ses éléments satisfont. Étant donnés une propriété $Q(x)$ (par ex. une formule logique) et un ensemble $A$, on note $\{x \in A~|~Q(x)\}$ l'ensemble des éléments de $A$ qui satisfont $P$. Si l'ensemble $A$ est évident dans le contexte, on s'abstiendera de le préciser.
 \end{definition}
 
 \begin{example}
@@ -199,12 +209,12 @@ On peut définir l'ensemble des mots de longueur paire $\{x \in \Sigma^*~|~P(x)\
 \end{example}
 
 \begin{exercice}
-Donnez une définition de l'ensemble des mots de longueur 3 en utilisant le prédicat $L$ défini dans l'exemple \ref{predL}. 
+Donner une définition de l'ensemble des mots de longueur 3 en utilisant le prédicat $L$ défini dans l'exemple \ref{predL}. 
 \end{exercice}
 
 Si les définitions intentionnelles permettent, contrairement aux extensionnelles, de dénoter des ensembles contenant une infinité de mots, elles sont avant tout un outil théorique. En effet, une propriété comme "le mot $w$ a une longueur paire" ne dit rien à un ordinateur en soi, et doit donc être définie formellement. Se pose alors la question d'un langage pour les propriétés.
 
- Si plusieurs logiques équipées des bonnes primitives peuvent être utilisés, les traductions sont rarement très agréables. Certaines propriétés nécessitent en effet de ruser contre le langage, voire sont impossibles à formaliser dans certaines logiques. Il existe heureusement un outil qui va nous aider, avec le premier problème du moins.
+Si plusieurs logiques équipées des bonnes primitives peuvent être utilisées, les traductions sont rarement très agréables. Certaines propriétés nécessitent en effet de ruser contre le langage, voire sont impossibles à formaliser dans certaines logiques. Il existe heureusement un outil qui va nous aider, avec le premier problème du moins.
 
 \chapter{Expressions régulières}
 \label{regex}
