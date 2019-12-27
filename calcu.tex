@@ -29,12 +29,38 @@ Le $\lambda$-calcul est utilisé en NLP, mais sera étudié dans un autre cours.
 
 \section{Décidabilité}
 
-La calculabilité a découle de l'\textbf{Entscheidungsproblem}, soit la question de savoir si on pouvait vérifier les propriétés d'algorithmes (sans les éxécuter). Invention de notion de calcul pour bien poser la question, créations parallèles de lambda et TM, tout ça tout ça.
+Au $XVII^{ème}$ siècle, Leibniz rêve d'une procédure permettant de déterminer automatiquement, \textit{via} un calcul, si une formule mathématique est vraie ou non. Leibniz se rendit compte que les bases formelles n'étaient alors pas disponibles, notamment la formalisation du calcul. Le problème réapparaît dans un cadre plus faorable, en 1928, lorsque Hilbert repose la question dans le cadre de son fameux programme de refondation des mathématiques. Le problème de la décision prend alors le doux nom d'\textbf{Entscheidungsproblem}. 
 
-La réponse est non, intuitivement parce que les TM et lambda sont "trop puissants". La démonstration originale est assez rigolote : la rappeler (introduction raisonnement par l'absurde).
+La réponse ne se fera pas (trop) attendre, et c'est un double non. Church et Turing publient en 1936, mais indépendament, des preuves qu'une telle procèdure, ou plutôt un tel programme, est impossible à écrire en machine de Turing et $\lambda$-calcul, et donc pour tout modèle de calcul équivalent. Le problème de la décision est \textbf{indécidable}, et il est loin d'être le seul.
 
-Théorème de Rice.
+\begin{theorem}{\textbf(Indécidabilité du problème de l'arrêt)}} Savoir si un programme termine est un problème indécidable.
+\end{theorem}
 
-Commence alors un jeu consistant à affaiblir les modèles pour qu'on puisse décider des propriétés à leur sujet sans qu'ils deviennent trivial. Ce cours va partir du bas avec un modèle faible mais particulièrement adapté à l'analyse linguistique : les automates finis. %De cette recherche découle notamment un modèle qui 1) est plus faible 2) concerne les langages, et donc les linguistes : les automates finis. 
+\begin{proof}
+On va procéder par l'absurde. La décidabilité du problème de l'arrêt signifierait qu'il existe un programme, appelé $A$, qui prend en argument un programme $P$ et un élément $x$, et renvoie \verb!true! si et seulement si $A(x)$ termine.
 
-Puisqu'on veut les analyser, on va d'abord définir la notion de langages - et donc de mots dans la section \ref{langages}. On étudiera dans la section \ref{regex} un outil pour les décrireet manipuler, les expressions régulières. On pourra ensuite s'intéresser aux automates dans la section \ref{automates}, ainsi qu'à la notion connexe de grammaires formelles en \ref{grammaires}. Enfin, on étudiera en \ref{hierarchie} la façon dont ces différents outils s'imbriquent, et on \textit{teasera} la suite du cours, en évoquant des extensions des automates.
+A partir de $A$, on peut constuire un autre programme appelé $B$, qui prend en argument un programme $P$, et termine si et seulement si $P(P)$ ne termine pas :\\
+\verb!def B P := if (A P P) then (while true skip) else skip!.
+
+Maintenant, appliquons $B$ à lui même. On utilisant la définition de B, on obtient\\ \verb!B(B) := if (A B B) then (while true skip) else skip!, ce qui veut dire que $B(B)$ termine si et seulement si $B(B)$ ne termine pas. On obtient donc un paradoxe, signifiant que notre seule hypothèse, l'existence de $A$, est fausse.
+\end{proof}
+
+\paragraph{Remarque} La preuve contient une bizarrerie, à savoir l'application d'un programme à lui-même ($B(B)$). Une telle chose est proscrite par l'utilisation de types, qui rendent la preuve donnée caduque. Il est cependant toujours possible de prouver l'indécidabilité de l'arrêt pour des programmes typés, de façon plus tordue cependant.
+
+Au-delà de ces deux problèmes particulièrement connus, il existe une véritable armée de problèmes indécidables, comme le montre spécifié par le théorème de Rice :
+
+
+\begin{theorem}{\textbf(Théorème de Rice)}} On appelle propriété sémantique non-triviale une propriété sur le comportement d'un programme telle qu'il existe au moins un exemple la respectant et un ne la respectant pas. Toute propriété sémantique non-triviale est indécidable.
+\end{theorem}
+
+\begin{proof}
+On procède encore une fois par l'absurde, en supposant qu'il existe une propriété sémantique non-triviale $i$ décidable. Puisque $i$ est non-triviale, on sait qu'il existe $P_{i+}$ (resp. $P_{i-}$) un programme qui satisfait (resp. ne satisfait pas) la propriété $i$. On va montrer qu'il est alors possible de résoudre le problème de l'arrêt.
+
+Soit un programme $P$ dont on veut vérifier qu'il termine sur l'argument $x$. On vérifie d'abord si $P$ satisfait la propriété $i$. Supposons, sans perte de généralité (il suffit sinon d'inverser les $+$ et $-$), que ce n'est pas le cas. On écrit alors un programme qui fait tourner $P(x)$, puis $P_{i+}$. On vérifie si le tout satisfait $i$. Si c'est le cas, on sait que $P(x)$ a fini. A l'inverse, si ce n'est pas le cas, $P_{i+}$ n'a pas été atteint, ce qui veut dire que $P(x)$ n'a pas fini.
+
+L'existence supposée de la décidabilité propriété sémantique non-triviale permet de 
+résoudre le problème de l'arrêt, pourtant indécidable. Il n'existe donc pas de telle propriété.\end{proof}
+
+Intuitivement, tous ces problèmes sont indécidables sur tout modèle Turing-complet car ces derniers sont trop puissants, ou expressifs\footnote{Comme le disent tous les oncles Ben du monde, un grand pouvoir (expressif) implique une grande indécidabilité}. Commence alors un jeu consistant à affaiblir les modèles pour qu'on puisse décider des propriétés à leur sujet, sans pour autant qu'ils en deviennent trivial. Ce cours va s'intéresser à la famille des automates, particulièrement adaptée à l'analyse linguistique.%De cette recherche découle notamment un modèle qui 1) est plus faible 2) concerne les langages, et donc les linguistes : les automates finis. 
+
+Puisqu'on veut les analyser, on va d'abord définir la notion de langages - et donc de mots dans la section \ref{langages}. On étudiera dans la section \ref{regex} un outil pour les décrire et manipuler, les expressions régulières. On pourra ensuite s'intéresser aux automates les plus simples dans la section \ref{automates}, ainsi qu'à la notion connexe de grammaires formelles en \ref{grammaires}. Enfin, on étudiera en \ref{hierarchie} la façon dont ces différents outils s'imbriquent, et on \textit{teasera} la suite du cours, en évoquant des extensions des automates.
