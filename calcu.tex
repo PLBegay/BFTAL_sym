@@ -1,25 +1,31 @@
 
 \chapter{Notion de calculabilité}
 
-Pour une version plus détaillée de cette section, voir \cite{dowek}. Pour une excellente présentation orientée programmation, voir aussi \href{https://www.college-de-france.fr/site/xavier-leroy/inaugural-lecture-2018-11-15-18h00.htm}{la leçon inaugurale de Xavier Leroy au Collège de France}.
+%Pour une version plus détaillée de cette section, voir \cite{dowek}. 
+Pour une version plus détaillée, voir \href{https://www.college-de-france.fr/site/xavier-leroy/inaugural-lecture-2018-11-15-18h00.htm}{la leçon inaugurale de Xavier Leroy au Collège de France}.
 
 \section{Différents modèles de calcul}
 
-Avant d'automatiser les calculs, définir de quoi il s'agit.
+L'informatique a vocation à automatiser les calculs afin de les faire réaliser par une machine plutôt que par des Humains. Avant d'automatiser les calculs, il s'agit donc de définir formellement de quoi on parle.
 
-Du point de vue programmation, 2 grands modèles : \textbf{machines de Turing} et  \textbf{$\lambda$-calcul}. Langages pas utilisables en pratique (\href{http://www.ens-lyon.fr/actualite/lecole/la-machine-de-turing-en-legos}{encore que ...}), mais posent les fondamentaux de ce qu'est un langage de programmation.
+D'un point de vue programmation, 2 principaux modèles co-existent : les \textbf{machines de Turing} et le \textbf{$\lambda$-calcul}. Ces langages ne sont pas utilisables en pratique (\href{http://www.ens-lyon.fr/actualite/lecole/la-machine-de-turing-en-legos}{encore que}), mais posent les fondamentaux de ce qu'est un langage de programmation.
 
-\paragraph{Machines de Turing} Etat + mémoire modifiable, programmation impérative.
+\paragraph{Machines de Turing} Les machines de Turing disposent d'une notion d'état, et d'une mémoire infinie modifiable. La notion d'état sera discutée en longueur dans la section \ref{automates}, mais correspond en gros à une mémoire spéciale, propre à chaque programme, qui peut être modifiée et consultée facilement, notamment pour s'orienter dans le \textit{flow} du programme\footnote{Pensez à une variable booleene "premierefois" que vous avez sans doute déjà utilisée dans un \texttt{if} pour accéder ou non à un cas particulier}. Ces traits rapprochement fortement les machines de Turing de la programmation impérative (\textbf{C}, langage machine, le coeur de Python etc). Les machines de Turing sont dues à \textbf{Alan Turing}.
 
-\paragraph{$\lambda$-calcul} Tout n'est que fonction, et ces dernières sont d'ailleurs des objets passables en arguments comme les autres. Exemple classique : une fonction qui reçoit une fonction de tri et une liste, et renvoie la liste triée selon la fonction fournie.
+\paragraph{$\lambda$-calcul} A la différence des machines de Turing, qui ont une approche quasiment mécanique (pour ne pas dire "bidouille") de l'exécution d'un programme, le $\lambda$-calcul est profondément mathématique. Tout n'y est que fonction, au point que ces dernières sont des objets comme les autres, notamment passables en arguments. On citera l'exemple classique d'une fonction qui reçoit une fonction de tri et une liste, et renvoie la liste triée selon la fonction fournie. Le $\lambda$-calcul est la base de la programmation fonctionnelle. Il a été crée par \textbf{Alonzo Church}.
 
-\paragraph{Note} Penser au typage d'une telle fonction. 
+\paragraph{Remarque} Les types en programmation impérative n'ont souvent qu'une valeur de garde-fou contre des opérations totalement absurdes, alors qu'ils ont une fonction beaucoup plus structurante (certaine.s diraient "contraignante") en programmation fonctionnelle. L'utilisation de fonctions comme arguments oblige par exemple à repenser les types et aller plus loin que les classiques \verb!bool!, \verb!int! et cie. On renverra encore une fois à la présentation de Xavier Leroy citée en introduction pour une meilleur vision d'ensemble.
 
-\paragraph{Note}On peut rajouter des trucs plus exotiques, comme les fonctions $\mu$-récursives ou les automates cellulaires.
+Ces deux modèles ne forment pas l'alpha et l'omega de la calculabilité, qui contient de nombreux modèles plus ou moins exotiques, comme les fonctions $\mu$-récursives ou les automates cellulaires (voir à ce sujet \href{https://www.youtube.com/watch?v=S-W0NX97DB0}{la vidéo de la chaîne ScienceEtonnante}.
 
-\paragraph{Thèse de Church} Tout ça calcule les mêmes choses, de façons très différentes.
+\paragraph{Thèse de Church (ou thèse de Church-Turing)} Church et Turing ont montré, dans les années 30, que les machines de Turing et le $\lambda$-calcul sont équivalents, dans le sens où toute fonction exprimable dans un modèle le sera dans l'autre. On dit que les modèles ont la même \textbf{expressivité}. Attention cependant, certaines fonctions très simples en $\lambda$-calcul seront un enfer à coder en machine de Turing, et inversement\footnote{Penser à la différence entre compétence et performance.}. Mais il reste remarquable que deux modèles fonctionnant de façons si orthogonales aient, au fond, la même puissance. 
 
-Le $\lambda$-calcul est utilisé en NLP, cours dédié l'an prochain. Les machines de Turing en soi n'ont pas d'intérêt pour la linguistique, mais on peut les affaiblir pour les rendre paradoxalement plus pertinentes.
+Ce résultat est moins surprenant avec le recul, puisqu'on sait maintenant que tous la plupart des modèles de calcul non-triviaux sont équivalents, et forment la classe des modèles \textbf{Turing-complets}. Il est en effet possible de simuler, ou coder, les machines de Turing ou le $\lambda$-calcul dans les fonctions $\mu$-récursives ou les automates cellulaires, et inversement. Ce résultat s'étend à une armée de modèles, auxquels ils faut ajouter aujourd'hui des milliers de langages de programmation : Python, \textbf{C}, OCaml, Java, et même Makefile, Bash ou $\LaTeX$ sont bel et bien aussi expressifs les uns que les autres.
+
+La thèse de Church peut même s'étendre à l'épistémologie ou à la philosophie, puisqu'elle peut sembler suggérer l'existence d'une notion "naturelle" et indépassable de calcul. On conseillera la lecture de \cite{dowek} pour une introduction à ces problématiques.
+
+
+Le $\lambda$-calcul est utilisé en NLP, mais sera étudié dans un autre cours. Les machines de Turing quant à elles n'ont, en soi, pas d'intérêt pour la linguistique, mais on peut les affaiblir pour les rendre paradoxalement plus pertinentes.
 
 \section{Décidabilité}
 
