@@ -310,7 +310,13 @@ Le symbole $+$ permet quant à lui de signifier qu'on a le choix entre plusieurs
 La regex $aa+bb$ dénote l'ensemble $\{aa,bb\}$
 \end{example}
 
-Il peut bien sûr se combiner avec $*$ :
+Si on a par exemple $\Sigma = \{a,b,c\}$, alors $(a+b+c)$ correspond à "n'importe quelle lettre de l'alphabet". On écrira cette expression plus simplement $\Sigma$.
+
+\begin{example}
+L'expression $\Sigma \Sigma \Sigma$, ou $\Sigma^3$, correspond à n'importe quel mot de longueur 3.
+\end{example}
+
+La disjonction peut bien sûr se combiner avec $*$ :
 
 \begin{example}
 \label{ex3}
@@ -571,3 +577,59 @@ $=$ & $\{aa, aaaa, abba, aaaaaa, aaabba, abbaaa, abbbba, ...\}$
 \end{tabular} \end{tabular}
 \end{figure}
 \end{example}
+
+\section{Mise en application}
+
+On a abordé les expressions régulières sous un angle très théorique, mais on leur trouve bien sûr des applications concrètes.
+
+\subsection{Quelques astuces}
+
+On présente d'abord, sous forme d'exercices (corrigés dans un autre document), quelques astuces classiques, susceptibles d'aider les TAListes dans leurs futures oeuvres. 
+
+\begin{exercice}
+Donner une \textit{regex} pour les mots qui commencent par $a$.
+\end{exercice}
+
+\begin{exercice}
+Donner une \textit{regex} pour les mots qui finissent par $b$.
+\end{exercice}
+
+\begin{exercice}
+Donner une \textit{regex} pour les mots qui commencent par $a$ finissent par $b$.
+\end{exercice}
+
+
+\begin{exercice}
+Donner une \textit{regex} pour les mots de longueur paire.
+\end{exercice}
+
+\begin{exercice}
+Donner une \textit{regex} pour les mots de longueur impaire qui contiennent au moins 4 lettres.
+\end{exercice}
+
+\begin{exercice}
+Donner une \textit{regex} pour les mots de longueur impaire, qui contiennent au moins 4 lettres, comment par $a$ et finissent par $b$.
+\end{exercice}
+
+
+\subsection{Syntaxe en pratique}
+
+Les expressions régulières dans Unix, Python \& cie utilisent une syntaxe différente, et surtout plus étendue que celle que l'on vient d'étudier. Celà est dû aux besoins différents que l'on a entre la théorie et la pratique. 
+
+Dans la théorie, on veut définir nos objets de façon minimale, c'est-à-dire avec le moins de symboles et de règles possible, afin d'en simplifier l'étude. Par exemple, le peu de règles permet une définition légère de la sémantique formelle des \textit{regex}. De la même façon, toute preuve à leur propos en sera tout autant simplifiée :
+
+\begin{theorem}
+$\forall e, \exists w \in \llbracket e \rrbracket$, cad. que toute expression rationnelle dénote au moins un mot.
+\end{theorem}
+\begin{proof}
+On procède par induction structurelle sur l'expression rationnelle $e$:
+
+\begin{itemize}
+\item Si $e = \epsilon$, alors $\llbracket e \rrbracket = \{\epsilon\}$, qui contient bien un mot ($\epsilon$ donc)
+\item Si $e = a$, alors $\llbracket e \rrbracket = \{a\}$, qui contient bien un mot ($a$)
+\item Si $e = e_1 + e_2$, alors $\llbracket e \rrbracket = \llbracket e_1 \rrbracket \cup \llbracket e_2 \rrbracket$. Par hypothèse d'induction, $\llbracket e_1 \rrbracket$ contient un mot $w_1$ et $\llbracket e_2 \rrbracket$ contient $w_2$. $\llbracket e \rrbracket$ contient donc non pas un, mais au moins deux mots.
+\item Si $e = e_1.e_2$, alors $\llbracket e \rrbracket = \llbracket e_1 \rrbracket . \llbracket e_2 \rrbracket$. Par hypothèse d'induction, $\llbracket e_1 \rrbracket$ contient un mot $w_1$ et $\llbracket e_2 \rrbracket$ contient $w_2$. $\llbracket e \rrbracket$ contient donc un mot, $w_1w_2$.
+\item Si $e = e_1^*$, alors $\llbracket e \rrbracket$ contient $\epsilon$.
+\end{itemize}
+\end{proof}
+
