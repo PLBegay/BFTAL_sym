@@ -580,7 +580,7 @@ $=$ & $\{aa, aaaa, abba, aaaaaa, aaabba, abbaaa, abbbba, ...\}$
 
 \section{Mise en application}
 
-On a abordé les expressions régulières sous un angle très théorique, mais on leur trouve bien sûr des applications concrètes.
+On a abordé les expressions régulières sous un angle très théorique, mais on leur trouve bien sûr des applications concrètes. 
 
 \subsection{Quelques astuces}
 
@@ -632,4 +632,8 @@ On procède par induction structurelle sur l'expression rationnelle $e$:
 \item Si $e = e_1^*$, alors $\llbracket e \rrbracket$ contient $\epsilon$.
 \end{itemize}
 \end{proof}
+
+Dans la pratique, on préfère ne pas avoir à réinventer la roue chaque matin, la syntaxe des \textit{regex} est donc étendue en pratique. Ces extensions ne changent rien au fond, dans le sens où elles n'ajoutent pas en expressivité. En effet, les nouveaux symboles peuvent tous être codés avec ceux de la syntaxe minimale : 
+
+
 
