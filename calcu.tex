@@ -5,15 +5,15 @@ On s'attache d'abord à contextualiser le reste du cours en évoquant le cadre p
 
 \section{Différents modèles de calcul}
 
-L'informatique a vocation à automatiser les calculs afin de les faire réaliser par une machine plutôt que par des Humains. Avant d'automatiser les calculs, il s'agit donc de définir formellement de quoi on parle.
+L'informatique a pour vocation automatiser ce qui peut l'être afin de faire réaliser ces tâches par des machines plutôt que des humains. Une tâche est automatisable si elle peut être résolue par une série d'instructions sans ambiguïté, c'est-à-dire si elle peut être réduite à des calculs qu'il s'agit de définir formellement. 
 
-D'un point de vue programmation, 2 principaux modèles co-existent : les \textbf{machines de Turing} et le \textbf{$\lambda$-calcul}. Ces langages ne sont pas utilisables en pratique (\href{http://www.ens-lyon.fr/actualite/lecole/la-machine-de-turing-en-legos}{encore que}), mais posent les fondamentaux de ce qu'est un langage de programmation.
+D'un point de vue programmation, 2 principaux modèles historiques co-existent : les \textbf{machines de Turing} et le \textbf{$\lambda$-calcul}. Ces langages, qui remontent tout de même aux années 30, ne sont pas utilisables en pratique (\href{http://www.ens-lyon.fr/actualite/lecole/la-machine-de-turing-en-legos}{encore que}), mais posent les fondamentaux de ce qu'est un langage de programmation.
 
 \paragraph{Machines de Turing} Les machines de Turing disposent d'une notion d'état, et d'une mémoire infinie modifiable. La notion d'état sera discutée en longueur dans la section \ref{automates}, mais correspond en gros à une mémoire spéciale, propre à chaque programme, qui peut être modifiée et consultée facilement, notamment pour s'orienter dans le \textit{flow} du programme\footnote{Pensez à une variable booleene "premierefois" que vous avez sans doute déjà utilisée dans un \texttt{if} pour accéder ou non à un cas particulier}. Ces traits rapprochement fortement les machines de Turing de la programmation impérative (C, langage machine, le coeur de Python etc). Les machines de Turing sont dues à \textbf{Alan Turing}.
 
 \paragraph{$\lambda$-calcul} A la différence des machines de Turing, qui ont une approche quasiment mécanique (pour ne pas dire "bidouille") de l'exécution d'un programme, le $\lambda$-calcul est profondément mathématique. Tout n'y est que fonction, au point que ces dernières sont des objets comme les autres, notamment passables en arguments. On citera l'exemple classique d'une fonction qui reçoit une fonction de tri et une liste, et renvoie la liste triée selon la fonction fournie. Le $\lambda$-calcul est la base de la programmation fonctionnelle. Il a été crée par \textbf{Alonzo Church}.
 
-\paragraph{Remarque} Les types en programmation impérative n'ont souvent qu'une valeur de garde-fou contre des opérations totalement absurdes, alors qu'ils ont une fonction beaucoup plus structurante (certaine.s diraient "contraignante") en programmation fonctionnelle. L'utilisation de fonctions comme arguments oblige par exemple à repenser les types et aller plus loin que les classiques \verb!bool!, \verb!int! et cie. On renverra encore une fois à la présentation de Xavier Leroy citée en introduction pour une meilleur vision d'ensemble.
+\paragraph{Remarque} Les types en programmation impérative n'ont souvent qu'une valeur de garde-fou contre des opérations totalement absurdes, alors qu'ils ont une fonction beaucoup plus structurante (certain.e.s diraient "contraignante") en programmation fonctionnelle. L'utilisation de fonctions comme arguments oblige par exemple à repenser les types et aller plus loin que les classiques \verb!bool!, \verb!int! et cie. On renverra encore une fois à la présentation de Xavier Leroy citée en introduction pour une meilleur vision d'ensemble.
 
 Ces deux modèles ne forment pas l'alpha et l'omega de la calculabilité, qui contient de nombreux modèles plus ou moins exotiques, comme les fonctions $\mu$-récursives ou les automates cellulaires (voir à ce sujet \href{https://www.youtube.com/watch?v=S-W0NX97DB0}{la vidéo de la chaîne ScienceEtonnante}).
 
@@ -28,7 +28,7 @@ Le $\lambda$-calcul est utilisé en NLP, mais sera étudié dans un autre cours.
 
 \section{Décidabilité}
 
-Au $XVII^{ème}$ siècle, Leibniz rêve d'une procédure permettant de déterminer automatiquement, \textit{via} un calcul, si une formule mathématique est vraie ou non. Leibniz se rendit compte que les bases formelles n'étaient alors pas disponibles, notamment la formalisation du calcul. Le problème réapparaît dans un cadre plus faorable, en 1928, lorsque Hilbert repose la question dans le cadre de son fameux programme de refondation des mathématiques. Le problème de la décision prend alors le doux nom d'\textbf{Entscheidungsproblem}. 
+Au $XVII^{ème}$ siècle, Leibniz rêve d'une procédure permettant de déterminer automatiquement, \textit{via} un calcul, si une formule mathématique est vraie ou non. Leibniz se rendit compte que les bases formelles n'étaient alors pas disponibles, notamment la formalisation du calcul. Le problème réapparaît dans un cadre plus favorable, en 1928, lorsque Hilbert repose la question dans le cadre de son fameux programme de refondation des mathématiques. Le problème de la décision prend alors le doux nom d'\textbf{Entscheidungsproblem}. 
 
 La réponse ne se fera pas (trop) attendre, et c'est un double non. Church et Turing publient en 1936, mais indépendament, des preuves qu'une telle procèdure, ou plutôt un tel programme, est impossible à écrire en machine de Turing et $\lambda$-calcul, et donc pour tout modèle de calcul équivalent. Le problème de la décision est \textbf{indécidable}, et il est loin d'être le seul.
 
@@ -36,7 +36,7 @@ La réponse ne se fera pas (trop) attendre, et c'est un double non. Church et Tu
 \end{theorem}
 
 \begin{proof}
-On va procéder par l'absurde. La décidabilité du problème de l'arrêt signifierait qu'il existe un programme, appelé $A$, qui prend en argument un programme $P$ et un élément $x$, et renvoie \verb!true! si et seulement si $A(x)$ termine.
+On va procéder par l'absurde (cf. annexe \ref{abs}). La décidabilité du problème de l'arrêt signifierait qu'il existe un programme, appelé $A$, qui prend en argument un programme $P$ et un élément $x$, et renvoie \verb!true! si et seulement si $P(x)$ termine.
 
 A partir de $A$, on peut constuire un autre programme appelé $B$, qui prend en argument un programme $P$, et termine si et seulement si $P(P)$ ne termine pas :\\
 \verb!def B P := if (A P P) then (while true skip) else skip!.
@@ -44,7 +44,7 @@ A partir de $A$, on peut constuire un autre programme appelé $B$, qui prend en 
 Maintenant, appliquons $B$ à lui même. On utilisant la définition de B, on obtient\\ \verb!B(B) := if (A B B) then (while true skip) else skip!, ce qui veut dire que $B(B)$ termine si et seulement si $B(B)$ ne termine pas. On obtient donc un paradoxe, signifiant que notre seule hypothèse, l'existence de $A$, est fausse.
 \end{proof}
 
-\paragraph{Remarque} La preuve contient une bizarrerie, à savoir l'application d'un programme à lui-même ($B(B)$). Une telle chose est proscrite par l'utilisation de types, qui rendent la preuve donnée caduque. Il est cependant toujours possible de prouver l'indécidabilité de l'arrêt pour des programmes typés, de façon plus tordue cependant.
+\paragraph{Remarque} La preuve contient une bizarrerie, à savoir l'application d'un programme à lui-même ($P(P)$ et $B(B)$). Une telle chose est proscrite par l'utilisation de types, qui rendent la preuve donnée caduque. Il est cependant toujours possible de prouver l'indécidabilité de l'arrêt pour des programmes typés, de façon plus tordue cependant.
 
 Au-delà de ces deux problèmes particulièrement connus, il existe une véritable armée de problèmes indécidables, comme le montre spécifié par le théorème de Rice :
 
@@ -59,6 +59,8 @@ Soit un programme $P$ dont on veut vérifier qu'il termine sur l'argument $x$. O
 
 L'existence supposée de la décidabilité propriété sémantique non-triviale permet de 
 résoudre le problème de l'arrêt, pourtant indécidable. Il n'existe donc pas de telle propriété.\end{proof}
+
+\paragraph{Remarque} Une telle preuve, où on montre que la décidabilité d'un problème $P_1$ permettrait de résoudre un problème $P_2$ pourtant indécidable, s'appelle une preuve par réduction, puisqu'on y réduit la décidabilité de $P_2$ à celle de $P_1$.
 
 Intuitivement, tous ces problèmes sont indécidables sur tout modèle Turing-complet car ces derniers sont trop puissants, ou expressifs\footnote{Comme le disent tous les oncles Ben du monde, un grand pouvoir (expressif) implique une grande indécidabilité}. Commence alors un jeu consistant à affaiblir les modèles pour qu'on puisse décider des propriétés à leur sujet, sans pour autant qu'ils en deviennent trivial. Ce cours va s'intéresser à la famille des automates, particulièrement adaptée à l'analyse linguistique.%De cette recherche découle notamment un modèle qui 1) est plus faible 2) concerne les langages, et donc les linguistes : les automates finis. 
 
