@@ -4,6 +4,26 @@
 
 \paragraph{}On rappelle quelques notions et notations de base.
 
+\section{Logique}
+
+\subsection{Raisonnement par l'absurde}
+
+Un raisonnement par l'absurde consiste à prouver une chose en 1) supposant son contraire et 2) montrer que ça fout tout en l'air. Plus formellement, pour prouver $P$, on suppose $\neg P$ et on montre que ça nous permet de déduire $\bot$, ce qui veut dire soit que la logique est incohérente, soit que $\neg P$ est fausse, et donc que $P$ est vraie.
+
+\begin{example}
+Imaginons une situation où les rues sont sèches, et où on voudrait prouver qu'il n'a pas plu. On suppose alors l'inverse, c'est-à-dire qu'il a plu. Or, s'il a plu, les routes sont mouillées. On obtient alors que 1) les routes sont mouillées et 2) les routes ne sont pas mouillées, ce qui est un paradoxe. La seule hypothèse faite étant le fait qu'il a plu, elle doit être fausse.
+\end{example}
+
+\begin{example}
+On veut prouver qu'il existe une infinité de nombres premiers. On suppose l'inverse, cad. qu'il y en a un ensemble fini $\{p_1,...,p_n\}$. Soit $n = 1 + \prod_{i \in [1 - n]} p_i = 1 + p_1 \times ... \times p_n$. $n$, comme tout nombre, admet au moins un diviseur premier. 
+
+Or, $n$ est strictement plus grand que tout nombre premier et ne peut donc pas en être un. De plus, pour tout $i \in [1 - n]$, $\frac{n}{p_i} = p_1 \times ... \times p_{i-1} \times p_{i+1} \times ... \times p_n + \frac{1}{p_i}$. Tout nombre premier étant $\geq 2$, $\frac{1}{p_i}$ ne forme pas un entier, et donc $\frac{n}{p_i}$ non plus.
+
+On obtient une contradiction, notre hypothèse sur la finitude des nombres premiers est donc fausse.
+\end{example}
+
+
+
 \section{Ensembles}
 
 lol
