@@ -2,7 +2,7 @@
 \chapter{Langages}
 \label{langages}
 
-On définit d'abord la notion de mot, nécessaire à celle de langage. On verra ensuite comment décrire des langages à l'aide de notations ensemblistes.
+On définit d'abord la notion de mot, nécessaire à celle de langage. On verra ensuite comment décrire des langages à l'aide de notations ensemblistes, révisant ces dernières par la même occasion.
 
 \section{Mots}
 
@@ -78,6 +78,21 @@ Alors la propriété $P$ est vraie pour tout mot $w$.
 
 \paragraph*{Remarque} Est également valide le principe d'induction où, dans le cas récursif, la lettre est rajoutée à droite du mot plutôt qu'à sa gauche.
 
+
+On va s'entraîner à utiliser ce principe d'induction en prouvant deux lemmes qui n'en nécessitaient sans doute pas tant :
+
+\begin{lemma}
+$\forall w \in \Sigma^*, |w| \geq 0$, cad. que tout mot a une longueur positive.
+\end{lemma}
+\begin{proof}
+On procède par induction sur $w$.
+
+Dans le cas de base, $w = \epsilon$. On a donc $|w| = |\epsilon| = 0 \geq 0$.
+
+Dans le cas récursif, $w = c.w'$ avec $c \in \Sigma$ et on suppose $|w'| \geq 0$. On a $|c.w'| = 1 + |w'| \geq |w'| \geq 0$.
+\end{proof}
+
+
 \begin{lemma}
 Etant donnés deux mots $w_1$ et $w_2$, $|w_1.w_2| = |w_1| + |w_2|$. 
 \end{lemma}
@@ -129,6 +144,23 @@ Un mot $s$ est un \textbf{suffixe} du mot $w$ ssi $\exists v, w = v.s$, cad. ssi
 Le mot $abba$ admet comme préfixes $\epsilon$, $a$, $ab$, $abb$ et $abba$. Ses suffixes sont, quant à eux, $\epsilon$, $a$, $ba$, $bba$ et $abba$.
 \end{example}
 
+\begin{lemma}
+$\forall w \in \Sigma^*, \epsilon$ et $w$ sont des préfixes de $w$
+\end{lemma}
+
+\begin{proof}
+Pour $\epsilon$, il suffit de prendre $v = w$. A l'inverse, en prenant $v = \epsilon$, on voit que $w$ est son propre préfixe.
+\end{proof}
+
+\begin{lemma}
+$\forall w \in \Sigma^*, \epsilon$ et $w$ sont des suffixes de $w$
+\end{lemma}
+
+\begin{proof}
+Analogue au lemme précédent.
+\end{proof}
+
+
 \begin{exercice}\label{expref}
 Combien de préfixes et suffixes admet un mot $w$ quelconque ?
 \end{exercice}
@@ -141,6 +173,13 @@ Un mot $f$ est un \textbf{facteur} du mot $w$ ssi $\exists v_1 v_2, w = v_1.f.v_
 Les facteurs du mot $abba$ sont $\epsilon$, $a$, $b$, $ab$, $ba$, $abb$, $bba$ et $abba$. 
 \end{example}
 
+\begin{lemma}
+$\forall w \in \Sigma^*$, $\epsilon$ et $w$ sont des facteurs de $w$.
+\end{lemma}
+
+\begin{proof}
+Pour $\epsilon$, il suffit de prendre $v_1 = w$ et $v_2 = \epsilon$ (ou l'inverse) et la condition est trivialement vérifiée. Pour $w$, on prend $v_1 = v_2 = \epsilon$.
+\end{proof}
 
 \begin{exercice}
 Donner l'ensemble des facteurs du mot $abbba$.
@@ -162,6 +201,14 @@ Un mot $s$ est un \textbf{sous-mot} du mot $w$ ssi $w = v_0s_0v_1s_1v_2...s_nv_n
 \end{itemize}
 \end{example}
 
+
+\begin{lemma}
+$\forall w \in \Sigma^*$, $\epsilon$ et $w$ sont des sous-mots de $w$.
+\end{lemma}
+
+\begin{proof}
+Pour $\epsilon$, il suffit de prendre $n = 0$, $s_0 = \epsilon$, $v_0 = w$ et $v_1 = \epsilon$ (ou l'inverse) et la condition est trivialement vérifiée. Pour $w$, on prend $n = 0$, $s_0 = w$ et $v_0 = v_1 = \epsilon$.
+\end{proof}
 
 \begin{exercice}
 Montrer que tout facteur d'un mot en est également un sous-mot. A l'inverse, montrer qu'un sous-mot n'est pas forcément un facteur. 
