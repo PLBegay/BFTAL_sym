@@ -16,7 +16,7 @@ jobs:
         working_directory: poly/sources
     - name: deplacement pdf
       run: |
-          mkdir poly/sources/pdf 
+          mkdir poly/pdf 
           mv poly/sources/poly.pdf poly/pdf/poly.pdf
     - name: gen artifact
       uses: actions/upload-artifact@v1
