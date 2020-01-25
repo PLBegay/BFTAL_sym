@@ -17,5 +17,5 @@ jobs:
     - name: deplacement pdf
       uses: actions/upload-artifact@v1
       with:
-        name: poly/sources/poly.pdf
+        name: poly
         path: poly/pdf
