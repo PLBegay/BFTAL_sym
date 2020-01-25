@@ -15,7 +15,9 @@ jobs:
         root_file: poly.tex
         working_directory: poly/sources
     - name: deplacement pdf
-      run: mv poly/sources/poly.pdf poly/pdf/poly.pdf
+      run: |
+          mkdir sources/pdf 
+          mv poly/sources/poly.pdf poly/pdf/poly.pdf
     - name: gen artifact
       uses: actions/upload-artifact@v1
       with:
