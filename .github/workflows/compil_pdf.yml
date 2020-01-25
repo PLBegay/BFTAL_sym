@@ -14,6 +14,7 @@ jobs:
       with:
         root_file: poly.tex
         working_directory: poly/sources
+        args: -f
     - name: deplacement pdf
       run: |
           mkdir poly/pdf 
