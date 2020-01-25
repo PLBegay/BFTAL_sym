@@ -14,4 +14,5 @@ jobs:
       with:
         root_file: poly/sources/poly.tex
         working_directory: poly/sources
-        args: -outdir="../pdf"
+    - name: deplacement pdf
+      run: mv poly/sources/poly.tex poly/pdf/poly.pdf
