@@ -18,14 +18,10 @@ jobs:
       run: |
           mkdir poly/pdf 
           mv poly/sources/poly.pdf poly/pdf/poly.pdf
-    - name: gen artifact
-      uses: actions/upload-artifact@v1
+          
+    - name: upload artifact
+      uses: actions/upload-artifact@master
       with:
         name: poly
         path: poly/pdf/poly.pdf
-        
-    - name: telechargement artifact
-      uses: actions/download-artifact@v1
-      with:
-        name: poly
-        path: poly/pdf/polybis.pdf
+        target: poly
