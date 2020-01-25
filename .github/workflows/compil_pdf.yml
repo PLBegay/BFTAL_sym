@@ -15,14 +15,10 @@ jobs:
         root_file: poly.tex
         working_directory: poly/sources
         args: -f
-    - name: deplacement pdf
-      run: |
-          mkdir poly/pdf 
-          mv poly/sources/poly.pdf poly/pdf/poly.pdf
-          
+      
     - name: upload artifact
       uses: actions/upload-artifact@master
       with:
         name: poly
-        path: poly/pdf/poly.pdf
+        path: poly/sources/poly.pdf
         target: poly
