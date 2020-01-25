@@ -1,0 +1,425 @@
+
+\section{Lexique et idée générale}
+
+Une expression rationnelle (ou \textit{regex}, pour \textit{regular expression}\footnote{On se trompera sans doute souvent en parlant d'"expression régulière"}) est, en gros, une \textit{forme de mot}, écrite à l'aide de lettres et des symboles $.$, $*$ et $+$.
+
+\subsection{Les lettres et $\epsilon$, la base}
+
+Les regex sont construites récursivement, en partant bien sûr des cas de base. Étant donné un alphabet $\Sigma$, ces derniers sont les différentes lettres de $\Sigma$, ainsi que $\epsilon$. Ces regex dénotent chacune un seul mot, la lettre utilisée dans le premier cas, et le mot vide dans le second.
+
+
+\begin{example}
+La \textit{regex} $a$ dénote le langage $\{a\}$.
+\end{example}
+
+
+\subsection{$.$, la concaténation}
+
+On peut heureusement concaténer des regex en utilisant à nouveau le symbole $.$. La concaténation de deux expressions rationnelles $e_1$ et $e_2$, notée $e_1.e_2$ donc, dénote l'ensemble des mots qui peuvent se décomposer en une première partie "de $e_1$" et une deuxième "de $e_2$".
+
+\paragraph{Remarque} En pratique, on ne notera pas les $.$ dans les regex, mais quelque chose comme $abbc$ devrait en théorie être lu comme $a.b.b.c$
+
+
+\begin{example}
+La \textit{regex} $abca$ dénote l'ensemble $\{abca\}$.
+\end{example}
+
+
+\subsection{*, l'itération}
+
+Le symbole $*$ permet de dire qu'une regex peut être répétée autant de fois que voulu (y compris 0). 
+
+\begin{example}
+La regex $ab^*c$ dénote l'ensemble des mots de la forme "un $a$, puis une série (éventuellement vide) de $b$, puis un $c$", c'est-à-dire $\{ac, abc, abbc, abbbc, ...\}$
+\end{example}
+
+En utilisant des parenthèses, on peut appliquer $*$ à des facteurs entiers :
+
+\begin{example}
+La regex $(aa)^*$ dénote l'ensemble des mots de la forme "une série (éventuellement vide) de deux $a$", c'est-à-dire $\{\epsilon, aa, aaaa, aaaaaa, ...\}$, ou encore les mots composés uniquement de $a$ et de longueur paire.
+\end{example}
+
+On peut bien sûr utiliser plusieurs $*$ dans une même expression. Dans ce cas, les nombres de "copies" des facteurs concernés ne sont pas liés, comme l'illustrent les examples suivant :
+
+
+\begin{example}
+\label{ex0}
+La regex $a^*b^*$ dénote l'ensemble des mots de la forme "Une série (éventuellement vide) de $a$, puis une série (éventuellement vide) de $b$", contenant notamment $\epsilon$, $a$, $b$, $aaab$, $abbbb$, $bb$, $aaa$, $ab$, $aabb$ et $aaabb$
+\end{example}
+
+\begin{example}
+\label{ex1}
+La regex $ab(bab)^*b(ca)^*b$ dénote l'ensemble des mots de la forme "$ab$, puis une série (éventuellement vide) de $bab$, puis un $b$, puis une série (éventuellement vide) de $ca$, puis un $b$", contenant notamment $abbb$, $abbabbb$, $abbcab$ ou $abbabbabbabbcab$.
+\end{example}
+
+\begin{exercice}
+Donner 5 autres mots appartenant au langage dénotée par l'expression de l'exemple \ref{ex1}. 
+\end{exercice}
+
+\begin{exercice}
+Pourquoi le changement de formulation dans les exemples \ref{ex0} et \ref{ex1} par rapport aux exemples précédents ("c'est à dire $\{x, y, z ... \}$" qui devient "contenant notamment $x$, $y$ ou $z$") ?
+\end{exercice}
+
+On peut même faire encore plus rigolo, en enchâssant les étoiles:
+
+
+\begin{example}
+\label{ex2}
+La regex $(a^*b^*)^*$ dénote l'ensemble des mots de la forme "une série (éventuellement vide) de [(une série (éventuellement vide) de a] puis [une série (éventuellement vide) de b]]", contenant notamment $\epsilon$, $abba$; $baba$ ou $abbbabba$. 
+\end{example}
+
+\paragraph{Remarque} Certaines regex peuvent générer des mêmes mots de plusieurs façons. Si on prend l'expression de l'exemple \ref{ex2} et le mot $abbbabba$, on peut la voir comme 
+
+\begin{itemize}
+    \item $\underbrace{\underbrace{\underbrace{a}_\text{$a^1$}\underbrace{bbb}_\text{$b^3$}}_\text{$a^1b^3$}\underbrace{\underbrace{a}_\text{$a^1$}\underbrace{bb}_\text{$b^2$}}_\text{$a^1b^2$}\underbrace{\underbrace{a}_\text{$a^1$}\underbrace{ }_\text{$b^0$}}_\text{$a^1b^0$}}_\text{$(a^*b^*)^3$}$   
+    \item $\underbrace{\underbrace{\underbrace{a}_\text{$a^1$}\underbrace{b}_\text{$b^1$}}_\text{$a^1b^1$}\underbrace{\underbrace{ }_\text{$a^0$}\underbrace{bb}_\text{$b^2$}}_\text{$a^0b^2$}\underbrace{\underbrace{a}_\text{$a^1$}\underbrace{b }_\text{$b^1$}}_\text{$a^1b^1$}\underbrace{\underbrace{ }_\text{$a^0$}\underbrace{b }_\text{$b^1$}}_\text{$a^0b^1$}\underbrace{\underbrace{a}_\text{$a^1$}\underbrace{  }_\text{$b^0$}}_\text{$a^1b^0$}}_\text{$(a^*b^*)^5$}$
+   
+    \item $\underbrace{\underbrace{\underbrace{a}_\text{$a^1$}\underbrace{b}_\text{$b^1$}}_\text{$a^1b^1$}\underbrace{\underbrace{ }_\text{$a^0$}\underbrace{ }_\text{$b^0$}}_\text{$a^0b^0$}\underbrace{\underbrace{ }_\text{$a^0$}\underbrace{b}_\text{$b^1$}}_\text{$a^0b^1$}\underbrace{\underbrace{ }_\text{$a^0$}\underbrace{b}_\text{$b^1$}}_\text{$a^0b^1$}\underbrace{\underbrace{a}_\text{$a^1$}\underbrace{b }_\text{$b^1$}}_\text{$a^1b^1$}\underbrace{\underbrace{ }_\text{$a^0$}\underbrace{b }_\text{$b^1$}}_\text{$a^0b^1$}\underbrace{\underbrace{a}_\text{$a^1$}\underbrace{  }_\text{$b^0$}}_\text{$a^1b^0$}}_\text{$(a^*b^*)^7$}$
+\end{itemize}
+
+Le premier déroulement (on parlera de \textbf{dérivation}) semble bien sûr plus "naturel" et optimal que les deux autres. Ils sont pourtant tout aussi valides, et il sera utile en pratique d'éviter des expressions fortement ambiguës comme celle-ci.
+
+
+\subsection{$+$, la disjonction}
+
+Le symbole $+$ permet quant à lui de signifier qu'on a le choix entre plusieurs sous-regex.
+
+\begin{example}
+La regex $aa+bb$ dénote l'ensemble $\{aa,bb\}$
+\end{example}
+
+Si on a par exemple $\Sigma = \{a,b,c\}$, alors $(a+b+c)$ correspond à "n'importe quelle lettre de l'alphabet". On écrira cette expression plus simplement $\Sigma$.
+
+\begin{example}
+L'expression $\Sigma \Sigma \Sigma$, ou $\Sigma^3$, correspond à n'importe quel mot de longueur 3.
+\end{example}
+
+La disjonction peut bien sûr se combiner avec $*$ :
+
+\begin{example}
+\label{ex3}
+La regex $(aa)^*+(bb)^*$ dénote l'ensemble des mots composés uniquement de a et de longueur paire, ou uniquement de b et de longueur également paire, par exemple $\epsilon$, $aa$, $bb$, $aaaa$ ou $bbbbbb$. La dérivation du dernier mot serait alors de la forme 
+
+\[
+\underbrace{\underbrace{\underbrace{bb~bb~bb~bb}_\text{$(bb)^4$}}_\text{$(bb)^*$}}_\text{$(aa)^*+(bb)^*$}
+\]
+\end{example}
+
+\begin{example}
+\label{ex4}
+La regex $(aa+bb)^*$ dénote l'ensemble des mots de la forme "une série  (éventuellement vide) de $aa$ et $bb$", par exemple $aabb$, $aaaaaaaaaaaa$ ou $bbaabbbbbbaa$. La dérivation du dernier mot ressemblerait alors à 
+
+\[
+\underbrace{\underbrace{bb}_\text{$aa+bb$}~~\underbrace{aa}_\text{$aa+bb$}~~\underbrace{bb}_\text{$aa+bb$}~~\underbrace{bb}_\text{$aa+bb$}~~\underbrace{bb}_\text{$aa+bb$}~~\underbrace{aa}_\text{$aa+bb$}}_\text{$(aa+bb)^6$}
+\]
+\end{example}
+
+\begin{exercice}
+Donner un mot acceptant deux dérivations avec la regex de l'exemple \ref{ex3} (justifier en donnant les dérivations). Existe-t-il un autre mot admettant plusieurs dérivations ?
+\end{exercice}
+
+\begin{exercice}
+Existe-t-il un mot acceptant plusieurs dérivations pour la regex de l'exemple \ref{ex4} ?
+\end{exercice}
+
+\begin{exercice}
+Donner un mot accepté par la regex de l'exemple \ref{ex4} mais pas celle de l'exemple \ref{ex3}. Est-il possible de trouver un mot qui, à l'inverse, est accepté par la deuxième mais pas la première ?
+\end{exercice}
+
+
+\begin{exercice} (*)
+Exprimer, en langue naturelle et de façon concise, le langage dénoté par la regex de l'exemple \ref{ex2}. Traduire ensuite ce langage en une regex non-ambiguë, c'est-à-dire où il n'y aura qu'une dérivation pour chaque mot.
+\end{exercice}
+
+
+Notez que dans l'exemple \ref{ex3}, on choisit d'abord de composer le mot de $a$ ou de $b$, puis la longueur. A l'inverse, on choisit dans la regex de l'exemple \ref{ex4} la longueur, puis $a$ ou $b$ pour chaque "morceau", et ce, individuellement. Pour mieux comprendre cette différence, il faut s'intéresser formellement à la mécanique des regex, qui se décompose bien évidemment entre syntaxe et sémantique.
+
+\section{Syntaxe}
+
+%Avant de parler de syntaxe, il faut d'abord s'arrêter sur un lexique, c'est-à-dire l'ensemble des symboles qui entreront en jeu. Comme on l'a dit précédemment, les expressions régulières se composent des lettres d'un alphabet donné, de $+$ et de $*$. On utilisera de plus les méta-symboles $($ et $)$ pour en coder la structure linéairement.
+
+Les expressions rationnelles ont, comme à peu près tout langage, une structure. Elles sont définies à l'aide de 5 règles, dont 3 récursives, qui correspondent au lexique décrit précédemment : 
+
+\begin{figure}[h]
+    \centering
+\begin{tabular}{cccl}
+$e$ & $\textcolor{black}{::=}$ & & $\epsilon$\\
+& & $|$&  $a \in \Sigma$\\
+& & $|$&  $e_1.e_2$\\
+& & $|$&  $e_1+e_2$\\
+& & $|$&  $e_1^*$\\
+\end{tabular}
+\caption{Syntaxe des expression régulières}
+    \label{resynfig}
+\end{figure}
+
+La figure \ref{resynfig} se lit "une expression rationnelle $e$ est 
+
+\begin{itemize}
+    \item[\textbf{soit}] le symbole $\epsilon$
+    \item[\textbf{soit}] une lettre appartenant à l'alphabet $\Sigma$
+    \item[\textbf{soit}] une expression rationnelle $e_1$ (définie à l'aide des mêmes règles), suivie de $.$, puis d'une expression rationnelle $e_2$
+    \item[\textbf{soit}] une expression rationnelle $e_1$, suivie de $+$, puis d'une expression rationnelle $e_2$
+    \item[\textbf{soit}] une expression rationnelle $e_1$ auréolée d'un $*$
+\end{itemize}
+
+et rien d'autre".
+
+Ces règles de dérivation nous permettent de \textit{parser} des expressions rationnelles. En notant $t()$ la fonction qui prend une regex et renvoie son arbre syntaxique, on peut la définir à l'aide des 5 règles de la figure \ref{resynfig} :
+
+\begin{itemize}
+\item $t(\epsilon)$ renvoie une feuille annotée par $\epsilon$.
+\item $t(a)$ renvoie une feuille annotée par $a$.
+\item $t(e_1.e_2)$ renvoie un noeud $.$ dont les descendants sont les arbres de $e_1$ et $e_2$, comme sur la figure \ref{parseconcat}
+\item $t(e_1+e_2)$ renvoie un noeud $+$ dont les descendants sont les arbres de $e_1$ et $e_2$, comme sur la figure \ref{parsedisj}
+\item $t(e_1^*)$ renvoie un noeud $*$ avec un seul descendant, l'arbre de $e_1$, comme sur la figure \ref{parseit}
+\end{itemize}
+
+\begin{figure*}[t!]
+    \centering
+    \begin{subfigure}[b]{0.3\textwidth}
+        \centering
+ \raisebox{-2.2\height}{$t(e_1.e_2) =$} \raisebox{-0.5\height}{\Tree[.{.} $t(e_1)$ $t(e_2)$ ]}
+    \caption{Concaténation}
+    \label{parseconcat}
+    \end{subfigure}%
+    ~~
+    \begin{subfigure}[b]{0.3\textwidth}
+ \raisebox{-2.2\height}{$t(e_1+e_2) =$} \raisebox{-0.5\height}{\Tree[.{+} $t(e_1)$ $t(e_2)$ ]}
+    \caption{Disjonction}
+    \label{parsedisj}
+    \end{subfigure}
+   ~~
+    \begin{subfigure}[b]{0.3\textwidth}
+ \raisebox{-2.2\height}{$t(e_1^*) =$} \raisebox{-0.5\height}{\Tree[.{*} $t(e_1)$ ]}
+    \caption{Etoile}
+    \label{parseit}
+    \end{subfigure}
+    \caption{Analyse syntaxique récursive de \textit{regex}}
+\end{figure*}
+
+
+Les règles décrites ci-avant ne disent pas comment parser une expression comme $a.b+c$. En effet, rien ne dit si elle doit être lue comme $(ab)+c$ ou $a.(b+c)$. Pour éviter d'avoir à mettre des parenthèses absolument partout, on va donc devoir définir les priorités entre les différentes opérations :
+
+\begin{figure}[h]
+    \centering
+    $+ < . < *$
+    \caption{Priorités pour les opérateurs d'expressions rationnelles}
+    \label{prio}
+\end{figure}
+
+Concrètement, $+ < .$ veut dire qu'une expression comme $a.b+c$ doit être interprétée comme $(a.b)+c$\footnote{De la même façon que $a \times b + c$ se comprend comme $(a \times b) + c$}. De même, $a.b^*$ se lit $a.(b^*)$, et $a+b^*$ comme $a+(b^*)$.
+
+Maintenant qu'on a les règles de dérivation et les priorités associées, on peut commencer à jouer avec quelques exemples.
+
+\begin{example}
+\label{parsefig}
+L'expression rationnelle $(aa)^*+(bb)^*$ peut être parsée comme 
+\hspace{-5cm}
+\begin{figure}[h!]
+    \centering
+    \hspace*{-2cm}\begin{tabularx}{\textwidth}{ccccccccc}
+         $t((aa)^*+(bb)^*)$& $ = $ & \noindent\parbox[c]{3cm}{\Tree[.{$+$} $t((aa)^*)$ $t((bb)^*)$ ]} & $ = $ & \noindent\parbox[c]{2cm}{\Tree[.{$+$} [.{$*$} $t(aa)$ ] [.{$*$} $t(bb)$ ] ]} & $=$ & \noindent\parbox[c]{3.35cm}{\Tree[.{$+$} [.{$*$} [.{$.$} $t(a)$ $t(a)$ ] ] [.{$*$} [.{$.$} $t(b)$ $t(b)$ ] ] ]} & $ = $ & \noindent\parbox[c]{3cm}{\Tree[.{$+$} [.{$*$} [.{$.$} $a$ $a$ ] ] [.{$*$} [.{$.$} $b$ $b$ ] ] ]}
+    \end{tabularx}
+    \caption{Analyse syntaxique de $(aa)^*+(bb)^*$}
+    \label{}
+\end{figure}
+\end{example}
+
+On remarquera bien sûr l'absence habile dans l'exemple \ref{parsefig} de formes encore problématiques : $a+b+c$ et $a.b.c$. En effet, rien ne nous dit pour l'instant auquel des arbres de la figure \ref{ambfig} la première regex correspond.
+
+
+\begin{figure*}[h!]
+    \centering
+    \begin{subfigure}[b]{0.5\textwidth}
+        \centering
+\Tree[.{$+$} [.{$+$} $a$ $b$ ] $c$ ]
+\caption{version $(a+b)+c$}
+    \end{subfigure}%
+    ~ 
+    \begin{subfigure}[b]{0.5\textwidth}
+        \centering
+\Tree[.{$+$} $a$ [.{$+$} $b$ $c$ ] ]
+\caption{version $a+(b+c)$}
+    \end{subfigure}
+    \caption{Ambiguïté syntaxique de $a+b+c$}
+        \label{ambfig}
+    \end{figure*}
+
+Comme on le verra dans la partie sémantique, les symboles $+$ et $.$ sont \textbf{associatifs}, ce qui veut dire que, pour toutes expressions $e_1$, $e_2$ et $e_3$, $(e_1 + e_2) + e_3$ et $e_1 + (e_2 + e_3)$ ont le même sens\footnote{Notez qu'en arithmétique, $+$ et $\times$ sont également associatives}, et pareil avec la concaténation. Malgré une méfiance justifiée des arbres ternaires et plus, on se permettra donc d'écrire des expressions ambiguës comme $e_1 + e_2 + e_3$ ou $e_1e_2e_3$, et de les parser comme dans la figure \ref{ambpasfig}
+
+\begin{figure}[h!]
+    \centering
+    \Tree[.{$+$} $t(e_1)$ $t(e_2)$ $t(e_3)$ ]
+    \caption{Ambiguïté syntaxique assumée de $a+b+c$}
+    \label{ambpasfig}
+\end{figure}
+
+\begin{example}
+L'expression rationnelle $(aa(a+b)^*bb)^*$ s'analyse comme 
+
+\begin{figure}[h!]
+    \centering
+    \Tree[.{$*$} [.{.} $a$ $a$ [.{$*$} [.{$+$} $a$ $b$ ] ] $b$ $b$ ] ]
+    \label{rien}
+\end{figure}
+\end{example}
+
+%\begin{exercice}
+%Donner les arbres de syntaxe des expressions $e_1 = $
+%\end{exercice}
+
+On a pour l'instant uniquement défini le lexique et la syntaxe des expressions régulières, mais les beaux arbres qu'on est désormais en mesure de constuire n'ont en soi aucun sens, et donc aucun intérêt. Il s'agit donc désormais d'en définir une sémantique.
+
+\section{Sémantique}
+\label{resem}
+
+Avant de regarder la tuyauterie d'une fonction, il s'agit d'en définir le type. La sémantique des expressions rationnelles, notée $\llbracket e \rrbracket$, prend en argument une expression et renvoie un langage, donc un ensemble de mots. Comme pour le parsing, il suffit de définir la sémantique sur les 5 constructeurs des expressions rationnelles pour pouvoir toutes les traiter :
+
+
+\subsection{Les cas de base}
+
+Ici, pas de surprise, $\llbracket \epsilon \rrbracket = \{\epsilon\}$ et $\llbracket a \rrbracket = \{a\}$. 
+
+\subsection{Sémantique de la concaténation}
+
+Formellement, on a 
+
+\[\mt{\Tree[.{.} $e_1$ $e_2$ ]} = \llbracket e_1 \rrbracket \times \llbracket e_2 \rrbracket = \bigcup_{\substack{u \in \llbracket e_1 \rrbracket \\ v \in \llbracket e_2 \rrbracket}} u.v \]
+
+Concrètement, ça veut dire que la sémantique de la concaténation de deux regex ($\llbracket e_1.e_2 \rrbracket$) est le produit cartésien ($\times$) des sémantiques de $e_1$ ($\llbracket e_1 \rrbracket$) et $e_2$ ($\llbracket e_2 \rrbracket$), c'est-à-dire l'ensemble des combinaisons d'un mot de $\llbracket e_1 \rrbracket$ concaténé à un mot de $\llbracket e_2 \rrbracket$. La notation $\bigcup_{\substack{u \in \llbracket e_1 \rrbracket \\ v \in \llbracket e_2 \rrbracket}} u.v$ est analogue une double boucle sur les éléments de $\llbracket e_1 \rrbracket$ et $\llbracket e_2 \rrbracket$, comme dans le code python suivant :
+
+\begin{python}
+s = set()
+for u in e1:
+    for v in e2:
+        s.add(u.v)
+return s
+\end{python}
+
+
+\begin{example}
+En appliquant les règles de la concaténation et des lettres vues précédemment, la sémantique de l'expression $ab$ est 
+
+\[\mt{\Tree[.{.} a b ]} = \bigcup_{\substack{u \in \llbracket a \rrbracket \\ v \in \llbracket b \rrbracket}} u.v = \bigcup_{\substack{u \in \{a\} \\ v \in \{b\}}} u.v = \{a.b\} = \{ab\}\]
+\end{example}
+
+L'exemple n'est pas renversant, mais permet d'illustrer l'aspect purement systémique et récursif de la sémantique. Pour des exemples plus rigolos, on va avoir besoin d'ajouter des constructeurs à la sémantique.
+
+\subsection{Sémantique de la disjonction}
+
+Formellement, on a 
+
+\[\mt{\Tree[.{+} $e_1$ $e_2$ ]} = \llbracket e_1 \rrbracket \cup \llbracket e_2 \rrbracket \]
+
+Concrètement, ça veut dire que la sémantique de la disjonction de deux regex ($\llbracket e_1 + e_2 \rrbracket$) est l'union ($\cup$) des sémantiques de $e_1$ ($\llbracket e_1 \rrbracket$) et $e_2$ ($\llbracket e_2 \rrbracket$), c'est-à-dire l'ensemble des mots qui apparaissent dans $\llbracket e_1 \rrbracket$ ou (inclusif) $\llbracket e_2 \rrbracket$.
+
+\paragraph*{Remarque} A partir d'ici et pour des raisons de mise en page, on ne mettra pas forcément tout sous forme d'arbres dans les exemples, et on comptera sur la capacité du lecteur ou de la lectrice à \textit{parser} automatiquement toute expression rationnelle qu'il ou elle lit. Ne vous y trompez pas cependant : l'analyse sémantique s'opère bien sur un arbre plutôt que sur une expression "plate". 
+
+\begin{example}
+En appliquant les règles de la concaténation et des lettres vues précédemment, la sémantique de l'expression $a(b+c)$ est 
+
+\[\mt{\Tree[.{.} a [.{+} b c ] ]} = \bigcup_{\substack{u \in \llbracket a \rrbracket \\ v \in \llbracket b + c \rrbracket }} u.v = \bigcup_{\substack{u \in \{a\} \\ v \in \llbracket b \rrbracket \cup \llbracket c \rrbracket}} = \bigcup_{\substack{u \in \{a\} \\ v \in \{b,c\} }} u.v = \{a.b, a.c\} = \{ab, ac\}\]
+\end{example}
+
+\begin{example}
+En appliquant les règles de la concaténation et des lettres vues précédemment, la sémantique de l'expression $(a+b)(b+a)$ est 
+
+\[\mt{\Tree[.{.} [.{+} a b ] [.{+} b a ] ]} = \bigcup_{\substack{u \in \llbracket a + b \rrbracket \\ v \in \llbracket b + a \rrbracket }} u.v = \bigcup_{\substack{u \in \llbracket a \rrbracket \cup \llbracket b \rrbracket \\ v \in \llbracket b \rrbracket \cup \llbracket a \rrbracket}} = \bigcup_{\substack{u \in \{a,b\} \\ v \in \{b,a\} }} u.v = \{a.b, a.a, b.b, b.a\} = \{ab, aa, bb, ba\}\]
+\end{example}
+
+Il ne nous manque maintenant que le plus ésotérique des constructeurs.
+
+\subsection{Sémantique de l'itération}
+
+Formellement, on a 
+
+\[\llbracket e^* \rrbracket = \bigcup_{n \in \mathbf{N}} \llbracket e \rrbracket^n = \{\llbracket e \rrbracket^0, \llbracket e \rrbracket^1, \llbracket e \rrbracket^2, \llbracket e \rrbracket^3 ...\}\]
+
+
+Concrètement, on fait l'union de $\llbracket e \rrbracket^n$ pour tous les entiers $n$, $\llbracket e \rrbracket^n$ étant $n$ mots de $\llbracket e \rrbracket$ concaténés\footnote{Les puissances sur les ensembles ont le même sens que sur les nombres, avec la multiplication remplacée par la concaténation}.
+
+\begin{example}
+La sémantique de l'expression $a(aa+bb)^*a$ est
+%\hspace{-5cm}
+\begin{figure}[h]
+\hspace{-2cm}
+\begin{tabular}{cl}
+$\mt{\Tree[.{.} a [.{*} [.{+} [.{.} a a ] [.{.} b b ] ] ] a ]}$ &
+\begin{tabular}{ll}
+$=$& $\llbracket a \rrbracket . \llbracket (aa+bb)^* \rrbracket . \llbracket a \rrbracket$ \\ & \\ $=$ & $\{a\} . \bigcup_{n \in \mathbf{N}} \llbracket aa+bb \rrbracket^n . \{a\}$ \\ & \\ $=$ & $\{a\} . \bigcup_{n \in \mathbf{N}} \{aa,bb\}^n . \{a\}$ \\ 
+& \\
+$=$ & $\{a.\epsilon.a, a.aa.a, a.bb.a, a.((aa).(aa)).a, a.((aa).(bb)).a, a.((bb).(aa)).a, a.((bb).(bb)).a, ...\}$ \\
+&\\
+$=$ & $\{aa, aaaa, abba, aaaaaa, aaabba, abbaaa, abbbba, ...\}$
+\end{tabular} \end{tabular}
+\end{figure}
+\end{example}
+
+\section{Mise en application}
+
+On a abordé les expressions régulières sous un angle très théorique, mais on leur trouve bien sûr des applications concrètes. 
+
+\subsection{Quelques astuces}
+
+On présente d'abord, sous forme d'exercices (corrigés dans un autre document), quelques astuces classiques, susceptibles d'aider les TAListes dans leurs futures oeuvres. 
+
+\begin{exercice}
+Donner une \textit{regex} pour les mots qui commencent par $a$.
+\end{exercice}
+
+\begin{exercice}
+Donner une \textit{regex} pour les mots qui finissent par $b$.
+\end{exercice}
+
+\begin{exercice}
+Donner une \textit{regex} pour les mots qui commencent par $a$ finissent par $b$.
+\end{exercice}
+
+
+\begin{exercice}
+Donner une \textit{regex} pour les mots de longueur paire.
+\end{exercice}
+
+\begin{exercice}
+Donner une \textit{regex} pour les mots de longueur impaire qui contiennent au moins 4 lettres.
+\end{exercice}
+
+\begin{exercice}
+Donner une \textit{regex} pour les mots de longueur impaire, qui contiennent au moins 4 lettres, comment par $a$ et finissent par $b$.
+\end{exercice}
+
+
+\subsection{Syntaxe en pratique}
+
+Les expressions régulières dans Unix, Python \& cie utilisent une syntaxe différente, et surtout plus étendue que celle que l'on vient d'étudier. Celà est dû aux besoins différents que l'on a entre la théorie et la pratique. 
+
+Dans la théorie, on veut définir nos objets de façon minimale, c'est-à-dire avec le moins de symboles et de règles possible, afin d'en simplifier l'étude. Par exemple, le peu de règles permet une définition légère de la sémantique formelle des \textit{regex}. De la même façon, toute preuve à leur propos en sera tout autant simplifiée :
+
+\begin{theorem}
+$\forall e, \exists w \in \llbracket e \rrbracket$, cad. que toute expression rationnelle dénote au moins un mot.
+\end{theorem}
+\begin{proof}
+On procède par induction structurelle sur l'expression rationnelle $e$:
+
+\begin{itemize}
+\item Si $e = \epsilon$, alors $\llbracket e \rrbracket = \{\epsilon\}$, qui contient bien un mot ($\epsilon$ donc)
+\item Si $e = a$, alors $\llbracket e \rrbracket = \{a\}$, qui contient bien un mot ($a$)
+\item Si $e = e_1 + e_2$, alors $\llbracket e \rrbracket = \llbracket e_1 \rrbracket \cup \llbracket e_2 \rrbracket$. Par hypothèse d'induction, $\llbracket e_1 \rrbracket$ contient un mot $w_1$ et $\llbracket e_2 \rrbracket$ contient $w_2$. $\llbracket e \rrbracket$ contient donc non pas un, mais au moins deux mots.
+\item Si $e = e_1.e_2$, alors $\llbracket e \rrbracket = \llbracket e_1 \rrbracket . \llbracket e_2 \rrbracket$. Par hypothèse d'induction, $\llbracket e_1 \rrbracket$ contient un mot $w_1$ et $\llbracket e_2 \rrbracket$ contient $w_2$. $\llbracket e \rrbracket$ contient donc un mot, $w_1w_2$.
+\item Si $e = e_1^*$, alors $\llbracket e \rrbracket$ contient $\epsilon$.
+\end{itemize}
+\end{proof}
+
+Dans la pratique, on préfère ne pas avoir à réinventer la roue chaque matin, la syntaxe des \textit{regex} est donc étendue en pratique. Ces extensions ne changent rien au fond, dans le sens où elles n'ajoutent pas en expressivité. En effet, les nouveaux symboles peuvent tous être codés avec ceux de la syntaxe minimale : 
+
+\begin{itemize}
+\item $e?$, ou "$e$ une ou zéro fois", peut être codée comme $(e + \epsilon)$
+\item $e+$, ou "$e$ au moins une fois", peut être codée comme $ee^*$
+\begin{itemize} \item [remarque] On trouve régulièrement cette notation dans la littérature académique sous la forme $e^+$. Le $e_1 + e_2$ qu'on a vu est lui, pour le coup, écrit $e_1 | e_2$ en pratique. \end{itemize}
+\item $e\{n\}$, ou "$e$ exactement $n$ fois" peut être simplement traduite en $\underbrace{eee...eee}_\text{$n$ fois}$ 
+\item $e\{n,\}$, ou "$e$ au moins $n$ fois" peut être simplement traduite en $\underbrace{eee...eee}_\text{$n$ fois}e^*$ 
+\item $e\{n,m\}$, ou "$e$ entre $n$ et $m$ fois" peut se traduire $\underbrace{eee...eee}_\text{$n$ fois}\underbrace{(e+\epsilon)...(e+\epsilon)}_\text{$m-n$ fois}$
+\end{itemize}
+
+Les traductions proposée ici ne correspondent pas forcément à ce qui se passe concrètement dans les bibliothèques de \textit{regex} des différents langages de programmation (la dernière en particulier semble très ambigüe, et donc inefficace). L'objectif est seulement de montrer que les ajouts à la syntaxe n'ent modifient pas l'expressivité, et qu'il s'agit seulement de \textbf{sucre syntaxique}.
