@@ -22,6 +22,6 @@ jobs:
     - name: upload artifact
       uses: actions/upload-artifact@master
       with:
-        name: poly
-        path: poly/pdf/poly.pdf
-        target: poly
+        name: polylog
+        path: poly/pdf/poly.log
+        target: polylog
