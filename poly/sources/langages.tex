@@ -78,43 +78,6 @@ Alors la propriété $P$ est vraie pour tout mot $w$.
 
 \paragraph*{Remarque} Est également valide le principe d'induction où, dans le cas récursif, la lettre est rajoutée à droite du mot plutôt qu'à sa gauche.
 
-On va s'entraîner à utiliser ce principe d'induction en prouvant deux lemmes qui ne le nécessitaient sans doute pas :
-
-\begin{lemma}
-$\forall w \in \Sigma^*, |w| \geq 0$, cad. que tout mot a une longueur positive.
-\end{lemma}
-\begin{proof}
-On procède par induction sur $w$.
-
-Dans le cas de base, $w = \epsilon$. On a donc $|w| = |\epsilon| = 0 \geq 0$.
-
-Dans le cas récursif, $w = c.w'$ avec $c \in \Sigma$ et on suppose $|w'| \geq 0$. On a $|c.w'| = 1 + |w'| \geq |w'| \geq 0$.
-\end{proof}
-
-\begin{lemma}
-Etant donnés deux mots $w_1$ et $w_2$, $|w_1.w_2| = |w_1| + |w_2|$. 
-\end{lemma}
-
-\begin{proof}
-On procède par induction sur $w_1$.
-
-Dans le cas de base, $w_1 = \epsilon$. On a donc $|w_1.w_2| = |\epsilon.w_2| = |w_2| = 0 + |w_2| = |w_1| + |w_2|$.
-
-Dans le cas récursif, $w_1 = c.w_1'$ avec $c \in \Sigma$ et on suppose $|w_1'.w_2| = |w_1'| + |w_2|$. On a
-\begin{tabular}{cll}
-&&\\
-& $|w_1.w_2|$ & \\
-$=$ & $|c.w_1'.w_2|$ & par définition de $w_1$ \\
-$=$&  $1 + |w_1'.w_2|$ & par définition de $|.|$ \\
-$=$& $1 + (|w_1'| + |w_2|)$ & par hypothèse d'induction \\
-$=$& $(1 + |w_1'|) + |w_2|$ & par associativité de l'addition \\
-$=$& $|c.w_1'| + |w_2|$ & par définition de $|.|$ \\
-$=$& $|w_1| + |w_2|$ & par définition de $w_1$
-\end{tabular}
-
-On a donc bien nos deux conditions pour le raisonnement par induction.
-\end{proof}
-
 
 \begin{definition}{Nombre d'occurrences d'une lettre}{}
 Etant donné un mot $w$ et une lettre $a$, on note $\mathbf{|w|_a}$ le nombre de $a$ dans $w$.
