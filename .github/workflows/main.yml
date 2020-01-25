@@ -11,5 +11,5 @@ jobs:
     - uses: actions/checkout@v1
     - name: production pdf
       run: |
-        mv cours/poly
+        cd cours/poly
         make.
