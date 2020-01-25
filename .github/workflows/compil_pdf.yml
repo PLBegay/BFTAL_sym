@@ -1,0 +1,18 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: LaTeX compilation
+      uses: dante-ev/latex-action@v0.2.0
+      with:
+        root_file: poly.tex
+        working_directory: poly/sources
+    - name: deplacement pdf
+      run: mv poly/sources/poly.pdf poly/pdf/poly.pdf
