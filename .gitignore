@@ -1,0 +1,13 @@
+*.dvi
+*.log
+*.bbl
+*.blg
+*.aux
+*.xcp
+*.fdb_latexmk
+*.fls
+*.out
+*.pyg
+*.toc
+*.synctex.gz
+
