@@ -11,5 +11,6 @@ jobs:
     - uses: actions/checkout@v1
     - name: production pdf
       run: |
+        apt-get install latexmk
         cd poly/sources
         make
