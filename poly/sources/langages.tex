@@ -251,28 +251,7 @@ On \textbf{définit extensionnellement un ensemble} en en donnant la liste des �
 \]
 \end{example}
 
-Les définitions extensionnelles ont le mérite d'être pour le moins simples, mais pas super pratiques quand il s'agit de définir des ensembles avec un nombre infini d'éléments, comme l'ensemble des mots de longueur pair. %Les définitions intentionnelles permettent elles de gérer ça, en utilisant des prédicats.
-
-%\begin{definition}{Prédicat}{}
-%Un prédicat est une propriété, sur un ou plusieurs\footnote{Ou zéro, mais bon} éléments. On note les prédicats comme des fonctions, par exemple $P(x)$ un prédicat unaire et $Q(x,y)$ un prédicat binaire.
-%\end{definition}
-
-%\begin{example}
-%On pose $P(x) \equiv$ x est de longueur paire. On a alors $P(ab)$ ou $P(\epsilon)$, mais pas $P(a)$ (ce qu'on note $\neg P(a)$). 
-%\end{example}
-
-%\begin{example}
-%\label{predL}
-%On pose $L(x,y) \equiv$ $|x| = |y|$. On a alors $L(ab,ba)$, $L(aaaa,bbbb)$ et $\neg L(aba,ba)$.
-%\end{example}
-
-%\begin{exercice}
-%Donner l'ensemble des mots $w$ tels que $L(w,\epsilon)$. 
-%\end{exercice}
-
-%\begin{exercice}
-%Soit $\Sigma = \{a,b\}$, donner l'ensemble des mots $w$ tels que $L(aba,w)$. 
-%\end{exercice}
+Les définitions extensionnelles ont le mérite d'être pour le moins simples, mais pas super pratiques quand il s'agit de définir des ensembles avec un nombre infini d'éléments, comme l'ensemble des mots de longueur pair. 
 
 \begin{definition}{Définition intensionnelle d'un ensemble}{}
 On \textbf{définit intensionnellement un ensemble} à l'aide d'une propriété que tous ses éléments satisfont. Étant donnés une propriété $Q(x)$ (typiquement représentée sous la forme d'une formule logique) et un ensemble $A$, on note $\{x \in A~|~Q(x)\}$ l'ensemble des éléments de $A$ qui satisfont $P$. Si l'ensemble $A$ est évident dans le contexte, on s'abstiendera de le préciser.
@@ -281,10 +260,6 @@ On \textbf{définit intensionnellement un ensemble} à l'aide d'une propriété 
 \begin{example}
 On peut définir l'ensemble des mots de longueur paire $\{w \in \Sigma^*~|~|w|~pair\}$.
 \end{example}
-
-%\begin{exercice}
-%Donner une définition de l'ensemble des mots de longueur 3 en utilisant le prédicat $L$ défini dans l'exemple \ref{predL}. 
-%\end{exercice}
 
 Si les définitions intentionnelles permettent, contrairement aux extensionnelles, de dénoter des ensembles contenant une infinité de mots, elles sont avant tout un outil théorique. En effet, une propriété comme "$|w|$ paire" ne dit rien à un ordinateur en soi, et doit donc être définie formellement. Se pose alors la question d'un langage pour les propriétés.
 
