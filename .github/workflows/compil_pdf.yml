@@ -22,4 +22,10 @@ jobs:
       uses: actions/upload-artifact@v1
       with:
         name: poly
-        path: poly/pdf
+        path: poly/pdf/poly.pdf
+        
+    - name: telechargement artifact
+      uses: actions/download-artifact@v1
+      with:
+        name: poly
+        path: poly/pdf/polybis.pdf
