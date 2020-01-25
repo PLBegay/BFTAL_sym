@@ -56,6 +56,8 @@
 \newtheorem{example}{Exemple}[section]
 
 \newtheorem{theorem}{Théorème}
+
+\newtheorem{lemma}{Lemme}
  
 \newtheorem{exercice}{Exercice}[section]
  
@@ -79,20 +81,19 @@
 
 \tableofcontents
 
-\input{calcu.tex}
 \input{langages.tex}
 
-\chapter{Automates}
-\label{automates}
+\input{auto}
 
-\chapter{Grammaires formelles}
-\label{grammaires}
+\input{grams}
 
-\chapter{Théorème de Kleene et hiérarchie de Chomsky}
-\label{hierarchie}
+%\input{calcu.tex}
+\chapter{Introduction à la calculabilité}
+
+\input{kleene}
 
 \bibliographystyle{plain}
-\bibliography{main}
+\bibliography{poly}
 
 \appendix
 

@@ -6,7 +6,7 @@ On définit d'abord la notion de mot, nécessaire à celle de langage. On verra 
 
 \section{Mots}
 
-\begin{definition}{Mot}{}Un \textbf{mot} est une suite de lettres tirées d'un alphabet donné.
+\begin{definition}{Mot}{}Un \textbf{mot} est une suite de lettres tirées d'un alphabet donné. L'ensemble des mots sur un alphabet $\Sigma$ est noté $\Sigma^*$.
 \end{definition}
 
 \begin{example}
@@ -48,7 +48,7 @@ L'opération de \textbf{concaténation}, notée $.$, consiste tout simplement à
     w.\epsilon = \epsilon.w = w
 \]
 
-\paragraph{Remarque} Les algébristes enthousiastes remarqueront que, pour tout alphabet $\Sigma$, $(\Sigma,.,\epsilon)$ forme un monoïde libre de base $\Sigma$
+\paragraph{Remarque} Les algébristes enthousiastes remarqueront que $(\Sigma^*,.,\epsilon)$ forme un monoïde libre de base $\Sigma$
 
 
 \begin{definition}{Longueur d'un mot}{}
@@ -65,7 +65,43 @@ Tout naturellement,
 \end{itemize}
 \end{example}
 
-\paragraph{Remarque} Vous devriez pouvoir vous convaincre que, pour tous mots $w_1$ et $w_2$, $|w_1.w_2| = |w_1| + |w_2|$. 
+\begin{definition}{Principe d'induction sur un mot}{}
+Etant donnée une propriété $P$ sur les mots. Si on a\\
+
+\begin{enumerate}
+\item $P(\epsilon)$ (cad. que $P$ est vraie pour le mot vide)
+\item $\forall w, \forall c \in \Sigma, (P(w) \rightarrow P(c.w))$ (cad. que si $P$ est vraie pour un mot, alors elle reste vraie si on rajoute n'importe quelle lettre à gauche du mot)\\
+\end{enumerate}
+
+Alors la propriété $P$ est vraie pour tout mot $w$.
+\end{definition}
+
+\paragraph*{Remarque} Est également valide le principe d'induction où, dans le cas récursif, la lettre est rajoutée à droite du mot plutôt qu'à sa gauche.
+
+\begin{lemma}
+Etant donnés deux mots $w_1$ et $w_2$, $|w_1.w_2| = |w_1| + |w_2|$. 
+\end{lemma}
+
+\begin{proof}
+On procède par induction sur $w_1$.
+
+Dans le cas de base, $w_1 = \epsilon$. On a donc $|w_1.w_2| = |\epsilon.w_2| = |w_2| = 0 + |w_2| = |w_1| + |w_2|$.
+
+Dans le cas récursif, $w_1 = c.w_1'$ avec $c \in \Sigma$ et on suppose $|w_1'.w_2| = |w_1'| + |w_2|$. On a
+\begin{tabular}{cll}
+&&\\
+& $|w_1.w_2|$ & \\
+$=$ & $|c.w_1'.w_2|$ & par définition de $w_1$ \\
+$=$&  $1 + |w_1'.w_2|$ & par définition de $|.|$ \\
+$=$& $1 + (|w_1'| + |w_2|)$ & par hypothèse d'induction \\
+$=$& $(1 + |w_1'|) + |w_2|$ & par associativité de l'addition \\
+$=$& $|c.w_1'| + |w_2|$ & par définition de $|.|$ \\
+$=$& $|w_1| + |w_2|$ & par définition de $w_1$
+\end{tabular}
+
+On a donc bien nos deux conditions pour le raisonnement par induction.
+\end{proof}
+
 
 \begin{definition}{Nombre d'occurrences d'une lettre}{}
 Etant donné un mot $w$ et une lettre $a$, on note $\mathbf{|w|_a}$ le nombre de $a$ dans $w$.
@@ -156,7 +192,7 @@ Donner la borne la plus basse possible du nombre de sous-mots d'un mot $w$. Donn
 Un langage, c'est tout simplement un ensemble de mots. On distingue d'entrée deux langages un peu spéciaux, pour ne pas dire pathologiques.
 
 \begin{definition}{Langage plein}{}
-Etant donné un alphabet $\Sigma$, on note \mathbf{$\Sigma^*$} l'ensemble de tous les mots formés à partir de $\Sigma$.
+Etant donné un alphabet $\Sigma$, on note $\mathbf{\Sigma^*}$ l'ensemble de tous les mots formés à partir de $\Sigma$.
 \end{definition}
 
 
