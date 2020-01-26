@@ -199,7 +199,7 @@ Ces règles de dérivation nous permettent de \textit{parser} des expressions ra
 \end{figure*}
 
 
-Les règles décrites ci-avant ne disent pas comment parser une expression comme $a.b+c$. En effet, rien ne dit si elle doit être lue comme $(ab)+c$ ou $a.(b+c)$. Pour éviter d'avoir à mettre des parenthèses absolument partout, on va donc devoir définir les priorités entre les différentes opérations :
+Les règles décrites ci-avant ne disent pas comment parser une expression comme $a.b+c$. En effet, rien ne dit si elle doit être lue comme $(ab)+c$ ou $a.(b+c)$. Pour éviter d'avoir à mettre des parenthèses absolument partout, on va devoir définir les priorités entre les différentes opérations :
 
 \begin{figure}[h]
     \centering
@@ -285,9 +285,9 @@ Ici, pas de surprise, $\llbracket \epsilon \rrbracket = \{\epsilon\}$ et $\llbra
 
 Formellement, on a 
 
-\[\mt{\Tree[.{.} $e_1$ $e_2$ ]} = \llbracket e_1 \rrbracket \times \llbracket e_2 \rrbracket = \bigcup_{\substack{u \in \llbracket e_1 \rrbracket \\ v \in \llbracket e_2 \rrbracket}} u.v \]
+\[\mt{\Tree[.{.} $e_1$ $e_2$ ]} = \llbracket e_1 \rrbracket . \llbracket e_2 \rrbracket = \{u.v~|~ u \in \llbracket e_1 \rrbracket ~\wedge~ v \in \llbracket e_2 \rrbracket \}= \bigcup_{\substack{u \in \llbracket e_1 \rrbracket \\ v \in \llbracket e_2 \rrbracket}} u.v \]
 
-Concrètement, ça veut dire que la sémantique de la concaténation de deux regex ($\llbracket e_1.e_2 \rrbracket$) est le produit cartésien ($\times$) des sémantiques de $e_1$ ($\llbracket e_1 \rrbracket$) et $e_2$ ($\llbracket e_2 \rrbracket$), c'est-à-dire l'ensemble des combinaisons d'un mot de $\llbracket e_1 \rrbracket$ concaténé à un mot de $\llbracket e_2 \rrbracket$. La notation $\bigcup_{\substack{u \in \llbracket e_1 \rrbracket \\ v \in \llbracket e_2 \rrbracket}} u.v$ est analogue une double boucle sur les éléments de $\llbracket e_1 \rrbracket$ et $\llbracket e_2 \rrbracket$, comme dans le code python suivant :
+Concrètement, ça veut dire que la sémantique de la concaténation de deux regex est le produit des sémantiques de $e_1$ et $e_2$, c'est-à-dire l'ensemble des combinaisons d'un mot de $\llbracket e_1 \rrbracket$ concaténé à un mot de $\llbracket e_2 \rrbracket$. La notation $\bigcup_{\substack{u \in \llbracket e_1 \rrbracket \\ v \in \llbracket e_2 \rrbracket}} u.v$ est analogue une double boucle sur les éléments de $\llbracket e_1 \rrbracket$ et $\llbracket e_2 \rrbracket$, comme dans le pseudocode python suivant :
 
 \begin{python}
 s = set()
