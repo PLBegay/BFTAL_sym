@@ -17,8 +17,10 @@ jobs:
         args: -f
 
     - name: print tree
-      run: ls poly *
-      
+      run: |
+        ls poly *
+        ls poly/sources
+        
     - name: upload artifact
       uses: actions/upload-artifact@master
       with:
