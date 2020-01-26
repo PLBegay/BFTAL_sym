@@ -283,11 +283,11 @@ Ici, pas de surprise, $\llbracket \epsilon \rrbracket = \{\epsilon\}$ et $\llbra
 
 \subsection{Sémantique de la concaténation}
 
-Formellement, on a 
+La sémantique de la concaténation repose sur un produit d'ensembles avec la concaténation (cf. définition \ref{ensprod}). Formellement, on a 
 
 \[\mt{\Tree[.{.} $e_1$ $e_2$ ]} = \llbracket e_1 \rrbracket . \llbracket e_2 \rrbracket = \{u.v~|~ u \in \llbracket e_1 \rrbracket ~\wedge~ v \in \llbracket e_2 \rrbracket \}= \bigcup_{\substack{u \in \llbracket e_1 \rrbracket \\ v \in \llbracket e_2 \rrbracket}} u.v \]
 
-Concrètement, ça veut dire que la sémantique de la concaténation de deux regex est le produit des sémantiques de $e_1$ et $e_2$, c'est-à-dire l'ensemble des combinaisons d'un mot de $\llbracket e_1 \rrbracket$ concaténé à un mot de $\llbracket e_2 \rrbracket$. La notation $\bigcup_{\substack{u \in \llbracket e_1 \rrbracket \\ v \in \llbracket e_2 \rrbracket}} u.v$ est analogue une double boucle sur les éléments de $\llbracket e_1 \rrbracket$ et $\llbracket e_2 \rrbracket$, comme dans le pseudocode python suivant :
+Concrètement, ça veut dire que la sémantique de la concaténation de deux regex est la concaténation des sémantiques de $e_1$ et $e_2$, c'est-à-dire l'ensemble des combinaisons d'un mot de $\llbracket e_1 \rrbracket$ concaténé à un mot de $\llbracket e_2 \rrbracket$. La notation $\bigcup_{\substack{u \in \llbracket e_1 \rrbracket \\ v \in \llbracket e_2 \rrbracket}} u.v$ est analogue une double boucle sur les éléments de $\llbracket e_1 \rrbracket$ et $\llbracket e_2 \rrbracket$, comme dans le pseudocode python suivant :
 
 \begin{python}
 s = set()
