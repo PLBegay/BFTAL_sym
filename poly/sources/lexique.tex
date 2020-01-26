@@ -1,14 +1,17 @@
 
 \chapter{Rappels mathématiques}
-\section{Lexique }
+%\section{Lexique }
 
-\paragraph{}On rappelle quelques notions et notations de base.
+%\paragraph{}On rappelle quelques notions et notations de base.
 
 \section{Logique}
 
 \subsection{Raisonnement par l'absurde}
 \label{abs}
-Un raisonnement par l'absurde consiste à prouver une chose en 1) supposant son contraire et 2) montrer que ça fout tout en l'air. Plus formellement, pour prouver $P$, on suppose $\neg P$ et on montre que ça nous permet de déduire $\bot$, ce qui veut dire soit que la logique est incohérente, soit que $\neg P$ est fausse, et donc que $P$ est vraie.
+
+\begin{definition}{Raisonnement par l'absurde}{}
+Un \textbf{raisonnement par l'absurde} consiste à prouver une chose en 1) supposant son contraire et 2) montrer que ça fout tout en l'air. Plus formellement, pour prouver $P$, on suppose $\neg P$ et on montre que ça nous permet de déduire $\bot$, ce qui veut dire soit que la logique est incohérente, soit que $\neg P$ est fausse, et donc que $P$ est vraie.
+\end{definition}
 
 \begin{example}
 Imaginons une situation où les rues sont sèches, et où on voudrait prouver qu'il n'a pas plu. On suppose alors l'inverse, c'est-à-dire qu'il a plu. Or, s'il a plu, les routes sont mouillées. On obtient alors que 1) les routes sont mouillées et 2) les routes ne sont pas mouillées, ce qui est un paradoxe. La seule hypothèse faite étant le fait qu'il a plu, elle doit être fausse.
@@ -26,8 +29,32 @@ On obtient une contradiction, notre hypothèse sur la finitude des nombres premi
 
 \section{Ensembles}
 
-lol
+\subsection{Opérations entre ensembles}
 
-\section{Prédicats}
+\begin{definition}{Produit d'ensembles}{}
+Soit deux ensembles $E_1$ et $E_2$, contenant respectivement des éléments de types $\tau_1$ et $\tau_2$. Soit également $\cdot$ une opération de type $\tau_1 \rightarrow \tau_2 \rightarrow \tau_3$, cad. une opération qui prend en argument gauche un élément de type $\tau_1$ et à droite un argument de type $\tau_2$ et renvoie un objet de type $\tau_3$, alors 
 
-lol bis
+\[
+E_1 \cdot E_2 = \{x \cdot y~|~x \in E_1~\wedge~y \in E_2\}
+\]
+\end{definition}
+
+Dit autrement, un produit d'ensembles renvoie l'ensemble des combinaisons d'éléments de deux ensembles \textit{via} une opération fournie. Si l'opération $\cdot$ est un endormorphisme, cad. qu'elle est de type $\tau \rightarrow \tau \rightarrow \tau$, alors on peut itérer le produit de la façon suivante :
+
+\begin{equations*}
+E^0 = \{1\} ~~~~~~~~~~~~~~~~ \textrm{Où $1$ est l'élément neutre de $\tau$} \\
+E^{n+1} = E^n \cdot E
+\end{equations*}
+
+Cette notion très générale ne doit pas être confondue avec
+
+\begin{definition}{Produit cartésien}{}
+Soit deux ensembles $E_1$ et $E_2$, ne contenant pas forcément des éléments de même type, alors
+
+\[
+E_1 \times E_2 = \{(x,y)~|~x \in E_1~\wedge~y \in E_2\}
+\]
+\end{definition}
+
+Le produit cartésien, noté $\times$, renvoie l'ensemble des couples d'éléments de deux ensembles donnés. Il s'agit d'un cas particulier du produit d'ensemble, où l'opération est la "mise en couple". Cette opération ne pouvant pas être un endormorphisme, le produit cartésien ne peut être itéré.
+
