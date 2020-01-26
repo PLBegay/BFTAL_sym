@@ -337,13 +337,13 @@ Formellement, on a
 \[\llbracket e^* \rrbracket = \llbracket e \rrbracket^* =\bigcup_{n \in \mathbf{N}} \llbracket e \rrbracket^n = \{\llbracket e \rrbracket^0, \llbracket e \rrbracket^1, \llbracket e \rrbracket^2, \llbracket e \rrbracket^3 ...\}\]
 
 
-Concrètement, on fait l'union de $\llbracket e \rrbracket^n$ pour tous les entiers $n$, $\llbracket e \rrbracket^n$ étant $n$ mots de $\llbracket e \rrbracket$ concaténés\footnote{Les puissances sur les ensembles ont le même sens que sur les nombres, avec la multiplication remplacée par la concaténation}.
+Concrètement, on fait l'union de $\llbracket e \rrbracket^n$ pour tous les entiers $n$, $\llbracket e \rrbracket^n$ étant $n$ mots de $\llbracket e \rrbracket$ concaténés.
 
 \begin{example}
-La sémantique de l'expression $a(aa+bb)^*a$ est
+La sémantique de l'expression $a(aa+bb)^*a$ est\\
 %\hspace{-5cm}
-\begin{figure}[h]
-\hspace{-2cm}
+%\begin{figure}[ht!]
+%\hspace{-2cm}
 \begin{tabular}{cl}
 $\mt{\Tree[.{.} a [.{*} [.{+} [.{.} a a ] [.{.} b b ] ] ] a ]}$ &
 \begin{tabular}{ll}
@@ -353,7 +353,7 @@ $=$ & $\{a.\epsilon.a, a.aa.a, a.bb.a, a.((aa).(aa)).a, a.((aa).(bb)).a, a.((bb)
 &\\
 $=$ & $\{aa, aaaa, abba, aaaaaa, aaabba, abbaaa, abbbba, ...\}$
 \end{tabular} \end{tabular}
-\end{figure}
+%\end{figure}
 \end{example}
 
 \section{Mise en application}

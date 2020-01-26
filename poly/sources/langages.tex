@@ -248,7 +248,52 @@ Un langage, c'est un ensemble de mots.
 
 On distingue donc d'entrée les deux langages extrêmes : $\mathbf{\Sigma^*}$, l'ensemble (infini) de tous les mots formés à partir de $\Sigma$, et $\mathbf{\emptyset}$, le langage / ensemble vide, qui se caractèrise comme ne contenant aucun élément.
 
-\paragraph{Remarque} Ne surtout pas confondre $\emptyset$ et $\{\epsilon\}$. Le premier est un ensemble vide, contenant donc \textbf{0} élément, trandis que le second contient \textbf{1} élément, le mot ide. 
+\paragraph{Remarque} Ne surtout pas confondre $\emptyset$ et $\{\epsilon\}$. Le premier est un ensemble vide, contenant donc \textbf{0} élément, trandis que le second contient \textbf{1} élément, le mot ide.
+
+\begin{definition}{Produit de langages}{}
+Le produit de deux langages $L_1$ et $L_2$, noté $L_1 . L_2$, renvoie l'ensemble des mots composés d'un mot de $L_1$ puis d'un de $L_2$ :\\
+$L_1 . L_2 = \{w_1 . w_2 ~|~ w_1 \in L_1 ~\wedge~w_2 \in L_2\}$
+
+Il s'agit d'un cas particulier de produit d'ensembles (cf. définition \ref{ensprod}.
+\end{definition}
+
+\begin{example}
+Soit $L_1 = \{ab,b,\epsilon\}$ et $L_2 = \{a,b,aa\}$, on a\\
+\begin{tabular}{cl} 
+    & $L_1 . L_2$ \\
+ $=$& $\{ab.a,ab.b,ab.aa,b.a,b.b,b.aa,\epsilon.a,\epsilon.b,\epsilon.aa\}$ \\
+ $=$& $\{aba,abb,abaa,ba,bb,baa,a,b,aa\}$
+\end{tabular}
+\end{example}
+
+Le produit de langage peut être itéré\footnote{Concrètement, les puissances sur les langages ont le même sens que sur les nombres, avec la multiplication remplacée par la concaténation} :
+
+\begin{eqnarray*}
+L^0 = \{\epsilon\}\\
+L^{n+1} = L^n . L
+\end{eqnarray*}
+
+Les langages disposent en plus d'un opérateur spécial :
+
+
+\begin{definition}{Etoile de Kleene}{}
+Soit $L$ un langage. On note $L^*$ la concaténation de n'importe quel nombre de mots apparaissant dans $L$, cad.
+
+\[
+L^* = \bigcup_{n \in \mathbf{N}} L^n = L^0 \cup L^1 \cup L^2 \cup ... 
+\]
+\end{definition}
+
+\begin{example}
+Soit $L = \{aa,b\}$, on a \\
+\begin{tabular}{rl}
+$L^* =$& $\{epsilon\} $ \\
+ $\cup $& $\{aa,b\}$ \\
+$\cup$ & $ \{aaaa,aab,baa,bb\}$ \\
+ $\cup $ & $ \{aaaaaa,aaaab,aabaa,aabb,baaaa,baab,bbaa,bbb\}$ \\
+ $\cup$ & ...
+\end{tabular}
+\end{example}
 
 La question maintenant est maintenant de savoir comment on définit et parle de langages précis et plus "intermédiaires" que les deux précédents. En tout généralité, les ensembles peuvent être définis de façon \textbf{extensionnelle} ou \textbf{intentionnelle}. 
 
