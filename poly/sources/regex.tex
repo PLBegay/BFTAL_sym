@@ -304,7 +304,7 @@ En appliquant les règles de la concaténation et des lettres vues précédemmen
 \[\mt{\Tree[.{.} a b ]} = \bigcup_{\substack{u \in \llbracket a \rrbracket \\ v \in \llbracket b \rrbracket}} u.v = \bigcup_{\substack{u \in \{a\} \\ v \in \{b\}}} u.v = \{a.b\} = \{ab\}\]
 \end{example}
 
-L'exemple n'est pas renversant, mais permet d'illustrer l'aspect purement systémique et récursif de la sémantique. Pour des exemples plus rigolos, on va avoir besoin d'ajouter des constructeurs à la sémantique.
+L'exemple n'est pas renversant, mais permet d'illustrer l'aspect purement systémique et récursif de la sémantique. Pour des exemples plus intéressants, on va avoir besoin d'ajouter des constructeurs à la sémantique.
 
 \subsection{Sémantique de la disjonction}
 
@@ -312,7 +312,7 @@ Formellement, on a
 
 \[\mt{\Tree[.{+} $e_1$ $e_2$ ]} = \llbracket e_1 \rrbracket \cup \llbracket e_2 \rrbracket \]
 
-Concrètement, ça veut dire que la sémantique de la disjonction de deux regex ($\llbracket e_1 + e_2 \rrbracket$) est l'union ($\cup$) des sémantiques de $e_1$ ($\llbracket e_1 \rrbracket$) et $e_2$ ($\llbracket e_2 \rrbracket$), c'est-à-dire l'ensemble des mots qui apparaissent dans $\llbracket e_1 \rrbracket$ ou (inclusif) $\llbracket e_2 \rrbracket$.
+Concrètement, ça veut dire que la sémantique de la disjonction de deux regex est l'union des sémantiques de $e_1$ et $e_2$, c'est-à-dire l'ensemble des mots qui apparaissent dans $\llbracket e_1 \rrbracket$ ou (inclusif) $\llbracket e_2 \rrbracket$.
 
 \paragraph*{Remarque} A partir d'ici et pour des raisons de mise en page, on ne mettra pas forcément tout sous forme d'arbres dans les exemples, et on comptera sur la capacité du lecteur ou de la lectrice à \textit{parser} automatiquement toute expression rationnelle qu'il ou elle lit. Ne vous y trompez pas cependant : l'analyse sémantique s'opère bien sur un arbre plutôt que sur une expression "plate". 
 
@@ -334,7 +334,7 @@ Il ne nous manque maintenant que le plus ésotérique des constructeurs.
 
 Formellement, on a 
 
-\[\llbracket e^* \rrbracket = \bigcup_{n \in \mathbf{N}} \llbracket e \rrbracket^n = \{\llbracket e \rrbracket^0, \llbracket e \rrbracket^1, \llbracket e \rrbracket^2, \llbracket e \rrbracket^3 ...\}\]
+\[\llbracket e^* \rrbracket = \llbracket e \rrbracket^* =\bigcup_{n \in \mathbf{N}} \llbracket e \rrbracket^n = \{\llbracket e \rrbracket^0, \llbracket e \rrbracket^1, \llbracket e \rrbracket^2, \llbracket e \rrbracket^3 ...\}\]
 
 
 Concrètement, on fait l'union de $\llbracket e \rrbracket^n$ pour tous les entiers $n$, $\llbracket e \rrbracket^n$ étant $n$ mots de $\llbracket e \rrbracket$ concaténés\footnote{Les puissances sur les ensembles ont le même sens que sur les nombres, avec la multiplication remplacée par la concaténation}.
@@ -411,7 +411,7 @@ On procède par induction structurelle sur l'expression rationnelle $e$:
 \end{itemize}
 \end{proof}
 
-Dans la pratique, on préfère ne pas avoir à réinventer la roue chaque matin, la syntaxe des \textit{regex} est donc étendue en pratique. Ces extensions ne changent rien au fond, dans le sens où elles n'ajoutent pas en expressivité. En effet, les nouveaux symboles peuvent tous être codés avec ceux de la syntaxe minimale : 
+Dans la pratique, on préfère ne pas avoir à réinventer la roue chaque matin, la syntaxe des \textit{regex} y est donc étendue. Ces extensions ne changent rien au fond, dans le sens où elles n'ajoutent pas en expressivité. En effet, les nouveaux symboles peuvent tous être codés avec ceux de la syntaxe minimale : 
 
 \begin{itemize}
 \item $e?$, ou "$e$ une ou zéro fois", peut être codée comme $(e + \epsilon)$
@@ -422,4 +422,4 @@ Dans la pratique, on préfère ne pas avoir à réinventer la roue chaque matin,
 \item $e\{n,m\}$, ou "$e$ entre $n$ et $m$ fois" peut se traduire $\underbrace{eee...eee}_\text{$n$ fois}\underbrace{(e+\epsilon)...(e+\epsilon)}_\text{$m-n$ fois}$
 \end{itemize}
 
-Les traductions proposée ici ne correspondent pas forcément à ce qui se passe concrètement dans les bibliothèques de \textit{regex} des différents langages de programmation (la dernière en particulier semble très ambigüe, et donc inefficace). L'objectif est seulement de montrer que les ajouts à la syntaxe n'ent modifient pas l'expressivité, et qu'il s'agit seulement de \textbf{sucre syntaxique}.
+Les traductions proposée ici ne correspondent pas forcément à ce qui se passe concrètement dans les bibliothèques de \textit{regex} des différents langages de programmation (la dernière en particulier semble très ambigüe, et donc inefficace). L'objectif est seulement de montrer que les ajouts à la syntaxe n'ent modifient pas l'expressivité, et qu'il s'agit seulement de ce qu'on appelle du \textbf{sucre syntaxique}.
