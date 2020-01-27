@@ -6,12 +6,70 @@
 
 Les automates forment un langage de programmation un peu particulier, en ce qu'il est très visuel (chaque programme est un graphe annoté, ou plus prosaïquement des ronds et des flèches) et que tout programme a le même type : un mot en entrée, un booleen en sortie. Un automate définit donc un langage en donnant un moyen automatique de déterminer si n'importe quel mot donné en fait partie ou non\footnote{En ce sens, les automates sont des \href{https://fr.wikipedia.org/wiki/Fonction_caract\%C3\%A9ristique_(th\%C3\%A9orie_des_ensembles)}{fonctions caractéristiques}, qui sont aux ensembles ce que les videurs sont aux boîtes de nuit.}.
 
-Les automates se divisent en de nombreuses sous-catégories, dont seulement certaines ramifications seront explorées dans ce cours. On verra d'abord le fonctionnement général des automates finis déterministes (\ref{DFA}) et non-déterministes (\ref{NDFA}), en allant à chaque fois du général au technique. On verra ensuite des algorithmes pour transformer (\ref{transauto}) des automates. On étudiera enfin les combinaisons d'automates, et donc les propriétés de clôture des langages qu'ils définissent (\ref{cloture}).
+Les automates se divisent en de nombreuses sous-catégories, dont certaines ramifications seront explorées dans ce cours. On verra d'abord le fonctionnement général des automates finis déterministes (\ref{DFA}) et non-déterministes (\ref{NDFA}), en allant à chaque fois du général au technique. On verra ensuite des algorithmes pour transformer (\ref{transauto}) des automates. On étudiera enfin les combinaisons d'automates, et donc les propriétés de clôture des langages qu'ils définissent (\ref{cloture}).
 
 \section{Automates finis déterministes}
 \label{DFA}
 
+On introduit les Automates finis déterministes, noté $AFD$ (ou $DFA$, pour \textit{deterministic finite automaton}\footnote{Notez qu'on parle d'\textit{automat\textbf{on}} au singulier et d'\textit{automat\textbf{a}} au pluriel}), avant d'en étudier la formalisation.
+
+
 \subsection{Principe général}
+
+Imaginez que vous développiez un jeu d'infiltration. Dans ce jeu, le comportement des méchants gardes ressemblerait sans doute à la figure \ref{garde}.
+
+\begin{figure}[!h]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.9cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state] (A)                    {Dodo};
+  \node[] (D) [right of=A] {} ;
+  \node[state] (B)      [right of=D]                {Fouille};
+  \node[state] (C)      [above of=B]                {Combat};
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(A) edge      [bend right]        node {Bruit suspect} (B)
+(B) edge      [bend right]        node {Rien trouvé} (A)
+(B) edge      [bend right]        node {Ennemi trouvé} (C)
+(C) edge      [bend right]        node {Ennemi tué} (A);
+\end{tikzpicture}
+\caption{Comportement des gardes d'un jeu imaginaire}
+\label{garde}
+\end{figure}
+
+Ce qu'est censé traduire ce graphe, c'est qu'un garde commence (la $\rightarrow$ sur sa gauche) dans un \textbf{état} qui est le dodo, et que différents événements (un bruit, un ennemi trouvé ou non, ou encore tué) vont le faire changer d'\textbf{état}. Un AFD fonctionne sur un principe similaire\footnote{Les AFD sont en fait des cas particuliers de Machines à états finis, \href{https://www.youtube.com/watch?v=JyF0oyarz4U}{qui sont effectivement employées dans la conception de jeux vidéo}}, mais où les transitions sont déclenchées par la lecture de lettres : un $AFD$, en partant d'un état initial, lit le mot donné en argument lettre par lettre et, à chaque lecture, change d'état en fonction de la lettre. 
+
+\begin{example}
+L'automate de la figure \ref{aaauto} contient trois états, appelés $0$, $1$ et $2$. La lecture de tout mot commence en $0$, appelé \textbf{état initial}. Si on lui passe le mot $abbaaba$ en argument, la première lettre ($a$) va nous faire passer de l'état $0$ à $1$. La deuxième lettre ($b$) nous refait passer en $0$. La troisième ($b$) nous y fait rester. Les deux lettres suivantes nous font ensuite passer en $1$ puis en $2$. 
+\end{example}
+
+
+\begin{figure}[!h]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.9cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state] (A)                    {$0$};
+  \node[state] (B)      [right of=A]                {$1$};
+  \node[accepting,state] (C)      [right of=B]                {$2$};
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(A) edge      [loop above]        node {$b$} (A)
+(C) edge      [loop above]        node {$a,b$} (C)
+(A) edge      [bend right]        node {$a$} (B)
+(B) edge      [bend right]        node {$b$} (A)
+(B) edge      []        node {$a$} (C);
+\end{tikzpicture}
+\caption{Un premier automate}
+\label{aaauto}
+\end{figure}
 
 \subsection{Formalisation}
 
