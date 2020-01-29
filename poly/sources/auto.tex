@@ -44,8 +44,9 @@ Imaginez que vous développiez un jeu d'infiltration. Dans ce jeu, le comporteme
 Ce qu'est censé traduire ce graphe, c'est qu'un garde commence (la $\rightarrow$ sur sa gauche) dans un \textbf{état} qui est le dodo, et que différents événements (un bruit, un ennemi trouvé ou non, ou encore tué) vont le faire changer d'\textbf{état}. Un AFD fonctionne sur un principe similaire\footnote{Les AFD sont en fait des cas particuliers de Machines à états finis, \href{https://www.youtube.com/watch?v=JyF0oyarz4U}{qui sont effectivement employées dans la conception de jeux vidéo}}, mais où les transitions sont déclenchées par la lecture de lettres : un $AFD$, en partant d'un état initial, lit le mot donné en argument lettre par lettre et, à chaque lecture, change d'état en fonction de la lettre. 
 
 \begin{example}
-L'automate de la figure \ref{aaauto} contient trois états, appelés $0$, $1$ et $2$. La lecture de tout mot commence en $0$, appelé \textbf{état initial}. Si on lui passe le mot $abbaaba$ en argument, la première lettre ($a$) va nous faire passer de l'état $0$ à $1$. La deuxième lettre ($b$) nous refait passer en $0$. La troisième ($b$) nous y fait rester. Les deux lettres suivantes nous font ensuite passer en $1$ puis en $2$. 
+L'automate de la figure \ref{aaauto} contient trois états, appelés $0$, $1$ et $2$. La lecture de tout mot commence en $0$, appelé \textbf{état initial}. Si on lui passe le mot $abbaaba$ en argument, la première lettre ($a$) va nous faire passer de l'état $0$ à $1$. La deuxième lettre ($b$) nous refait passer en $0$. La troisième ($b$) nous y fait rester. Les deux lettres suivantes nous font ensuite passer en $1$ puis en $2$. Les deux dernières lectures nous font rester en $2$ (la virgule est à comprendre comme une disjonction, cad. comme un "ou").
 \end{example}
+
 
 
 \begin{figure}[!h]
@@ -70,6 +71,20 @@ L'automate de la figure \ref{aaauto} contient trois états, appelés $0$, $1$ et
 \caption{Un premier automate}
 \label{aaauto}
 \end{figure}
+
+Comme dit en introduction, un automate accepte ou rejette tout mot donné. Certains états, notés par une douche couche, sont appelés états finaux (ou terminaux). Un mot est accepté par un automate si et seulement si le parcours de ce mot dans l'automate se termine sur un état final.
+
+\begin{example}
+L'automate de la figure \ref{aaauto} accepte le mot $abbaaba$, puisqu'il nous fait passer de l'état initial $0$ à $2$, qui est un état final. Il n'accepte en revanche pas les mots $bbaba$ (état $1$), $babbab$ ou $\epsilon$ (état $0$ tous les deux).
+\end{example}
+
+\begin{exercice}
+Les mots $abbaba$, $ababbaab$ et $abba$ sont-ils acceptés par l'automate de la figure \ref{aaauto} ?
+\end{exercice}
+
+\begin{exercice}
+Quel est le \textbf{langage reconnu}, cad. l'ensemble des mots acceptés, par l'automate de la figure \ref{aaauto} ?
+\end{exercice}
 
 \subsection{Formalisation}
 
