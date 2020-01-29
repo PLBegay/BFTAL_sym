@@ -83,7 +83,45 @@ Les mots $abbaba$, $ababbaab$ et $abba$ sont-ils acceptés par l'automate de la 
 \end{exercice}
 
 \begin{exercice}
-Quel est le \textbf{langage reconnu}, cad. l'ensemble des mots acceptés, par l'automate de la figure \ref{aaauto} ?
+Quel est le \textbf{langage reconnu}, cad. l'ensemble des mots acceptés, par l'automate de la figure \ref{aaauto} ? Donner la réponse en français et sous forme d'expression rationnelle.
+\end{exercice}
+
+\paragraph*{Remarque} Un automate ne contient pas toujours une transition pour chaque couple d'état / lettre, auquel cas il est dit \textbf{incomplet}. Si un automate ne contient pas de chemin correspondant à un mot, ce dernier est rejetté.
+
+\begin{example}
+L'automate de la figure \ref{incompauto} rejette le mot $aba$, car il n'y a pas de transition partant de l'état $1$ pour la lettre $b$.
+\end{example}
+
+
+\begin{figure}[!h]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.9cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state] (A)                    {$0$};
+  \node[state] (B)      [right of=A]                {$1$};
+  \node[accepting,state] (C)      [right of=B]                {$2$};
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(A) edge      [loop above]        node {$b$} (A)
+(C) edge      [loop above]        node {$a,b$} (C)
+(A) edge      []        node {$a$} (B)
+(B) edge      []        node {$a$} (C);
+\end{tikzpicture}
+\caption{Un automate incomplet}
+\label{incompauto}
+\end{figure}
+
+
+\begin{exercice}
+Les mots $bbbaababbaaba$, $bbabaab$ et $baaaaaab$ sont-ils acceptés par l'automate de la figure \ref{incompauto} ?
+\end{exercice}
+
+\begin{exercice}
+Quel est le langage reconnu par l'automate de la figure \ref{incompauto} ? Donner la réponse en français et sous forme d'expression rationnelle.
 \end{exercice}
 
 \subsection{Formalisation}
