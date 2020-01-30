@@ -1,0 +1,97 @@
+\documentclass{report}
+\usepackage[utf8]{inputenc}
+
+\title{Bases formelles du TAL \\ corrections d'exercices}
+\author{Pierre-Léo Bégay}
+%\date{October 2019}
+
+\usepackage{natbib}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{tikz}
+\usepackage{subcaption}
+\usepackage{tikz-qtree}
+\usepackage{tikz-qtree-compat}
+\usepackage{graphbox}
+\usepackage{tabularx}
+\usepackage{stmaryrd}
+
+\newcommand{\mt}[1]{\left\llbracket \vcenter{
+     \hbox{\bfseries#1}} \right\rrbracket}
+
+\usepackage[a4paper]{geometry}
+
+
+\hypersetup{
+    colorlinks=true,       % false: boxed links; true: colored links
+    linkcolor=blue,          % color of internal links (change box color with linkbordercolor)
+    citecolor=blue,        % color of links to bibliography
+    filecolor=magenta,      % color of file links
+    urlcolor=cyan           % color of external links
+}
+\usepackage{pythonhighlight}
+\usepackage{parskip}
+\setlength{\parskip}{0.5em}
+\setlength{\parindent}{0pt}%
+\usepackage{amsthm}
+\usepackage{epigraph}
+\setlength{\epigraphwidth}{0.6\textwidth}
+%\theoremstyle{definition}
+%\newtheorem{definition}{Définition}[section]
+
+\newtheoremstyle{slanted}
+  {1em plus .2em minus .1em}%   Space above
+  {1em plus .2em minus .1em}%   Space below
+  {\slshape}%  Body font
+  {}%          Indent amount (empty = no indent, \parindent = para indent)
+  {\bfseries}% Thm head font
+  {.}%         Punctuation after thm head
+  {0.5em}%     Space after thm head: " " = normal interword space;
+     %         \newline = linebreak
+  {}%          Thm head spec (can be left empty, meaning `normal')
+
+\theoremstyle{slanted}
+
+\newtheorem{exercice}{Exercice}[section]
+\newtheorem*{correction*}{Correction}
+
+\usepackage{tcolorbox}
+\tcbuselibrary{theorems}
+
+
+\newtcbtheorem[number within=section]{definition}{Définition}%
+{colback=blue!10,colframe=blue!30!black,fonttitle=\bfseries}{th}
+
+%\newtcbtheorem[number within=section]{lemma}{Lemme}%
+%{colback=green!10,colframe=blue!30!black,fonttitle=\bfseries}{th}
+
+\begin{document}
+
+\maketitle
+
+
+\tableofcontents
+
+\input{langages.tex}
+
+\input{regex}
+
+%\input{auto}
+
+%\input{grams}
+
+%\input{calcu.tex}
+%\chapter{Introduction à la calculabilité}
+
+%\input{kleene}
+
+%\bibliographystyle{plain}
+%\bibliography{poly}
+
+%\appendix
+
+%\input{lexique.tex}
+
+
+\end{document}

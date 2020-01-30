@@ -1,0 +1,168 @@
+
+\chapter{Langages}
+\label{langages}
+
+\section{Mots}
+
+
+\begin{exercice}
+\label{expref}
+Combien de préfixes et suffixes admet un mot $w$ quelconque ?
+\end{exercice}
+
+\begin{correction*}
+Soit un mot $w$ qui se décompose en $c_1c_2...c_n$ avec $\forall i \in [1-n], c_i \in \Sigma$. Il y a $n+1$ préfixes : $\epsilon, c_1, c_1c_2, c_1c_2c_3, ...,$ et $c_1...c_n$ entier. Pareil pour les suffixes avec $\epsilon, c_n, c_{n-1}c_n, ..., c_1...c_n$.
+
+Pour tout mot $w$, il y a donc $|w|+1$ préfixes et suffixes.
+\end{correction*}
+
+
+\begin{exercice}
+Donner l'ensemble des facteurs du mot $abbba$.
+\end{exercice}
+
+\begin{correction*}
+On note en \textcolor{red}{rouge} les facteurs :
+
+\begin{itemize}
+\item abbba (\textcolor{red}{$\epsilon$})
+\item \textcolor{red}{a}bbba
+\item \textcolor{red}{ab}bba
+\item \textcolor{red}{abb}ba
+\item \textcolor{red}{abbb}a
+\item \textcolor{red}{abbba}
+\item a\textcolor{red}{b}bba
+\item a\textcolor{red}{bb}ba
+\item a\textcolor{red}{bbb}a
+\item a\textcolor{red}{bbba}
+\begin{itemize} \item On saute ab\textcolor{red}{b}ba et ab\textcolor{red}{bb}a \end{itemize}
+\item ab\textcolor{red}{bba}
+\begin{itemize} \item On saute abb\textcolor{red}{b}a \end{itemize}
+\item abb\textcolor{red}{ba}
+\begin{itemize} \item On saute abbb\textcolor{red}{a} \end{itemize}
+\end{itemize}
+\end{correction*}
+
+
+\begin{exercice} \label{exfact}(*)
+Donner la borne la plus basse possible du nombre de facteurs d'un mot $w$. Donner un mot d'au moins 3 lettres dont le nombre de facteurs est exactement la borne donnée.
+\end{exercice}
+
+\begin{correction*}
+Soit $w = c_1...c_n$. L'ensemble des \textcolor{red}{facteurs} de $w$ est l'ensemble des $c_1 ... c_{i-1}\textcolor{red}{c_i...c_j}c_{j+1}...c_n$ ainsi qu'$\epsilon$. Le nombre de ces facteurs non-nuls est borné par 
+
+\[ |\{(i,j) ~|~ 0 \leq i < j \leq n\}| =\footnote{Quand $i$ vaut $0$, il y a $n$ possibilités pour $j$. Quand $i$ vaut $i$, il y a $n-1$ possiblités pour $j$. ... et quand $i$ vaut $n-1$, il y a une possibilité pour $j$.} 1 + 2 + 3 + ... + n =\footnote{Prouvable assez facilement par induction sur $n$ (bon entraînement si vous n'avez pas l'habitude)} \frac{n(n+1)}{2} \in O(n^2) \]
+
+Il ne s'agit que d'une borne, puisqu'il y aura des répétitions à partir du moment où une même lettre apparaît deux fois (cf. l'exercice précédent). Dualement, le mot $abc$ par exemple contient bien $1 + \frac{3\times 4}{2} = 7$ facteurs.
+\end{correction*}
+
+
+\begin{exercice}
+Montrer que tout facteur d'un mot en est également un sous-mot. A l'inverse, montrer qu'un sous-mot n'est pas forcément un facteur. 
+\end{exercice}
+
+\begin{correction*}
+Soit $f$ facteur d'un mot $w$. D'après la définition, ça veut dire qu'il existe $v_1$ et $v_2$ tels que $w = v_1.f.v_2$. On a alors bien $w = v_0.s_0.v_1$ avec $s_0 = f$.
+
+Soit $w = abc$. $ac$ en est clairement un sous-mot, alors qu'il n'en est pas un facteur.
+\end{correction*}
+
+\begin{exercice}
+Donner toutes les façons de voir $abba$ comme sous-mot de $baaabaabbaa$.
+\end{exercice}
+
+\begin{correction*}
+
+On a la liste (beaucoup trop longue (22 éléments !)) suivante :
+
+\begin{itemize}
+\item b\underline{a}aa\underline{b}aa\underline{b}b\underline{a}a
+\item b\underline{a}aa\underline{b}aa\underline{b}ba\underline{a}
+
+\item b\underline{a}aa\underline{b}aab\underline{b}\underline{a}a
+\item b\underline{a}aa\underline{b}aab\underline{b}a\underline{a}
+
+\item b\underline{a}aabaa\underline{bb}\underline{a}a
+\item b\underline{a}aabaa\underline{bb}a\underline{a}
+
+
+\item ba\underline{a}a\underline{b}aa\underline{b}b\underline{a}a
+\item ba\underline{a}a\underline{b}aa\underline{b}ba\underline{a}
+
+\item ba\underline{a}a\underline{b}aab\underline{b}\underline{a}a
+\item ba\underline{a}a\underline{b}aab\underline{b}a\underline{a}
+
+\item ba\underline{a}abaa\underline{bb}\underline{a}a
+\item ba\underline{a}abaa\underline{bb}a\underline{a}
+
+
+\item baa\underline{a}\underline{b}aa\underline{b}b\underline{a}a
+\item baa\underline{a}\underline{b}aa\underline{b}ba\underline{a}
+
+\item baa\underline{a}\underline{b}aab\underline{b}\underline{a}a
+\item baa\underline{a}\underline{b}aab\underline{b}a\underline{a}
+
+\item baa\underline{a}baa\underline{bb}\underline{a}a
+\item baa\underline{a}baa\underline{bb}a\underline{a}
+
+
+\item baaab\underline{a}a\underline{bb}\underline{a}a
+\item baaab\underline{a}a\underline{bb}a\underline{a}
+
+\item baaaba\underline{a}\underline{bb}\underline{a}a
+\item baaaba\underline{a}\underline{bb}a\underline{a}
+
+\end{itemize}
+
+\end{correction*}
+
+
+\begin{exercice}
+Donner l'ensemble des sous-mots de $abba$
+\end{exercice}
+
+
+\begin{correction*}
+On a la liste suivante de \textcolor{red}{sous-mots} : 
+
+\begin{itemize}
+\item abba (\textcolor{red}{$\epsilon$})
+\item abb\textcolor{red}{a}
+\item ab\textcolor{red}{b}a
+\item ab\textcolor{red}{ba}
+\begin{itemize} \item On saute a\textcolor{red}{b}ba et a\textcolor{red}{b}b\textcolor{red}{a} \end{itemize}
+\item a\textcolor{red}{bb}a
+\item a\textcolor{red}{bba}
+\begin{itemize} \item On saute \textcolor{red}{a}bba \end{itemize}
+\item \textcolor{red}{a}bb\textcolor{red}{a}
+\item \textcolor{red}{a}b\textcolor{red}{b}a
+\item \textcolor{red}{a}b\textcolor{red}{ba}
+\begin{itemize} \item On saute \textcolor{red}{ab}ba et \textcolor{red}{ab}b\textcolor{red}{a} \end{itemize}
+\item \textcolor{red}{abb}a
+\item \textcolor{red}{abba}
+\end{itemize}
+\end{correction*}
+
+
+
+\begin{exercice}\label{exssmot} (*)
+
+Donner la borne la plus basse possible du nombre de sous-mots d'un mot $w$. Donner un mot dont le nombre de sous-mots est exactement la borne donnée.
+\end{exercice}
+
+\begin{correction*}
+Pour construire l'ensemble des sous-mots d'un mot $w$, on choisit de garder ou non chaque lettre du mot. On a donc $2^{|w|}$ choix. On a d'ailleurs, pour énumérer l'ensemble des sous-mots de l'exercice précédent, "généré" la suite des séries de $5$ bits ($00000$, $00001$, $00010$, $00011$, etc) qu'on a collées sur $abbba$.
+
+Il peut y avoir des répétitions, comme dans l'exercice précédent, ce $2^{|w|}$ n'est donc qu'une borne maximale, cependant atteinte par un mot comme $abc$.
+\end{correction*}
+
+\begin{exercice} (*) Dans l'exercice \ref{expref}, on demande le nombre exact de préfixes et suffixes d'un mot, alors que dans les exercices \ref{exfact} et \ref{exssmot}, on demande une borne, pourquoi ?
+\end{exercice}
+
+\begin{correction*}
+Le nombre de préfixes et de suffixes est toujours le même, puisqu'on n'y trouve pas de problèmes de répétitions, contrairement aux facteurs et sous-mots (cf. les exercices associés).
+\end{correction*}
+
+
+\section{Langage}
+

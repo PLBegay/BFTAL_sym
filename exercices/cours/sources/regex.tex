@@ -1,0 +1,86 @@
+\chapter{Expressions régulières}
+\label{regex}
+
+\section{Lexique et idée générale}
+
+\subsection{Les lettres et $\epsilon$, la base}
+
+\subsection{$.$, la concaténation}
+
+\subsection{*, l'itération}
+
+\begin{exercice}
+Donner 5 autres mots appartenant au langage dénotée par l'expression de l'exemple \ref{ex1}. 
+\end{exercice}
+
+\begin{exercice}
+Pourquoi le changement de formulation dans les exemples \ref{ex0} et \ref{ex1} par rapport aux exemples précédents ("c'est à dire $\{x, y, z ... \}$" qui devient "contenant notamment $x$, $y$ ou $z$") ?
+\end{exercice}
+
+\subsection{$+$, la disjonction}
+
+\begin{exercice}
+Donner un mot acceptant deux dérivations avec la regex de l'exemple \ref{ex3} (justifier en donnant les dérivations). Existe-t-il un autre mot admettant plusieurs dérivations ?
+\end{exercice}
+
+\begin{exercice}
+Existe-t-il un mot acceptant plusieurs dérivations pour la regex de l'exemple \ref{ex4} ?
+\end{exercice}
+
+\begin{exercice}
+Donner un mot accepté par la regex de l'exemple \ref{ex4} mais pas celle de l'exemple \ref{ex3}. Est-il possible de trouver un mot qui, à l'inverse, est accepté par la deuxième mais pas la première ?
+\end{exercice}
+
+
+\begin{exercice} (*)
+Exprimer, en langue naturelle et de façon concise, le langage dénoté par la regex de l'exemple \ref{ex2}. Traduire ensuite ce langage en une regex non-ambiguë, c'est-à-dire où il n'y aura qu'une dérivation pour chaque mot.
+\end{exercice}
+
+\section{Syntaxe}
+
+
+\section{Sémantique}
+\label{resem}
+
+\subsection{Les cas de base}
+
+\subsection{Sémantique de la concaténation}
+
+\subsection{Sémantique de la disjonction}
+
+\subsection{Sémantique de l'itération}
+
+
+\section{Mise en application}
+
+\subsection{Quelques astuces}
+
+\begin{exercice}
+Donner une \textit{regex} pour les mots qui commencent par $a$.
+\end{exercice}
+
+\begin{exercice}
+Donner une \textit{regex} pour les mots qui finissent par $b$.
+\end{exercice}
+
+\begin{exercice}
+Donner une \textit{regex} pour les mots qui commencent par $a$ finissent par $b$.
+\end{exercice}
+
+
+\begin{exercice}
+Donner une \textit{regex} pour les mots de longueur paire.
+\end{exercice}
+
+\begin{exercice}
+Donner une \textit{regex} pour les mots de longueur impaire qui contiennent au moins 4 lettres.
+\end{exercice}
+
+\begin{exercice}
+Donner une \textit{regex} pour les mots de longueur impaire, qui contiennent au moins 4 lettres, comment par $a$ et finissent par $b$.
+\end{exercice}
+
+
+\subsection{Syntaxe en pratique}
+
+
