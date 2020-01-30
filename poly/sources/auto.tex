@@ -124,12 +124,55 @@ Les mots $bbbaababbaaba$, $bbabaab$ et $baaaaaab$ sont-ils acceptés par l'autom
 Quel est le langage reconnu par l'automate de la figure \ref{incompauto} ? Donner la réponse en français et sous forme d'expression rationnelle.
 \end{exercice}
 
+Il nous semble important d'insister sur le point suivant : de la même façon qu'un programme devrait la traduction d'une logique sous-jacente plutôt qu'un bidouaille fait à la va-vite, les états d'un automate ont un sens. Avant d'écrire un automate, il convient donc de réfléchir quelles sont les informations à retenir au cours de la lecture du mot. Si la bonne réponse est trouvée, le reste de l'automate devrait s'écrire seul.
 
-Blabla exos, $\Sigma = \{a,b\}$ sauf mention du contraire, réfléchir aux états tout ça
+\begin{example}
+\label{exemplePI}
+On veut écrire un automate reconnaissant le langage $L = \{w \in \Sigma^*~|~|w|_a$ pair et $|w|_b$ impair$\}$, cad. l'ensemble des mots aec un nombre pair de $a$ et impairs de $b$\footnote{On conseillera tout d'abord au lecteur ou à la lectrice de tenter lui/elle-même l'exercice, afin de mesurer la pertinence de l'approche ici présentée}.
+
+Il n'est pas question de compter les $a$ et les $b$ comme on pourrait naïvement l'imaginer, non seulement puisqu'il faut se contenter d'un nombre fini d'états, mais aussi parce que c'est beaucoup plus d'information que nécessaire.
+Les seules données qui nous intéressent sont en effet la parité du nombre de $a$ et du nombre de $b$ du mot donné : $a^2b$ comme $a^{26}b^{131}$ sont équivalents dans leur appartenance à $L$.
+
+Le nombre de $a$ et de $b$ étant tous les deux pairs ou impairs, on a 4 possibilités. Nos états s'appeleront $PP$ (nombre de $a$ pair et nombre de $b$ pair), $PI$ ($a$ pair et $b$ impair), $IP$ et $II$. La définition de $L$ nous dit immédiatement que seul $PI$ devrait être terminal. L'état initial devrait être celui qui correspond à $\epsilon$, cad. $PP$.
+
+Les transitions s'écrivent naturellement : en partant de $PP$, la lecture d'un $a$ change la parité du nombre de $a$ mais pas celle du nombre de $b$, et nous emmène donc vers $IP$, tandis que $b$ pointe vers $PI$, et ainsi de suite. S'il y a d'autres lettres dans l'alphabet, elles devraient faire des boucles, puisqu'elles ne changent rien aux parités qui nous intéressent.
+
+Au final, on obtient l'automate suivant : 
+
+
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.9cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state] (PP)                    {$PP$};
+  \node[state] (IP)      [above right of=PP]                {$IP$};  \node[state] (II)      [below right of=IP]                {$II$};
+  \node[accepting,state] (PI)      [below right of=PP]                {$PI$};
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(PP) edge      [bend right]        node {$a$} (IP)
+(PP) edge      [bend right]        node {$b$} (PI)
+(PI) edge      [bend right]        node {$a$} (II)
+(PI) edge      [bend right]        node {$b$} (PP)
+(IP) edge      [bend right]        node {$a$} (PP)
+(IP) edge      [bend right]        node {$b$} (II)
+(II) edge      [bend right]        node {$a$} (PI)
+(II) edge      [bend right]        node {$b$} (IP);
+\end{tikzpicture}
+\end{example}
+
+\begin{exercice} (**) En reprenant l'exemple \ref{exemplePI}, montrer que $\forall w, w \in L \leftrightarrow$ l'automate accepte $w$. Vous pouvez procéder par induction sur $w$, en utilisant un objectif un peu plus précis que celui fourni.
+\end{exercice}
+
+Dans la série d'exercices qui suit, on utilisera comme alphabet $\Sigma = \{a,b\}$.
 
 \begin{exercice}
 Donner un automate qui reconnaît le langage $\{w \in \Sigma^*~|~|w| \geq 3\}$.
 \end{exercice}
+
+
 
 
 
@@ -160,5 +203,5 @@ Donner un automate qui reconnaît le langage $\{w \in \Sigma^*~|~|w| \geq 3\}$.
 \subsection{Concaténation}
 
 \subsection{Itération}
-
+ 
 
