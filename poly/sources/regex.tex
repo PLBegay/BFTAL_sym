@@ -423,3 +423,7 @@ Dans la pratique, on préfère ne pas avoir à réinventer la roue chaque matin,
 \end{itemize}
 
 Les traductions proposée ici ne correspondent pas forcément à ce qui se passe concrètement dans les bibliothèques de \textit{regex} des différents langages de programmation (la dernière en particulier semble très ambigüe, et donc inefficace). L'objectif est seulement de montrer que les ajouts à la syntaxe n'ent modifient pas l'expressivité, et qu'il s'agit seulement de ce qu'on appelle du \textbf{sucre syntaxique}.
+
+\subsection{Calcul de l'appartenance}
+\label{reappart}
+Soit l'expression rationnelle $e = ((\Sigma^*baaba^+)^*baa(abba)^+ba(bb)^*a)^*$, il n'est (normalement) pas totalement évident de déterminer automatiquement si un mot donné appartient à sa sémantique (on pourra se convaincre en essayant à la main avec par exemple $baabbaaabaababbaaa$). Or, pour mettre en application les expressions rationnelles\footnote{Notamment pour en repérer des occurences dans du texte}, on va avoir besoin d'un tel algorithme. Ce dernier va nous être fourni via les \textbf{automates finis}.
