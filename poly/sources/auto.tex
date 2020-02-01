@@ -129,7 +129,7 @@ Il nous semble important d'insister sur le point suivant : de la même façon qu
 
 \begin{example}
 \label{exemplePI}
-On veut écrire un automate reconnaissant le langage $L = \{w \in \Sigma^*~|~|w|_a$ pair et $|w|_b$ impair$\}$, cad. l'ensemble des mots aec un nombre pair de $a$ et impairs de $b$\footnote{On conseillera tout d'abord au lecteur ou à la lectrice de tenter lui/elle-même l'exercice, afin de mesurer la pertinence de l'approche ici présentée}.
+On veut écrire un automate reconnaissant le langage $L = \{w \in \Sigma^*~|~|w|_a$ pair et $|w|_b$ impair$\}$, cad. l'ensemble des mots avec un nombre pair de $a$ et impairs de $b$\footnote{On conseillera tout d'abord au lecteur ou à la lectrice de tenter lui/elle-même l'exercice, afin de mesurer la pertinence de l'approche ici présentée}.
 
 Il n'est pas question de compter les $a$ et les $b$ comme on pourrait naïvement l'imaginer, non seulement puisqu'il faut se contenter d'un nombre fini d'états, mais aussi parce que c'est beaucoup plus d'information que nécessaire.
 Les seules données qui nous intéressent sont en effet la parité du nombre de $a$ et du nombre de $b$ du mot donné : $a^2b$ comme $a^{26}b^{131}$ sont équivalents dans leur appartenance à $L$.
@@ -167,11 +167,11 @@ Au final, on obtient l'automate suivant :
 \begin{exercice} (**) En reprenant l'exemple \ref{exemplePI}, montrer que $\forall w, w \in L \leftrightarrow$ l'automate accepte $w$. Vous pouvez procéder par induction sur $w$, en utilisant un objectif un peu plus précis que celui fourni.
 \end{exercice}
 
-Dans la série d'exercices qui suit, on utilisera comme alphabet $\Sigma = \{a,b\}$.
+%Dans la série d'exercices qui suit, on utilisera comme alphabet $\Sigma = \{a,b\}$.
 
-\begin{exercice}
-Donner un automate qui reconnaît le langage $\{w \in \Sigma^*~|~|w| \geq 3\}$.
-\end{exercice}
+%\begin{exercice}
+%Donner un automate qui reconnaît le langage $\{w \in \Sigma^*~|~|w| \geq 3\}$. 
+%\end{exercice}
 
 
 \subsection{Formalisation}
