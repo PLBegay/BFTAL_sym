@@ -10,31 +10,67 @@
 \subsection{*, l'itération}
 
 \begin{exercice}
-Donner 5 autres mots appartenant au langage dénotée par l'expression de l'exemple \ref{ex1}. 
+Donner 5 autres mots appartenant au langage dénotée par l'expression $ab(bab)^*b(ca)^*b$.
 \end{exercice}
 
+\begin{correction*}
+$abbabbabbb$ (première étoile instanciée à $2$ et seconde à $0$),
+$abbabbabbcab$ ($2$ et $1$), $abbabbabbcacacab$ ($2$ et $3$), $abbabbabbabbcacacab$ ($3$ et $3$) et $abbabbabbabbabbabbcacacacacab$ ($5$ et $5$). 
+\end{correction*}
+
 \begin{exercice}
-Pourquoi le changement de formulation dans les exemples \ref{ex0} et \ref{ex1} par rapport aux exemples précédents ("c'est à dire $\{x, y, z ... \}$" qui devient "contenant notamment $x$, $y$ ou $z$") ?
+Pourquoi le changement de formulation dans les exemples 2.1.5 et 2.1.6 par rapport aux exemples précédents ("c'est à dire $\{x, y, z ... \}$" qui devient "contenant notamment $x$, $y$ ou $z$") ?
 \end{exercice}
+
+\begin{correction*}
+Parce qu'on se met à étudier des \textit{regex} qui dénotent des langages infinis, et dont il est donc assez peu pratique de faire une liste exhaustive des mots.
+\end{correction*}
 
 \subsection{$+$, la disjonction}
 
 \begin{exercice}
-Donner un mot acceptant deux dérivations avec la regex de l'exemple \ref{ex3} (justifier en donnant les dérivations). Existe-t-il un autre mot admettant plusieurs dérivations ?
+Donner un mot acceptant deux dérivations avec la regex $(aa)^* + (bb)^*$ (justifier en donnant les dérivations). Existe-t-il un autre mot admettant plusieurs dérivations ?
 \end{exercice}
+
+\begin{correction*}
+On a les deux dérivations suivantes du mot $\epsilon$ :
+
+\centering
+\begin{tabular}{ccc}
+$\underbrace{\underbrace{\underbrace{\epsilon}_\text{$(bb)^0$}}_\text{$(bb)^*$}}_\text{$(aa)^*+(bb)^*$}$ & \hspace{3cm} & $\underbrace{\underbrace{\underbrace{\epsilon}_\text{$(aa)^0$}}_\text{$(aa)^*$}}_\text{$(aa)^*+(bb)^*$}$
+\end{tabular}
+
+\raggedright
+Il n'existe pas d'autre mot acceptant plusieurs dérivations : dans une dérivation, on choisit d'abord si le mot sera composé de $a$ ou de $b$, puis on choisit sa longueur (paire). Deux dérivations différentes généreront donc deux mots qui différent par leur longueur ou les lettres qui le composent, et donc deux mots qui seront forcément différents à moins que la longueur soit $0$.
+\end{correction*}
 
 \begin{exercice}
-Existe-t-il un mot acceptant plusieurs dérivations pour la regex de l'exemple \ref{ex4} ?
+Existe-t-il un mot acceptant plusieurs dérivations pour la regex $(aa+bb)^*$ ?
 \end{exercice}
+
+\begin{correction*}
+Non, dans cette \textit{regex} on choisit d'abord la longueur (paire) du mot, puis les lettres qui le composent. On n'a donc plus le cas de l'exercice précédent.
+\end{correction*}
 
 \begin{exercice}
-Donner un mot accepté par la regex de l'exemple \ref{ex4} mais pas celle de l'exemple \ref{ex3}. Est-il possible de trouver un mot qui, à l'inverse, est accepté par la deuxième mais pas la première ?
+Donner un mot accepté par la regex $(aa+bb)^*$ mais pas $(aa)^*+(bb)^*$. Est-il possible de trouver un mot qui, à l'inverse, est accepté par la deuxième mais pas la première ?
 \end{exercice}
 
+\begin{correction*}
+La première \textit{regex} accepte par exemple $bbaa$, qui ne fait pas partie du langage dénoté par la seconde.
+
+Tout mot accepté par la seconde \textit{regex} sera accepté par la première : si on a une dérivation de la forme $(aa)^*+(bb)^* \rightarrow (aa)^* \rightarrow (aa)^n$, alors on a également $(aa+bb)^* \rightarrow (aa+bb)^n \rightarrow^n (aa)^n$ (le $\rightarrow^n$ indique qu'il y a $n$ étapes de dérivation, en l'occurrence $n$ fois le choix de $aa$ dans $aa+bb$). Même raisonnement si on part sur les $b$.
+\end{correction*}
 
 \begin{exercice} (*)
-Exprimer, en langue naturelle et de façon concise, le langage dénoté par la regex de l'exemple \ref{ex2}. Traduire ensuite ce langage en une regex non-ambiguë, c'est-à-dire où il n'y aura qu'une dérivation pour chaque mot.
+Exprimer, en langue naturelle et de façon concise, le langage dénoté par la regex $(a^*b^*)^*$. Traduire ensuite ce langage en une regex non-ambiguë, c'est-à-dire où il n'y aura qu'une dérivation pour chaque mot.
 \end{exercice}
+
+\begin{correction*}
+La \textit{regex} permet d'engendrer n'importe quel mot. En effet, soit le mot $c_1c_2...c_n$, où $c_i \in \{a,b\}$ pour tout $i$, on peut par exemple commencer la dérivation par $(a^*b^*)^* \rightarrow (a^*b^*)^n$ et, quand $c_i = a$ (resp. $b$), instancier le $i^{ème}$ facteur par $a^1b^0$ (resp. $a^0b^1$).
+
+Le langage accepté, $\Sigma^*$, est plus simplement reconnu par la \textit{regex} $(a+b)^*$.
+\end{correction*}
 
 \section{Syntaxe}
 
@@ -59,27 +95,54 @@ Exprimer, en langue naturelle et de façon concise, le langage dénoté par la r
 Donner une \textit{regex} pour les mots qui commencent par $a$.
 \end{exercice}
 
+\begin{correction*}
+$a\Sigma^*$
+\end{correction*}
+
 \begin{exercice}
 Donner une \textit{regex} pour les mots qui finissent par $b$.
 \end{exercice}
 
+\begin{correction*}
+$\Sigma^*b$
+\end{correction*}
+
+
 \begin{exercice}
 Donner une \textit{regex} pour les mots qui commencent par $a$ finissent par $b$.
 \end{exercice}
+
+\begin{correction*}
+$a\Sigma^*b$
+\end{correction*}
 
 
 \begin{exercice}
 Donner une \textit{regex} pour les mots de longueur paire.
 \end{exercice}
 
+\begin{correction*}
+$(\Sigma\Sigma)^*$
+\end{correction*}
+
+
 \begin{exercice}
 Donner une \textit{regex} pour les mots de longueur impaire qui contiennent au moins 4 lettres.
 \end{exercice}
 
+\begin{correction*}
+$\Sigma^4(\Sigma\Sigma)^*\Sigma$
+\end{correction*}
+
+
 \begin{exercice}
-Donner une \textit{regex} pour les mots de longueur impaire, qui contiennent au moins 4 lettres, comment par $a$ et finissent par $b$.
+Donner une \textit{regex} pour les mots de longueur impaire, qui contiennent au moins 4 lettres, commencent par $a$ et finissent par $b$.
 \end{exercice}
 
+
+\begin{correction*}
+$a\Sigma^3(\Sigma\Sigma)^*b$
+\end{correction*}
 
 \subsection{Syntaxe en pratique}
 
