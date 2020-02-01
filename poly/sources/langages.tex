@@ -78,19 +78,6 @@ Alors la propriété $P$ est vraie pour tout mot $w$.
 
 \paragraph*{Remarque} Est également valide le principe d'induction où, dans le cas récursif, la lettre est rajoutée à droite du mot plutôt qu'à sa gauche.
 
-On va s'entraîner à utiliser ce principe d'induction en prouvant deux lemmes qui ne le nécessitaient sans doute pas :
-
-\begin{lemma}
-$\forall w \in \Sigma^*, |w| \geq 0$, cad. que tout mot a une longueur positive.
-\end{lemma}
-\begin{proof}
-On procède par induction sur $w$.
-
-Dans le cas de base, $w = \epsilon$. On a donc $|w| = |\epsilon| = 0 \geq 0$.
-
-Dans le cas récursif, $w = c.w'$ avec $c \in \Sigma$ et on suppose $|w'| \geq 0$. On a $|c.w'| = 1 + |w'| \geq |w'| \geq 0$.
-\end{proof}
-
 On va s'entraîner à utiliser ce principe d'induction en prouvant deux lemmes qui n'en nécessitaient sans doute pas tant :
 
 \begin{lemma}
@@ -148,7 +135,7 @@ Un mot $p$ est un \textbf{préfixe} du mot $w$ ssi $\exists v, w = p.v$, cad. ss
 \end{definition}
 
 \begin{definition}{Suffixe}{}
-Un mot $s$ est un \textbf{suffixe} du mot $w$ ssi $\exists v, w = v.s$, cad. ssi $w$ \textit{finit} par $p$.
+Un mot $s$ est un \textbf{suffixe} du mot $w$ ssi $\exists v, w = v.s$, cad. ssi $w$ \textit{finit} par $s$.
 \end{definition}
 
 \begin{example}
