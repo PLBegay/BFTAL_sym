@@ -1,4 +1,204 @@
-\chapter{Automates}
+\chapter{Automates finis}
 \label{automates}
 
-TODO.
+
+%\epigraph{- "Qu'est-ce qu'un automate ?"\\- "Des ronds et des flèches m'sieur !"\\- "Rien à voir ! [...] Un automate, c'est un graphe orienté."}{[censuré]}
+
+Les automates forment un langage de programmation un peu particulier, en ce qu'il est très visuel (chaque programme est un graphe annoté, ou plus prosaïquement des ronds et des flèches) et que tout programme a le même type : un mot en entrée, un booleen en sortie. Un automate définit donc un langage en donnant un moyen automatique de déterminer si n'importe quel mot donné en fait partie ou non\footnote{En ce sens, les automates sont des \href{https://fr.wikipedia.org/wiki/Fonction_caract\%C3\%A9ristique_(th\%C3\%A9orie_des_ensembles)}{fonctions caractéristiques}, qui sont aux ensembles ce que les videurs sont aux boîtes de nuit.}.
+
+Les automates se divisent en de nombreuses sous-catégories, dont certaines ramifications seront explorées dans ce cours. On verra d'abord le fonctionnement général des automates finis déterministes (\ref{DFA}) et non-déterministes (\ref{NDFA}), en allant à chaque fois du général au technique. On verra ensuite des algorithmes pour transformer (\ref{transauto}) des automates. On étudiera enfin les combinaisons d'automates, et donc les propriétés de clôture des langages qu'ils définissent (\ref{cloture}).
+
+\section{Automates finis déterministes}
+\label{DFA}
+
+On introduit les Automates finis déterministes, noté $AFD$ (ou $DFA$, pour \textit{deterministic finite automaton}\footnote{Notez qu'on parle d'\textit{automat\textbf{on}} au singulier et d'\textit{automat\textbf{a}} au pluriel}), avant d'en étudier la formalisation.
+
+
+\subsection{Principe général}
+
+Imaginez que vous développiez un jeu d'infiltration. Dans ce jeu, le comportement des méchants gardes ressemblerait sans doute à la figure \ref{garde}.
+
+\begin{figure}[!h]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.9cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state] (A)                    {Dodo};
+  \node[] (D) [right of=A] {} ;
+  \node[state] (B)      [right of=D]                {Fouille};
+  \node[state] (C)      [above of=B]                {Combat};
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(A) edge      [bend right]        node {Bruit suspect} (B)
+(B) edge      [bend right]        node {Rien trouvé} (A)
+(B) edge      [bend right]        node {Ennemi trouvé} (C)
+(C) edge      [bend right]        node {Ennemi tué} (A);
+\end{tikzpicture}
+\caption{Comportement des gardes d'un jeu imaginaire}
+\label{garde}
+\end{figure}
+
+Ce qu'est censé traduire ce graphe, c'est qu'un garde commence (la $\rightarrow$ sur sa gauche) dans un \textbf{état} qui est le dodo, et que différents événements (un bruit, un ennemi trouvé ou non, ou encore tué) vont le faire changer d'\textbf{état}. Un AFD fonctionne sur un principe similaire\footnote{Les AFD sont en fait des cas particuliers de Machines à états finis, \href{https://www.youtube.com/watch?v=JyF0oyarz4U}{qui sont effectivement employées dans la conception de jeux vidéo}}, mais où les transitions sont déclenchées par la lecture de lettres : un $AFD$, en partant d'un état initial, lit le mot donné en argument lettre par lettre et, à chaque lecture, change d'état en fonction de la lettre. 
+
+\begin{example}
+L'automate de la figure \ref{aaauto} contient trois états, appelés $0$, $1$ et $2$. La lecture de tout mot commence en $0$, appelé \textbf{état initial}. Si on lui passe le mot $abbaaba$ en argument, la première lettre ($a$) va nous faire passer de l'état $0$ à $1$. La deuxième lettre ($b$) nous refait passer en $0$. La troisième ($b$) nous y fait rester. Les deux lettres suivantes nous font ensuite passer en $1$ puis en $2$. Les deux dernières lectures nous font rester en $2$ (la virgule est à comprendre comme une disjonction, cad. comme un "ou").
+\end{example}
+
+
+
+\begin{figure}[!h]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.9cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state] (A)                    {$0$};
+  \node[state] (B)      [right of=A]                {$1$};
+  \node[accepting,state] (C)      [right of=B]                {$2$};
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(A) edge      [loop above]        node {$b$} (A)
+(C) edge      [loop above]        node {$a,b$} (C)
+(A) edge      [bend right]        node {$a$} (B)
+(B) edge      [bend right]        node {$b$} (A)
+(B) edge      []        node {$a$} (C);
+\end{tikzpicture}
+\caption{Un premier automate}
+\label{aaauto}
+\end{figure}
+
+Comme dit en introduction, un automate accepte ou rejette tout mot donné. Certains états, notés par une douche couche, sont appelés états finaux (ou terminaux). Un mot est accepté par un automate si et seulement si le parcours de ce mot dans l'automate se termine sur un état final.
+
+\begin{example}
+L'automate de la figure \ref{aaauto} accepte le mot $abbaaba$, puisqu'il nous fait passer de l'état initial $0$ à $2$, qui est un état final. Il n'accepte en revanche pas les mots $bbaba$ (état $1$), $babbab$ ou $\epsilon$ (état $0$ tous les deux).
+\end{example}
+
+\begin{exercice}
+Les mots $abbaba$, $ababbaab$ et $abba$ sont-ils acceptés par l'automate de la figure \ref{aaauto} ?
+\end{exercice}
+
+\begin{exercice}
+Quel est le \textbf{langage reconnu}, cad. l'ensemble des mots acceptés, par l'automate de la figure \ref{aaauto} ? Donner la réponse en français et sous forme d'expression rationnelle.
+\end{exercice}
+
+\paragraph*{Remarque} Un automate ne contient pas toujours une transition pour chaque couple d'état / lettre, auquel cas il est dit \textbf{incomplet}. Si un automate ne contient pas de chemin correspondant à un mot, ce dernier est rejetté.
+
+\begin{example}
+L'automate de la figure \ref{incompauto} rejette le mot $aba$, car il n'y a pas de transition partant de l'état $1$ pour la lettre $b$.
+\end{example}
+
+
+\begin{figure}[!h]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.9cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state] (A)                    {$0$};
+  \node[state] (B)      [right of=A]                {$1$};
+  \node[accepting,state] (C)      [right of=B]                {$2$};
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(A) edge      [loop above]        node {$b$} (A)
+(C) edge      [loop above]        node {$a,b$} (C)
+(A) edge      []        node {$a$} (B)
+(B) edge      []        node {$a$} (C);
+\end{tikzpicture}
+\caption{Un automate incomplet}
+\label{incompauto}
+\end{figure}
+
+
+\begin{exercice}
+Les mots $bbbaababbaaba$, $bbabaab$ et $baaaaaab$ sont-ils acceptés par l'automate de la figure \ref{incompauto} ?
+\end{exercice}
+
+\begin{exercice}
+Quel est le langage reconnu par l'automate de la figure \ref{incompauto} ? Donner la réponse en français et sous forme d'expression rationnelle.
+\end{exercice}
+
+
+Il nous semble important d'insister sur le point suivant : de la même façon qu'un programme devrait la traduction d'une logique sous-jacente plutôt qu'un bidouaille fait à la va-vite, les états d'un automate ont un sens. Avant d'écrire un automate, il convient donc de réfléchir quelles sont les informations à retenir au cours de la lecture du mot. Si la bonne réponse est trouvée, le reste de l'automate devrait s'écrire seul.
+
+\begin{example}
+\label{exemplePI}
+On veut écrire un automate reconnaissant le langage $L = \{w \in \Sigma^*~|~|w|_a$ pair et $|w|_b$ impair$\}$, cad. l'ensemble des mots avec un nombre pair de $a$ et impairs de $b$\footnote{On conseillera tout d'abord au lecteur ou à la lectrice de tenter lui/elle-même l'exercice, afin de mesurer la pertinence de l'approche ici présentée}.
+
+Il n'est pas question de compter les $a$ et les $b$ comme on pourrait naïvement l'imaginer, non seulement puisqu'il faut se contenter d'un nombre fini d'états, mais aussi parce que c'est beaucoup plus d'information que nécessaire.
+Les seules données qui nous intéressent sont en effet la parité du nombre de $a$ et du nombre de $b$ du mot donné : $a^2b$ comme $a^{26}b^{131}$ sont équivalents dans leur appartenance à $L$.
+
+Le nombre de $a$ et de $b$ étant tous les deux pairs ou impairs, on a 4 possibilités. Nos états s'appeleront $PP$ (nombre de $a$ pair et nombre de $b$ pair), $PI$ ($a$ pair et $b$ impair), $IP$ et $II$. La définition de $L$ nous dit immédiatement que seul $PI$ devrait être terminal. L'état initial devrait être celui qui correspond à $\epsilon$, cad. $PP$.
+
+Les transitions s'écrivent naturellement : en partant de $PP$, la lecture d'un $a$ change la parité du nombre de $a$ mais pas celle du nombre de $b$, et nous emmène donc vers $IP$, tandis que $b$ pointe vers $PI$, et ainsi de suite. S'il y a d'autres lettres dans l'alphabet, elles devraient faire des boucles, puisqu'elles ne changent rien aux parités qui nous intéressent.
+
+Au final, on obtient l'automate suivant : 
+
+
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.9cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state] (PP)                    {$PP$};
+  \node[state] (IP)      [above right of=PP]                {$IP$};  \node[state] (II)      [below right of=IP]                {$II$};
+  \node[accepting,state] (PI)      [below right of=PP]                {$PI$};
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(PP) edge      [bend right]        node {$a$} (IP)
+(PP) edge      [bend right]        node {$b$} (PI)
+(PI) edge      [bend right]        node {$a$} (II)
+(PI) edge      [bend right]        node {$b$} (PP)
+(IP) edge      [bend right]        node {$a$} (PP)
+(IP) edge      [bend right]        node {$b$} (II)
+(II) edge      [bend right]        node {$a$} (PI)
+(II) edge      [bend right]        node {$b$} (IP);
+\end{tikzpicture}
+\end{example}
+
+\begin{exercice} (**) En reprenant l'exemple \ref{exemplePI}, montrer que $\forall w, w \in L \leftrightarrow$ l'automate accepte $w$. Vous pouvez procéder par induction sur $w$, en utilisant un objectif un peu plus précis que celui fourni.
+\end{exercice}
+
+%Dans la série d'exercices qui suit, on utilisera comme alphabet $\Sigma = \{a,b\}$.
+
+%\begin{exercice}
+%Donner un automate qui reconnaît le langage $\{w \in \Sigma^*~|~|w| \geq 3\}$. 
+%\end{exercice}
+
+
+\subsection{Formalisation}
+
+\section{Automates finis non-déterministes}
+\label{NDFA}
+
+\subsection{Principe général}
+
+\subsection{Formalisation}
+
+\section{Transformation d'automates}
+\label{transauto}
+
+\subsection{Complétion}
+
+\subsection{Déterminisation}
+
+\subsection{Minimisation}
+
+\section{Propriétés de clôture}
+\label{cloture}
+\subsection{Union}
+
+\subsection{Intersection}
+
+\subsection{Concaténation}
+
+\subsection{Itération}
+
