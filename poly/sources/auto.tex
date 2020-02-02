@@ -167,30 +167,293 @@ Au final, on obtient l'automate suivant :
 \begin{exercice} (**) En reprenant l'exemple \ref{exemplePI}, montrer que $\forall w, w \in L \leftrightarrow$ l'automate accepte $w$. Vous pouvez procéder par induction sur $w$, en utilisant un objectif un peu plus précis que celui fourni.
 \end{exercice}
 
-%Dans la série d'exercices qui suit, on utilisera comme alphabet $\Sigma = \{a,b\}$.
+Dans la série d'exercices qui suit, on utilisera comme alphabet $\Sigma = \{a,b\}$.
 
-%\begin{exercice}
-%Donner un automate qui reconnaît le langage $\{w \in \Sigma^*~|~|w| \geq 3\}$. 
-%\end{exercice}
+\begin{exercice}
+Donner un automate qui reconnaît le langage $\{w \in \Sigma^*~|~|w| \geq 3\}$. 
+\end{exercice}
 
+\begin{exercice}
+Donner un automate pour les mots qui commencent par $a$.
+\end{exercice}
+
+\begin{exercice}
+Donner un automate pour les mots qui finissent par $b$.
+\end{exercice}
+
+\begin{exercice}
+Donner un automate pour les mots qui commencent par $a$ finissent par $b$.
+\end{exercice}
+
+
+\begin{exercice}
+Donner un automate pour les mots de longueur paire.
+\end{exercice}
+
+\begin{exercice}
+Donner un autuomate pour les mots de longueur impaire qui contiennent au moins 4 lettres.
+\end{exercice}
+
+\begin{exercice}
+Donner un automate pour les mots de longueur impaire, qui contiennent au moins 4 lettres, commencent par $a$ et finissent par $b$.
+\end{exercice}
 
 \subsection{Formalisation}
+
+Un automate fini déterministe est un $5-uplet$ (cad. un "paquet" qui contient 5 éléments ordonnés)
+
+\[
+%A =  
+\big \langle Q,\Sigma,q_0,F,\delta \big \rangle
+\]
+
+avec
+
+\begin{itemize}
+\item[] $Q$ ensemble fini d'états
+\item[] $\Sigma$ l'alphabet
+\item[] $q_0$ l'état initial
+\item[] $F \subseteq Q$, les états terminaux
+\item[] $\delta$ fonction partielle\footnote{Une fonction partielle est une fonction qui n'attribue pas forcément une image à tout argument. Dans le cas d'un automate complet, la fonction de transition est donc une fonction totale.} de $Q \times \Sigma$ dans $Q$ 
+\end{itemize}
+
+La fonction $\delta$ est alors \textit{liftée} aux mots\footnote{On dit qu'une fonction est \textit{liftée} lorsqu'on "soulève" le type d'un ou plusieurs de ses arguments, pour qu'elle s'applique par exemple à des listes ou des ensembles. Typiquement, si on a une fonction $f$ de type $\mathbb{N} \rightarrow \mathbb{N}$, alors sa version \textit{liftée} aux listes, étant donnée une liste $[a_1,...,a_n]$, renverra $[f(a_1),...,f(a_n)]$.} pour obtenir la fonction $\delta^* : (Q \times \Sigma^*) \rightarrow$ définie de la façon suivante :
+
+\begin{itemize}
+\item $\delta^*(q,\epsilon) = q$
+\item $\delta^*(q,a.w) = \delta^*(\delta(q,a),w)$ ($a$ est une lettre et $w$ un mot, éventuellement vide)
+\end{itemize}
+
+Plus prosaïquement, la fonction $\delta^*$ applique $\delta$ sur $w$, lettre par lettre, de la gauche vers la droite. Dans ce cadre, on dit qu'un mot $w$ est \textbf{reconnu} (ou accepté) par l'automate ssi. $\delta^*(q_0,w) \in F$. Dit encore autrement, un mot est accepté ssi en partant de l'état initial de l'automate et en suivant les transitions correspondant aux lettres successives du mot on finit dans un état terminal. 
+
+TODO rapport avec algo / prog
+
+\begin{example}
+L'automate de la figure \ref{aaauto} se formalise de la façon suivante :
+
+\begin{itemize}
+\item $Q = \{0,1,2\}$
+\item $\Sigma = \{a,b\}$
+\item $q_0 = 0$
+\item $F = \{2\}$
+\item $\delta(0,a) = 1; \delta(0,b) = 0; \delta(1,a) = 2; \delta(1,b) = 0; \delta(2,a) = 2; \delta(2,b) = 2$
+\end{itemize}
+
+On peut vérifier qu'il accepte bien le mot $abbaaba$ (lecture comme une BD) :
+
+\begin{tabular}{lllll}
+$\delta^*(0,abbaaba)$ &$=$& $\delta^*(\delta(0,a),bbaaba)$& $=$&$\delta^*(1,bbaaba)$ \\
+&$=$& $\delta^*(\delta(1,b),baaba)$ &$=$& $\delta^*(0,baaba) $\\
+&$=$& $\delta^*(\delta(0,b),aaba)$ &$=$& $\delta^*(0,aaba) $\\
+&$=$& $\delta^*(\delta(0,a),aba)$ &$=$& $\delta^*(1,aba) $\\
+&$=$& $\delta^*(\delta(1,a),ba)$ &$=$& $\delta^*(2,ba) $\\
+&$=$& $\delta^*(\delta(2,b),a)$ &$=$& $\delta^*(2,a) $\\
+&$=$& $\delta^*(\delta(2,a),\epsilon)$ &$=$& $\delta^*(2,\epsilon) $\\
+&&&$=$&$2 \in F$
+\end{tabular}
+
+
+\end{example}
+
+\begin{exercice}
+Donner la formalisation de l'automate de l'exemple \ref{exemplePI} et vérifier qu'il accepte le mot $aababba$. 
+\end{exercice}
+
+On a introduit en \ref{reappart} l'expression rationnelle $e = ((\Sigma^*baaba^+)^*baa(abba)^+ba(bb)^*a)^*$, qu'on était censé traduire en programme via les automates finis. Or, la traduction en AFD n'est à priori pas si évidente que ça (on conseille à nouveau d'essayer pour se rendre compte de la difficulté), du fait du haut niveau de non-déterminisme dans la \textit{regex}. On va donc avoir besoin d'un modèle un peu plus permissif.
 
 \section{Automates finis non-déterministes}
 \label{NDFA}
 
+Les automates finis qu'on a vus jusqu'ici sont déterministes, en ce qu'un automate admet au maximum une seule transition par lettre, et donc que tout mot n'a lui-même pas plus d'un chemin. On va ici voir une nouvelle classe d'automates, les automates finis non-déterministes (AFND, ou \textit{NDFA} pour \textit{non-deterministic finite automaton/a}), qui vont justement nous libérer de cette contrainte.
+
 \subsection{Principe général}
 
+Le non-déterminisme se manifeste de deux façons. On a d'abord les $\epsilon$-transitions, qui seront étudiées à part dans le cadre d'un DM. Ici, on se concentrera sur la possibilité d'avoir plusieurs transitions pour le même couple état $\times$ lettre, ainsi que plusieurs états initiaux.
+
+On peut donc maintenant avoir dans un automate plusieurs chemins pour un même mot, chemins qui vont chacun mener ou non à un état terminal. On accepte tout mot qui mène à un état terminal via au moins un chemin.
+
+\begin{example}
+Le langage des mots qui contiennent le facteur $aba$, dénoté par la \textit{regex} $\Sigma^*aba\Sigma^*$, est reconnu par l'automate suivant :
+
+\begin{figure}[!ht]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.9cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state] (0)                    {$0$};
+  \node[state] (1)      [right of=0]                {$1$};  
+  \node[state] (2)      [right of=1]                {$2$};
+  \node[accepting,state] (3)      [right of=2]                {$2$};
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(0) edge      [loop above]        node {$a,b$} (0)
+(0) edge      []        node {$a$} (1)
+(1) edge      []        node {$b$} (2)
+(2) edge      []        node {$a$} (3)
+(3) edge      [loop above]        node {$a,b$} (3);
+\end{tikzpicture}
+\end{figure}
+
+Si on regarde par exemple le mot $aabab$, il dispose de 3 parcours dans l'automate : 
+
+\begin{itemize}
+\item $0 \xrightarrow{a} 0 \xrightarrow{a} 0 \xrightarrow{b} 0 \xrightarrow{a} 0 \xrightarrow{b} 0$
+\item $0 \xrightarrow{a} 0 \xrightarrow{a} 0 \xrightarrow{b} 0 \xrightarrow{a} 1 \xrightarrow{b} 2$
+\item $0 \xrightarrow{a} 0 \xrightarrow{a} 1 \xrightarrow{b} 2 \xrightarrow{a} 3 \xrightarrow{b} 3$
+\end{itemize}
+
+On peut aussi passer dans l'état $1$ avec le premier $a$, mais il sera alors impossible de lire l'entiéreté du mot (le deuxième $a$ n'aura pas de transition).
+
+Des trois chemins possibles, un seul mène à un état terminal. C'est néanmoins suffisant pour que le mot soit accepté. A l'inverse, le mot $abbaabbaaabba$, bien que pouvant faire de très nombreux chemins dans l'automate, n'est pas accepté car aucun ne finit en $3$
+\end{example}
+
+Un tel automate a l'avantage de reconnaître très clairement le langage $\Sigma^*aba\Sigma^*$. On peut par exemple le comparer à sa version déterministe qui, malgré la simplicité du langage, perd déjà pas mal en lisibilité :
+
+\begin{figure}[!ht]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.9cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state] (0)                    {$0$};
+  \node[state] (1)      [right of=0]                {$1$};  
+  \node[state] (2)      [right of=1]                {$2$};
+  \node[accepting,state] (3)      [right of=2]                {$3$};
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(0) edge      [loop above]        node {$b$} (0)
+(0) edge      []        node {$a$} (1)
+(1) edge      [loop above]        node {$a$} (1)
+(1) edge      []        node {$b$} (2)
+(2) edge      []        node {$a$} (3)
+(2) edge      [bend left]        node {$b$} (0)
+(3) edge      [loop above]        node {$a,b$} (3);
+\end{tikzpicture}
+\end{figure}
+
+La grande différence entre les deux automates est que le premier utilise le non-déterminisme pour être une transcription directe de la \textit{regex}, là où le deuxième se bat avec le déterminisme pour reconnaître le langage de façon presque "accidentelle". En un sens, on est passé du domaine de la \textbf{spécification} à l'\textbf{implémentation}. La mauvaise nouvelle, c'est que les automates non-déterministes sont plus compliqués à mettre en pratique, du fait - ô surprise - du non-déterminisme, qui impose de tester énormément de chemins. La bonne nouvelle, c'est que, comme on va le voir en \ref{det}, on peut traduire automatiquement les automates non-déterministes en automates déterministes équivalents\footnote{Pour se rendre compte du miracle que c'est, on peut comparer aux langages de programmation classiques. Ce n'est pas parce qu'on a spécifié formellement, par exemple, le tri d'une liste (ce qui est déjà surprenamment non-trivial) qu'on peut automatiquement obtenir un programme réalisant cette tâche. Même une fois qu'on a codé un tel programme, selon l'algorithme chopisi, il n'est pas forcément aisé de se convaincre qu'il est correct, et encore moins de le prouver formellement. Il est donc assez \textit{cool} que tout ce passage de la spécification (la \textit{regex}) à une représentation intermédiaire (l'automate non-déterministe) à l'implémentation (le déterministe) soit automatique et sûre.}, avec bien sûr un certain coût. Mais avant de plonger dans ces histoires, on va voir encore quelques exemples d'AFND, et en étudier la formalisation.
+
+\begin{example}
+On veut reconnaître le langage des mots qui contiennent le facteur $aba$ ou (inclusif) $bab$. On peut exploiter la possibilité d'avoir plusieurs états initiaux, et tout simplement produire l'automate suivant :
+
+\begin{figure}[!ht]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.9cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state] (0)                    {$0$};
+  \node[state] (1)      [right of=0]                {$1$};  
+  \node[state] (2)      [right of=1]                {$2$};
+  \node[accepting,state] (3)      [right of=2]                {$3$};
+
+  \node[initial,state] (4)  [below of=0]            {$4$};
+  \node[state] (5)      [right of=4]                {$5$};  
+  \node[state] (6)      [right of=5]                {$6$};
+  \node[accepting,state] (7)      [right of=6]                {$7$};
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(0) edge      [loop above]        node {$a,b$} (0)
+(0) edge      []        node {$a$} (1)
+(1) edge      []        node {$b$} (2)
+(2) edge      []        node {$a$} (3)
+(3) edge      [loop above]        node {$a,b$} (3)
+(4) edge      [loop above]        node {$a,b$} (4)
+(4) edge      []        node {$b$} (5)
+(5) edge      []        node {$a$} (6)
+(6) edge      []        node {$b$} (7)
+(7) edge      [loop above]        node {$a,b$} (7);
+
+\end{tikzpicture}
+\end{figure}
+
+On notera bien sûr la symétrie entre l'automate ci-dessus, et la regex $\Sigma^*aba\Sigma^* + \Sigma^*bab\Sigma^*$.
+
+On peut aussi tenter d'être un poil plus malin, se rendre compte que les états $0$ et $4$ ont le même \textbf{rôle}, que les états $3$ et $7$ aussi, et donc qu'on peut réduire le nombre d'états en les fusionnant :
+
+
+\begin{figure}[!ht]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.9cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state] (0)                    {$0/4$};
+  \node[state] (1)      [above right of=0]                {$1$};  
+  \node[state] (2)      [right of=1]                {$2$};
+  \node[state] (3)      [below right of=0]                {$5$};  
+  \node[state] (4)      [right of=3]                {$6$};
+  \node[accepting,state] (5)      [below right of=2]                {$3/7$};
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(0) edge      [loop right]        node {$a,b$} (0)
+(0) edge      []        node {$a$} (1)
+(0) edge      []        node {$b$} (3)
+(1) edge      []        node {$b$} (2)
+(3) edge      []        node {$a$} (4)
+(2) edge      []        node {$a$} (5)
+(4) edge      []        node {$b$} (5)
+(5) edge      [loop right]        node {$a,b$} (5);
+
+\end{tikzpicture}
+\end{figure}
+\newpage
+Cette notion d'états équivalents et fusionnables sera formalisée en \ref{minim}. On remarquera (à nouveau) la symétrie entre cet automate et la regex $\Sigma^*(aba+bab)\Sigma^*$.
+
+\end{example}
+
+\begin{exercice}
+Donner une \textit{regex} et un automate fini pour le langage $L = \{w ~|~ aba$ est un sous-mot de $w\}$.
+\end{exercice}
+
+
+\begin{exercice}
+Donner une \textit{regex} et un automate fini pour le langage des mots qui commencent par $ab$ et finissent par $ba$.
+\end{exercice}
+
 \subsection{Formalisation}
+
+Les automates non-déterministes sont une généralisation\footnote{En effet, un AFD peut-être vu comme un AFND qui se trouve être ... déterministe. Rien dans la définition d'un AFND n'impose que le non-déterminisme permis par le changement de type de $\delta$ soit exploité, et on peut donc très bien avoir $|\delta(q,c)| \leq 1~\forall q \in Q$ et $\forall c \in \Sigma$.} des automates déterministes, où
+ 
+\begin{itemize}
+\item L'état initial $q_0$ est remplacé par un ensemble d'états initiaux $I \subseteq Q$
+\item La fonction de transition $\delta$ change de type, en passant de $(Q \times \Sigma) \rightarrow Q$ à $(Q \times \Sigma) \rightarrow P(Q)$\footnote{Pour rappel, $P(Q)$ est l'ensemble des sous-parties de $Q$, cad. l'ensemble des ensembles d'états.}. Dit autrement, étant donnés un état $q \in Q$ et une lettre $c \in \Sigma$, on a (potentiellement) \textit{accès} à un ensemble d'états plutôt qu'à un seul.
+\end{itemize}
+
+
+Puisqu'on a changé le type $\delta$, on doit également changer son \textit{lift} $\delta^*$, qui renvoie maintenant un ensemble d'états et est donc de type $(Q \times \Sigma^*) \rightarrow P(Q)$ :
+ 
+\begin{itemize}
+\item $\delta^*(q,\epsilon) = \{q\}$
+\item $\delta^*(q,a.w) = \bigcup_{q' \in \delta(q,a)} \delta^*(q',w)$
+\end{itemize}
+
+
+TODO on a du coup un parcours d'arbre, à mettre en annexe
+%La fonction $\delta^*$ applique $\delta$ sur $w$, lettre par lettre, de la gauche vers la droite. Dans ce cadre, on dit qu'un mot $w$ est \textbf{reconnu} (ou accepté) par l'automate ssi. $\delta^*(q_0,w) \in F$. Dit encore autrement, un mot est accepté ssi en partant de l'état initial de l'automate et en suivant les transitions correspondant aux lettres successives du mot on finit dans un état terminal. 
+
 
 \section{Transformation d'automates}
 \label{transauto}
 
+La formalisation très limitée et simple des automates en fait des programmes particulièrement simple à manipuler, comme l'illustrent les algorithmes de transformation d'automates présentés ici.
+
 \subsection{Complétion}
 
 \subsection{Déterminisation}
+\label{det}
 
 \subsection{Minimisation}
+\label{minim}
 
 \section{Propriétés de clôture}
 \label{cloture}
