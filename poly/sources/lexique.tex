@@ -29,6 +29,33 @@ On obtient une contradiction, notre hypothèse sur la finitude des nombres premi
 
 \section{Ensembles}
 
+\subsection{Ensemble des parties}
+
+Soit un ensemble $X$, on note $P(X)$ (parfois $2^X$) l'ensemble de ses parties, cad l'ensemble des ensembles formés à partir d'éléments de $X$.
+
+\begin{example}
+Soit $X = \{x,y,z\}$, alors - en classant les éléments par leur cardinal -
+
+\begin{tabular}{llll}
+ $P(X) = \{$ & $\emptyset$, & & \\
+& $\{x\}$,&$\{y\}$,&$\{z\}$,\\
+&$\{x,y\}$,& $\{x,z\}$,&$\{y,z\}$\\
+& $\{x,y,z\}$ & &$~~~~~~~~\}$.
+\end{tabular}
+\end{example}
+
+\begin{lemma}
+$\forall X, \emptyset \in P(X) \wedge X \in P(X)$.
+\end{lemma}
+
+\begin{lemma}
+$\forall X, |P(X)| = 2^{|X|}$.
+\end{lemma}
+
+\begin{proof}
+Pour générer l'ensemble des sous-ensembles de $X$, on choisit de prendre ou non chaque élément de $X$. On a donc $\underbrace{2 \times 2 \times ... \times 2}_{\textrm{n fois}}$ choix, d'où les $2^{|X|}$ au total.
+\end{proof}
+
 \subsection{Opérations entre ensembles}
 
 \begin{definition}{Produit d'ensembles}{}
