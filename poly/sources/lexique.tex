@@ -86,3 +86,60 @@ E_1 \times E_2 = \{(x,y)~|~x \in E_1~\wedge~y \in E_2\}
 
 Le produit cartésien, noté $\times$, renvoie l'ensemble des couples d'éléments de deux ensembles donnés. Il s'agit d'un cas particulier du produit d'ensemble, où l'opération est la "mise en couple". Cette opération ne pouvant pas être un endormorphisme, le produit cartésien ne peut être itéré.
 
+\section{Algorithmique}
+
+\subsection{Itératif vs. récursif, le cas des parcours d'arbre}
+
+On va comparer les implémentations itératives et récursives d'un parcours d'arbre. On regardera, sans perte de généralité, un parcours préfixe qui effectue une opération $f$ (par exemple afficher, peu importe) sur tous les éléments de l'arbre.
+
+Commençons par l'itératif. Puisqu'on a (littéralement des branchements, contrairement à une liste où on pourrait juste foncer tout droit, on va avoir besoin d'une mémoire. L'idée va être d'avoir une \textit{todo-list}, sous forme de pile, et d'explorer l'arbre en la suivant. On commence avec seulement la racine dans la pile et, chaque fois qu'en extrait un noeud comme dans la figure $\ref{simparbre}$, exécuter $f(x)$ et se noter qu'on doit explorer les arbre $d_1$, $d_2$ et $d_3$. Au total, on a l'algorithme de la figure \ref{treeit}.
+
+\begin{figure}[!ht]
+\centering
+$\Tree[.x d_1 d_2 d_3 ]$
+\caption{Exemple de noeud}
+\label{simparbre}
+\end{figure}
+
+\begin{figure}[!ht]
+\begin{python}
+# fonction tree_it(arbre)
+todo = stack()
+todo.add(root(arbre))
+while (todo pas vide):
+    current = todo.pop()
+    if current is Leaf(x):
+        f(x)
+    // si current est un noeud interne avec 
+    // un element x et la liste de descendants descs
+    elif current is Noeud(x,descs):
+        f(x)
+        // pour du prefixe, on doit avoir
+        // d1 plus haut dans la pile que d2
+        for d in reverse(descs):
+             todo.add(d)
+
+\end{python}
+\caption{Parcours itératif d'arbre}
+\label{treeit}
+\end{figure}
+
+Il n'est pas totalement trivial de se convaincre que cet algorithme visite bien tous les noeuds d'un arbre donné dans un ordre préfixe, notamment en comparaison de la version récursive trouvable en figure \ref{treerec}
+
+\begin{figure}[!ht]
+\begin{python}
+# fonction tree_rec(arbre)
+if arbre is Leaf(x):
+    f(x)
+elif arbre is Noeud(x,descs):
+    f(x)
+    for d in descs:
+        tree_rec(d)
+\end{python}
+\caption{Parcours récursif d'arbre}
+\label{treerec}
+\end{figure}
+
+La version récursive est dite \textbf{de haut-niveau}, dans le sens où elle est très proche de la définition d'un parcours d'arbre, alors que la version itérative est plus \texbf{de bas-niveau}, en ce qu'elle implémente cette définition. Dit autrement, la version récursive est plus abstraite, là où la version itérative est plus concrète, dans la mise en pratique de la définition. D'ailleurs, la figure \ref{treeit} correspond bien à l'exécution de la figure \ref{treerec}, où la pile $todo$ remplace la pile d'appels, qui gère les appels récursifs en suivant "où on en est" et ce qu'il reste à faire.
+
+Ces deux approches ont bien sûr leurs avantages et inconvénients. La programmation de haut-niveau permet de se convaincre - voire de prouver - bien plus facilement qu'un programme réalise ce qu'il est censé faire, et est plus facilement lisible / réutilisable. Par contre, jouer soi-même avec l'implémentation de la récursion permet de gérer à la main ces mécanismes et donc potentiellement d'optimiser tout ça - bien que les compilateurs appliquent des optimisations de plus en plus puissantes, bien souvent plus sûres et malignes que ce qu'on peut imaginer. 
