@@ -198,7 +198,7 @@ Donner un autuomate pour les mots de longueur impaire qui contiennent au moins 4
 Donner un automate pour les mots de longueur impaire, qui contiennent au moins 4 lettres, commencent par $a$ et finissent par $b$.
 \end{exercice}
 
-\subsection{Formalisation}
+\subsection{Formalisation et implémentation}
 
 Un automate fini déterministe est un $5-uplet$ (cad. un "paquet" qui contient 5 éléments ordonnés)
 
@@ -226,7 +226,17 @@ La fonction $\delta$ est alors \textit{liftée} aux mots\footnote{On dit qu'une 
 
 Plus prosaïquement, la fonction $\delta^*$ applique $\delta$ sur $w$, lettre par lettre, de la gauche vers la droite. Dans ce cadre, on dit qu'un mot $w$ est \textbf{reconnu} (ou accepté) par l'automate ssi. $\delta^*(q_0,w) \in F$. Dit encore autrement, un mot est accepté ssi en partant de l'état initial de l'automate et en suivant les transitions correspondant aux lettres successives du mot on finit dans un état terminal. 
 
-TODO rapport avec algo / prog
+La définition de $\delta^*$ donne quasiment directement une implémentation de la reconnaissance via automate fini déterministe :
+\begin{figure}[!ht]
+\begin{python}
+state = q_0
+for c in w:
+    state = delta(state,c)
+return (state in F)
+\end{python}
+\caption{Reconnaissance par un AFD}
+\label{afdrec}
+\end{figure}
 
 \begin{example}
 L'automate de la figure \ref{aaauto} se formalise de la façon suivante :
@@ -420,7 +430,7 @@ Donner une \textit{regex} et un automate fini pour le langage $L = \{w ~|~ aba$ 
 Donner une \textit{regex} et un automate fini pour le langage des mots qui commencent par $ab$ et finissent par $ba$.
 \end{exercice}
 
-\subsection{Formalisation}
+\subsection{Formalisation et implémentation}
 
 Les automates non-déterministes sont une généralisation\footnote{En effet, un AFD peut-être vu comme un AFND qui se trouve être ... déterministe. Rien dans la définition d'un AFND n'impose que le non-déterminisme permis par le changement de type de $\delta$ soit exploité, et on peut donc très bien avoir $|\delta(q,c)| \leq 1~\forall q \in Q$ et $\forall c \in \Sigma$.} des automates déterministes, où
  
@@ -438,9 +448,64 @@ Puisqu'on a changé le type $\delta$, on doit également changer son \textit{lif
 \end{itemize}
 
 
-TODO on a du coup un parcours d'arbre, à mettre en annexe
-%La fonction $\delta^*$ applique $\delta$ sur $w$, lettre par lettre, de la gauche vers la droite. Dans ce cadre, on dit qu'un mot $w$ est \textbf{reconnu} (ou accepté) par l'automate ssi. $\delta^*(q_0,w) \in F$. Dit encore autrement, un mot est accepté ssi en partant de l'état initial de l'automate et en suivant les transitions correspondant aux lettres successives du mot on finit dans un état terminal. 
+Pour ce qui est de la mise en application de $\delta^*$, on est cette fois face à un parcours d'arbres (l'ensemble des chemins) plutôt que d'une liste, comme dans la version déterministe. On adapte donc l'annexe \ref{itersif} :
 
+\begin{figure}[!ht]
+\begin{python}
+# fonction ndfa_acc(auto,w)
+# renvoie true ssi. l automate auto accepte le mot w
+todo = stack()
+// On va empiler des couples etat x mot qu il faut tester
+// On commence par se noter tous les etats initiaux
+for i in initial(auto):
+    todo.add(i,w)
+while (todo pas vide):
+    (q,mot) = todo.pop()
+    // Si on a fini de lire le mot et qu on est
+    // arrive sur un etat final, on accepte
+    // Si l etat n est pas final, on ne renvoie
+    // pas false, car il peut rester des chemins
+    // qu il faut tester
+    if mot is empty et q in F:
+        return true 
+    elif mot is a.reste:
+        // On continue la lecture du mot avec 
+        // chaque etat qu on peut atteindre
+        // avec la première lettre
+        next_states = delta(q,a)
+        for suivant in next_states:
+            todo.add(suivant,reste)
+// Si on n a au final rien trouve, on dit non
+return false
+\end{python}
+\caption{Reconnaissance par un AFND - version iterative}
+%\label{treeit}
+\end{figure}
+
+\begin{figure}[!ht]
+\begin{python}
+# fonction ndfa_acc_bis(auto,w,q)
+# renvoie true ssi. l automate auto accepte le mot w en partant de l etat q
+if w is empty:
+    return q in F
+elif w is a.reste:
+    for suivant in delta(q,a):
+        if ndfa_acc_bis(auto,reste,suivant):
+            return true
+    return false
+
+
+# fonction ndfa_acc(auto,w)
+# renvoie true ssi. l automate auto accepte le mot w
+for i in initial(auto):
+    if ndfa_acc_bis(auto,w,i):
+        return true
+return false
+\end{python}
+\caption{Reconnaissance par un AFND - version récursive}
+%\label{treerec}
+\end{figure}
+\newpage
 
 \section{Transformation d'automates}
 \label{transauto}
