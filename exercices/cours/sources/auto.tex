@@ -1,0 +1,622 @@
+\chapter{Automates finis}
+\label{automates}
+
+\section{Automates finis déterministes}
+\label{DFA}
+
+\subsection{Principe général}
+
+
+\begin{figure}[!h]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.9cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state] (A)                    {$0$};
+  \node[state] (B)      [right of=A]                {$1$};
+  \node[accepting,state] (C)      [right of=B]                {$2$};
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(A) edge      [loop above]        node {$b$} (A)
+(C) edge      [loop above]        node {$a,b$} (C)
+(A) edge      [bend right]        node {$a$} (B)
+(B) edge      [bend right]        node {$b$} (A)
+(B) edge      []        node {$a$} (C);
+\end{tikzpicture}
+\caption{Un premier automate}
+\label{aaauto}
+\end{figure}
+
+\begin{exercice}
+Les mots $abbaba$, $ababbaab$ et $abba$ sont-ils acceptés par l'automate de la figure \ref{aaauto} ?
+\end{exercice}
+
+\begin{correction*}
+On a les parcours suivant dans l'automate :
+\begin{itemize}
+
+\item $abbaba$
+\begin{itemize}
+\item[] $0 \xrightarrow{a} 1 \xrightarrow{b} 0 \xrightarrow{b} 0 \xrightarrow{a} 1 \xrightarrow{b} 0 \xrightarrow{a} 1 \notin \{2\}$, donc non.
+\end{itemize}
+
+\item $ababbaab$
+\begin{itemize}
+\item[] $0 \xrightarrow{a} 1 \xrightarrow{b} 0 \xrightarrow{a} 1 \xrightarrow{b} 0 \xrightarrow{b} 0 \xrightarrow{a} 1 \xrightarrow{a} 2 \xrightarrow{b} 2 \in \{2\}$, donc oui.
+\end{itemize}
+
+\item $abba$
+\begin{itemize}
+\item[] $0 \xrightarrow{a} 1 \xrightarrow{b} 0 \xrightarrow{b} 0 \xrightarrow{a} 1 \notin \{2\}$, donc non.
+\end{itemize}
+
+\end{itemize}
+\end{correction*}
+
+\begin{exercice}
+Quel est le \textbf{langage reconnu}, cad. l'ensemble des mots acceptés, par l'automate de la figure \ref{aaauto} ? Donner la réponse en français et sous forme d'expression rationnelle.
+\end{exercice}
+
+\begin{correction*}
+L'état $0$ correspond à "on n'a pas croisé de $aa$", l'état $1$ est "on vient de croiser un $a$ isolé" et $2$ est "On a croisé plus tôt $aa$". Le langage accepté est celui des mots ayant $aa$ comme facteur, cad. $\Sigma^*aa\Sigma^*$.
+\end{correction*}
+
+
+\begin{figure}[!h]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.9cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state] (A)                    {$0$};
+  \node[state] (B)      [right of=A]                {$1$};
+  \node[accepting,state] (C)      [right of=B]                {$2$};
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(A) edge      [loop above]        node {$b$} (A)
+(C) edge      [loop above]        node {$a,b$} (C)
+(A) edge      []        node {$a$} (B)
+(B) edge      []        node {$a$} (C);
+\end{tikzpicture}
+\caption{Un automate incomplet}
+\label{incompauto}
+\end{figure}
+
+
+\begin{exercice}
+Les mots $bbbaababbaaba$, $bbabaab$ et $baaaaaab$ sont-ils acceptés par l'automate de la figure \ref{incompauto} ?
+\end{exercice}
+
+
+\begin{correction*}
+On a les parcours suivant dans l'automate :
+\begin{itemize}
+
+\item $bbbaababbaaba$
+\begin{itemize}
+\item[] $0 \xrightarrow{b} 0 \xrightarrow{b} 0 \xrightarrow{b} 0 \xrightarrow{a} 1 \xrightarrow{a} 2 \xrightarrow{babbaaba} 2 \in \{2\}$, donc oui.
+\end{itemize}
+
+\item $bbabaab$
+\begin{itemize}
+\item[] $0 \xrightarrow{b} 0 \xrightarrow{b} 0 \xrightarrow{a} 1 \not\xrightarrow{b}$, donc non.
+\end{itemize}
+
+\item $baaaaaab$
+\begin{itemize}
+\item[] $0 \xrightarrow{b} 0 \xrightarrow{a} 1 \xrightarrow{a} 2 \xrightarrow{aaaab} 2 \in \{2\}$, donc oui.
+\end{itemize}
+
+\end{itemize}
+\end{correction*}
+
+\begin{exercice}
+Quel est le langage reconnu par l'automate de la figure \ref{incompauto} ? Donner la réponse en français et sous forme d'expression rationnelle.
+\end{exercice}
+
+\begin{correction*}
+On reste dans l'état $0$ tant qu'on a lu $b^*$. On passe en $1$ dès qu'on lit un premier $a$, et seul un autre $a$ tombant immédiatement permet de passer en $2$, où on accepte tout. Le langage reconnu est celui des mots qui contiennent des $a$ et dont le premier est immédiatement suivi d'un deuxième, cad. $b^*aa\Sigma^*$. 
+\end{correction*}
+
+\begin{example}
+\label{exemplePI}
+On veut écrire un automate reconnaissant le langage $L = \{w \in \Sigma^*~|~|w|_a$ pair et $|w|_b$ impair$\}$, cad. l'ensemble des mots avec un nombre pair de $a$ et impairs de $b$.
+
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.9cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state] (PP)                    {$PP$};
+  \node[state] (IP)      [above right of=PP]                {$IP$};  \node[state] (II)      [below right of=IP]                {$II$};
+  \node[accepting,state] (PI)      [below right of=PP]                {$PI$};
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(PP) edge      [bend right]        node {$a$} (IP)
+(PP) edge      [bend right]        node {$b$} (PI)
+(PI) edge      [bend right]        node {$a$} (II)
+(PI) edge      [bend right]        node {$b$} (PP)
+(IP) edge      [bend right]        node {$a$} (PP)
+(IP) edge      [bend right]        node {$b$} (II)
+(II) edge      [bend right]        node {$a$} (PI)
+(II) edge      [bend right]        node {$b$} (IP);
+\end{tikzpicture}
+\end{example}
+
+\begin{exercice} (**) En reprenant l'exemple \ref{exemplePI}, montrer que $\forall w, w \in L \leftrightarrow$ l'automate accepte $w$. Vous pouvez procéder par induction sur $w$, en utilisant un objectif un peu plus précis que celui fourni.
+\end{exercice}
+
+\begin{correction*}
+On est obligé, pour cette preuve, d'affiner la propriété qu'on veut prouver, en précisant le rôle des différents états :\\
+\begin{tabular}{crl}
+$\forall w,$& & $((PP \xrightarrow{w} PP$ ssi. $|w|_a $ pair et $|w|_b$ pair$)$ \\
+
+&$\wedge$& $(PP \xrightarrow{w} IP$ ssi. $|w|_a $ impair et $|w|_b$ pair$)$ \\
+
+&$\wedge$& $(PP \xrightarrow{w} PI$ ssi. $|w|_a $ pair et $|w|_b$ impair$)$ \\
+
+&$\wedge$& $(PP \xrightarrow{w} II$ ssi. $|w|_a $ impair et $|w|_b$ impair$))$ 
+
+\end{tabular}
+
+On procède par induction (droite) sur $w$. Dans le cas où $w = \epsilon$, la formule devient \\
+
+\begin{tabular}{rl}
+& $((PP \xrightarrow{\epsilon} PP$ ssi. $|\epsilon|_a $ pair et $|\epsilon|_b$ pair$)$ \\
+
+$\wedge$& $(PP \xrightarrow{\epsilon} IP$ ssi. $|\epsilon|_a $ impair et $|\epsilon|_b$ pair$)$ \\
+
+$\wedge$& $(PP \xrightarrow{\epsilon} PI$ ssi. $|\epsilon|_a $ pair et $|\epsilon|_b$ impair$)$ \\
+
+$\wedge$& $(PP \xrightarrow{\epsilon} II$ ssi. $|\epsilon|_a $ impair et $|\epsilon|_b$ impair$))$ 
+\end{tabular}
+
+Qui se réécrit en \\
+
+\begin{tabular}{rl}
+& $\top$ ssi. $\top$ \\
+
+$\wedge$& $\bot$ ssi. $\bot$ \\
+
+$\wedge$& $\bot$ ssi. $\bot$ \\
+
+$\wedge$& $\bot$ ssi. $\bot$
+\end{tabular}
+
+qui s'évalue à $\top$. Le cas de base est donc vrai. Pour la récursion, on suppose que la propriété est vraie pour $w$, et on veut vérifier qu'elle est vraie pour $w.a$ et $w.b$. On se concentre, sans perte de généralité, sur $w.a$. On a $4$ cas à étudier : $|w|_a$ pair et $|w|_b$ pair, $|w|_a$ impair et $|w|_b$ pair, $|w|_a$ pair et $|w|_b$ impair, et enfin $|w|_a$ impair et $|w|_b$ impair. On se concentre, encore une fois sans perte de généralité, sur le premier cas. On veut donc prouver \\
+
+\begin{tabular}{rl}
+& $((PP \xrightarrow{wa} PP$ ssi. $|wa|_a $ pair et $|wa|_b$ pair$)$ \\
+
+$\wedge$& $(PP \xrightarrow{wa} IP$ ssi. $|wa|_a $ impair et $|wa|_b$ pair$)$ \\
+
+$\wedge$& $(PP \xrightarrow{wa} PI$ ssi. $|wa|_a $ pair et $|wa|_b$ impair$)$ \\
+
+$\wedge$& $(PP \xrightarrow{wa} II$ ssi. $|wa|_a $ impair et $|wa|_b$ impair$))$ 
+\end{tabular}
+
+Puisqu'on est dans le cas $|w|_a$ pair et $|w|_b$ pair, $|wa|_a$ impair et $|wa|_b$ pair. De plus, l'hypothèse de récurrence nous dit que $PP \xrightarrow{w} PP$. Puisque $PP \xrightarrow{a} IP$, on a $PP \xrightarrow{wa} IP$. La propriété reste donc vraie en passant de $w$ à $w.a$.
+
+En généralisant cette preuve à tous les cas ignorés\footnote{Oui, la preuve formelle est un long et terrible chemin de croix parcouru par des héros et héroïnes du quotidien.}, on montre la propriété pour tout mot. Puisque le seul état terminal est $PI$, la correction de l'automate est un corrolaire.
+\end{correction*}
+
+Dans la série d'exercices qui suit, on utilisera comme alphabet $\Sigma = \{a,b\}$.
+
+\begin{exercice}
+Donner un automate qui reconnaît le langage $\{w \in \Sigma^*~|~|w| \geq 3\}$. 
+\end{exercice}
+
+\begin{correction*}
+
+On vérifie simplement la présence de 3 premières lettres avant d'autoriser n'importe quoi. Le nom des états représente le nombre de lettres lues : 
+
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.9cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state] (0)                    {$0$};
+  \node[state] (1)      [right of=0]                {$1$};  \node[state] (2)      [right of=1]                {$2$};
+  \node[accepting,state] (3)      [right of=2]                {$3+$};
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(0) edge      []        node {$a,b$} (1)
+(1) edge      []        node {$a,b$} (2)
+(2) edge      []        node {$a,b$} (3)
+(3) edge      [loop above]        node {$a,b$} (3);
+\end{tikzpicture}
+
+\end{correction*}
+
+\begin{exercice}
+Donner un automate pour les mots qui commencent par $a$.
+\end{exercice}
+
+\begin{correction*}
+
+On vérifie simplement la présence d'un $a$ au début du mot :
+
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.9cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state] (0)                    {$0$};
+  \node[state,accepting] (1)      [right of=0]                {$1$}; 
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(0) edge      []        node {$a$} (1)
+(1) edge      [loop above]        node {$a,b$} (1);
+\end{tikzpicture}
+
+\end{correction*}
+
+
+\begin{exercice}
+Donner un automate pour les mots qui finissent par $b$.
+\end{exercice}
+
+\begin{correction*}
+
+On vérifie simplement la présence d'un $b$ qui ne peut être suivi par rien :
+
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.9cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state] (0)                    {$0$};
+  \node[state,accepting] (1)      [right of=0]                {$1$}; 
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(0) edge      []        node {$b$} (1)
+(0) edge      [loop above]        node {$a,b$} (0);
+\end{tikzpicture}
+
+\end{correction*}
+
+\begin{exercice}
+Donner un automate pour les mots qui commencent par $a$ finissent par $b$.
+\end{exercice}
+
+\begin{correction*}
+
+En mélangeant les automates précédant, on obtient
+
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.9cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state] (0)                    {$0$};
+  \node[state] (1)      [right of=0]                {$1$}; 
+  \node[state,accepting] (2)      [right of=1]                {$2$}; 
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(0) edge      []        node {$a$} (1)
+(1) edge      [loop above]        node {$a,b$} (1)
+(1) edge      []        node {$b$} (2);
+\end{tikzpicture}
+
+\end{correction*}
+
+\begin{exercice}
+Donner un automate pour les mots de longueur paire.
+\end{exercice}
+
+
+\begin{correction*}
+
+On suit juste la parité de la longueur du mot donné :
+
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.9cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state,accepting] (0)                    {$P$};
+  \node[state] (1)      [right of=0]                {$I$}; 
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(0) edge      [bend right]        node {$a,b$} (1)
+(1) edge      [bend right]        node {$a,b$} (0);
+\end{tikzpicture}
+
+\end{correction*}
+
+
+\begin{exercice}
+Donner un autuomate pour les mots de longueur impaire qui contiennent au moins 4 lettres.
+\end{exercice}
+
+\begin{correction*}
+
+On vérifie d'abord qu'on a 5 lettres, puis qu'on ajoute un nombre pair de lettres :
+
+
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.9cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state] (0)                    {$0$};
+  \node[state] (1)      [right of=0]                {$1$};
+  \node[state] (2)      [right of=1]                {$2$};
+  \node[state] (3)      [right of=2]                {$3$};
+  \node[state] (4)      [right of=3]                {$4$};
+  \node[state,accepting] (5)      [right of=4]                {$5$}; 
+  \node[state] (P)      [above of=5]                {$P$}; 
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(0) edge      []        node {$a,b$} (1)
+(1) edge      []        node {$a,b$} (2)
+(2) edge      []        node {$a,b$} (3)
+(3) edge      []        node {$a,b$} (4)
+(4) edge      []        node {$a,b$} (5)
+(5) edge      [bend left]        node {$a,b$} (P)
+(P) edge      [bend left]        node {$a,b$} (5);
+\end{tikzpicture}
+
+Notez qu'on peut ici fusionner les états $4$ et $I$ :
+
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.9cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state] (0)                    {$0$};
+  \node[state] (1)      [right of=0]                {$1$};
+  \node[state] (2)      [right of=1]                {$2$};
+  \node[state] (3)      [right of=2]                {$3$};
+  \node[state] (4)      [right of=3]                {$4$};
+  \node[state,accepting] (5)      [right of=4]                {$5$}; 
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(0) edge      []        node {$a,b$} (1)
+(1) edge      []        node {$a,b$} (2)
+(2) edge      []        node {$a,b$} (3)
+(3) edge      []        node {$a,b$} (4)
+(4) edge      [bend left]        node {$a,b$} (5)
+(5) edge      [bend left]        node {$a,b$} (4);
+\end{tikzpicture}
+\end{correction*}
+
+
+\begin{exercice}
+Donner un automate pour les mots de longueur impaire, qui contiennent au moins 4 lettres, commencent par $a$ et finissent par $b$.
+\end{exercice}
+
+
+\begin{correction*}
+
+On contraint un peu l'automate précédent en forçant un $a$ au début, et en ajoutant un état (on ne peut plus avoir $5$ terminal, car sinon on va soit permettre de finir avec $a$, soit trop contraindre l'intérieur des mots) :
+
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.9cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state] (0)                    {$0$};
+  \node[state] (1)      [right of=0]                {$1$};
+  \node[state] (2)      [right of=1]                {$2$};
+  \node[state] (3)      [right of=2]                {$3$};
+  \node[state] (4)      [right of=3]                {$4$};
+  \node[state] (5)      [right of=4]                {$5$}; 
+  \node[state,accepting] (F)      [above right of=4]                {$F$}; 
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(0) edge      []        node {$a$} (1)
+(1) edge      []        node {$a,b$} (2)
+(2) edge      []        node {$a,b$} (3)
+(3) edge      []        node {$a,b$} (4)
+(4) edge      [bend left]        node {$a,b$} (5)
+(4) edge      []        node {$b$} (F)
+(5) edge      [bend left]        node {$a,b$} (4);
+\end{tikzpicture}
+\end{correction*}
+
+\subsection{Formalisation et implémentation}
+
+\begin{exercice}
+Donner la formalisation de l'automate de l'exemple \ref{exemplePI} et vérifier qu'il accepte le mot $aababba$. 
+\end{exercice}
+
+\begin{correction*}
+On a le 5-uplet suivant :
+\begin{itemize}
+\item $Q = \{PP,IP,PI,II\}$
+\item $\Sigma = \{a,b\}$
+\item $q_0 = PP$
+\item $F = \{PI\}$
+\item $\delta(PP,a) = IP; \delta(PP,b) = PI; \delta(IP,a) = PP; \delta(IP,b) = II; \delta(PI,a) = II; \delta(PI,b) = PP; \delta(II,a) = PI; \delta(II,b) = IP$.
+\end{itemize}
+
+On a alors le calcul suivant : 
+
+\begin{itemize}
+\item[] $\delta^*(PP,aababba)$
+\item[$=$] $\delta^*(\delta(PP,a),ababba)$
+\item[$=$] $\delta^*(IP,ababba)$
+\item[$=$] $\delta^*(\delta(IP,a),babba)$
+\item[$=$] $\delta^*(PP,babba)$
+\item[$=$] $\delta^*(PI,abba)$
+\item[$=$] $\delta^*(II,bba)$
+\item[$=$] $\delta^*(IP,ba)$
+\item[$=$] $\delta^*(II,a)$
+\item[$=$] $\delta^*(PI,\epsilon)$
+\item[$=$] $PI \in \{PI\}$, donc oui.
+\end{itemize}
+
+\end{correction*}
+
+\section{Automates finis non-déterministes}
+\label{NDFA}
+
+\subsection{Principe général}
+
+
+\begin{exercice}
+Donner une \textit{regex} et un automate fini pour le langage $L = \{w ~|~ aba$ est un sous-mot de $w\}$.
+\end{exercice}
+
+\begin{correction*}
+On peut fournir une $\textit{regex}$ hautemennt non-déterministe : $\Sigma^*a\Sigma^*b\Sigma^*a\Sigma^*$. L'automate non-déterministe équivalent est 
+
+
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.9cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state] (0)                    {$0$};
+  \node[state] (1)      [right of=0]                {$1$};
+  \node[state] (2)      [right of=1]                {$2$};
+  \node[state,accepting] (3)      [right of=2]                {$3$};
+
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(0) edge      [loop above]        node {$a,b$} (0)
+(0) edge      []        node {$a$} (1)
+(1) edge      [loop above]        node {$a,b$} (1)
+(1) edge      []        node {$b$} (2)
+(2) edge      [loop above]        node {$a,b$} (2)
+(2) edge      []        node {$a$} (3)
+(3) edge      [loop above]        node {$a,b$} (3);
+\end{tikzpicture}
+
+Assez étonnamment, on peut concevoir un automate déterministe qui reconnaît le même langage avec le même nombre d'états. 
+
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.9cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state] (0)                    {$0$};
+  \node[state] (1)      [right of=0]                {$1$};
+  \node[state] (2)      [right of=1]                {$2$};
+  \node[state,accepting] (3)      [right of=2]                {$3$};
+
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(0) edge      [loop above]        node {$b$} (0)
+(0) edge      []        node {$a$} (1)
+(1) edge      [loop above]        node {$a$} (1)
+(1) edge      []        node {$b$} (2)
+(2) edge      [loop above]        node {$b$} (2)
+(2) edge      []        node {$a$} (3)
+(3) edge      [loop above]        node {$a,b$} (3);
+\end{tikzpicture}
+
+Dans cette version, on enlève certaines transitions pour forcer que les transitions horizontales soient prises dès que possible. Cet automate permet de déduire une \textit{regex} moins claire car moins ambigüe, et donc plus efficace : $b^*aa^*bb^*a\Sigma^*$.
+
+\end{correction*}
+
+\begin{exercice}
+Donner une \textit{regex} et un automate fini pour le langage des mots qui commencent par $ab$ et finissent par $ba$.
+\end{exercice}
+
+\begin{correction*}
+
+On pourrait d'abord avoir envie de répondre 
+
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.9cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state] (0)                    {$0$};
+  \node[state] (1)      [right of=0]                {$1$};
+  \node[state] (2)      [right of=1]                {$2$};
+  \node[state] (3)      [right of=2]                {$3$};
+  \node[state,accepting] (4)      [right of=3]                {$4$};
+
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(0) edge      []        node {$a$} (1)
+(1) edge      []        node {$b$} (2)
+(2) edge      [loop above]        node {$a,b$} (2)
+(2) edge      []        node {$b$} (3)
+(3) edge      []        node {$a$} (4);
+\end{tikzpicture}
+
+Cependant, cet automate n'accepte pas $aba$, qui fait pourtant partie du langage. Il s'agit cependant de la seule exception, qu'on peut rajouter à la main (l'état $5$ représente le choix que le premier $b$ est à la fois celui du début et de la fin, et donc que le mot lu est $aba$). On aurait pu être encore plus flemmard et rajouter deux états, dont un initial, plutôt que de partager $0$ et $1$.
+
+
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.9cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state] (0)                    {$0$};
+  \node[state] (1)      [right of=0]                {$1$};
+  \node[state] (2)      [right of=1]                {$2$};
+  \node[state] (3)      [right of=2]                {$3$};
+  \node[state,accepting] (4)      [right of=3]                {$4$};
+  \node[state] (5)      [below right of=1]                {$5$};
+  \node[state,accepting] (6)      [below right of=2]                {$6$};
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(0) edge      []        node {$a$} (1)
+(1) edge      []        node {$b$} (2)
+(2) edge      [loop above]        node {$a,b$} (2)
+(2) edge      []        node {$b$} (3)
+(1) edge      []        node {$b$} (5)
+(5) edge      []        node {$a$} (6)
+(3) edge      []        node {$a$} (4);
+\end{tikzpicture}
+
+La \textit{regex} correspondant à cet automate est $a(b\Sigma^*ba + ba)$. On aurait pu plus simplement utiliser la version défactorisée $ab\Sigma^*ba + aba$.
+
+\end{correction*}
+
+\subsection{Formalisation et implémentation}
+
+\section{Transformation d'automates}
+\label{transauto}
+
+%La formalisation très limitée et simple des automates en fait des programmes particulièrement simple à manipuler, comme l'illustrent les algorithmes de transformation d'automates présentés ici.
+
+\subsection{Complétion}
+
+\subsection{Déterminisation}
+\label{det}
+
+\subsection{Minimisation}
+\label{minim}
+
+\section{Propriétés de clôture}
+\label{cloture}
+\subsection{Union}
+
+\subsection{Intersection}
+
+\subsection{Concaténation}
+
+\subsection{Itération}
+

@@ -17,6 +17,13 @@
 \usepackage{tabularx}
 \usepackage{stmaryrd}
 
+
+\usetikzlibrary{arrows,automata}
+\tikzset{initial text={}}
+\usetikzlibrary{calc,shapes.multipart,chains,arrows}
+
+ 
+
 \newcommand{\mt}[1]{\left\llbracket \vcenter{
      \hbox{\bfseries#1}} \right\rrbracket}
 
@@ -53,6 +60,7 @@
 
 \theoremstyle{slanted}
 
+\newtheorem{example}{Exemple}[section]
 \newtheorem{exercice}{Exercice}[section]
 \newtheorem*{correction*}{Correction}
 
@@ -77,7 +85,7 @@
 
 \input{regex}
 
-%\input{auto}
+\input{auto}
 
 %\input{grams}
 
