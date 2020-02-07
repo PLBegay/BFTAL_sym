@@ -92,7 +92,7 @@ Le produit cartésien, noté $\times$, renvoie l'ensemble des couples d'élémen
 \label{itersif}
 On va comparer les implémentations itératives et récursives d'un parcours d'arbre. On regardera, sans perte de généralité, un parcours préfixe qui effectue une opération $f$ (par exemple afficher, peu importe) sur tous les éléments de l'arbre.
 
-Commençons par l'itératif. Puisqu'on a (littéralement des branchements, contrairement à une liste où on pourrait juste foncer tout droit, on va avoir besoin d'une mémoire. L'idée va être d'avoir une \textit{todo-list}, sous forme de pile, et d'explorer l'arbre en la suivant. On commence avec seulement la racine dans la pile et, chaque fois qu'en extrait un noeud comme dans la figure $\ref{simparbre}$, exécuter $f(x)$ et se noter qu'on doit explorer les arbre $d_1$, $d_2$ et $d_3$. Au total, on a l'algorithme de la figure \ref{treeit}.
+Commençons par l'itératif. Puisqu'on a (littéralement) des branchements, contrairement à une liste où on pourrait juste foncer tout droit, on va avoir besoin d'une mémoire. L'idée va être d'avoir une \textit{todo-list}, sous forme de pile, et d'explorer l'arbre en la suivant. On commence avec seulement la racine dans la pile et, chaque fois qu'en extrait un noeud comme dans la figure $\ref{simparbre}$, exécuter $f(x)$ et se noter qu'on doit explorer les arbre $d_1$, $d_2$ et $d_3$. Au total, on a l'algorithme de la figure \ref{treeit}.
 
 \begin{figure}[!ht]
 \centering
