@@ -217,7 +217,7 @@ avec
 \item[] $\delta$ fonction partielle\footnote{Une fonction partielle est une fonction qui n'attribue pas forcément une image à tout argument. Dans le cas d'un automate complet, la fonction de transition est donc une fonction totale.} de $Q \times \Sigma$ dans $Q$ 
 \end{itemize}
 
-La fonction $\delta$ est alors \textit{liftée} aux mots\footnote{On dit qu'une fonction est \textit{liftée} lorsqu'on "soulève" le type d'un ou plusieurs de ses arguments, pour qu'elle s'applique par exemple à des listes ou des ensembles. Typiquement, si on a une fonction $f$ de type $\mathbb{N} \rightarrow \mathbb{N}$, alors sa version \textit{liftée} aux listes, étant donnée une liste $[a_1,...,a_n]$, renverra $[f(a_1),...,f(a_n)]$.} pour obtenir la fonction $\delta^* : (Q \times \Sigma^*) \rightarrow$ définie de la façon suivante :
+La fonction $\delta$ est alors \textit{liftée} aux mots\footnote{On dit qu'une fonction est \textit{liftée} lorsqu'on "soulève" le type d'un ou plusieurs de ses arguments, pour qu'elle s'applique par exemple à des listes ou des ensembles. Typiquement, si on a une fonction $f$ de type $\mathbb{N} \rightarrow \mathbb{N}$, alors sa version \textit{liftée} aux listes, étant donnée une liste $[a_1,...,a_n]$, renverra $[f(a_1),...,f(a_n)]$.} pour obtenir la fonction $\delta^* : (Q \times \Sigma^*) \rightarrow Q$ définie de la façon suivante :
 
 \begin{itemize}
 \item $\delta^*(q,\epsilon) = q$
@@ -447,6 +447,7 @@ Puisqu'on a changé le type $\delta$, on doit également changer son \textit{lif
 \item $\delta^*(q,a.w) = \bigcup_{q' \in \delta(q,a)} \delta^*(q',w)$
 \end{itemize}
 
+Il nous reste à vérifier que l'ensemble d'états atteignales contient un état terminal. Un AFND accepte donc un mot $w$ ssi. $\exists q \in ((\bigcup_{q_i \in I} \delta^*(q_i,w)) \cap F)$.
 
 Pour ce qui est de la mise en application de $\delta^*$, on est cette fois face à un parcours d'arbres (l'ensemble des chemins) plutôt que d'une liste, comme dans la version déterministe. On adapte donc l'annexe \ref{itersif} :
 
