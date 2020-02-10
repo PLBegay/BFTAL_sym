@@ -283,6 +283,7 @@ Le non-déterminisme se manifeste de deux façons. On a d'abord les $\epsilon$-t
 On peut donc maintenant avoir dans un automate plusieurs chemins pour un même mot, chemins qui vont chacun mener ou non à un état terminal. On accepte tout mot qui mène à un état terminal via au moins un chemin.
 
 \begin{example}
+\label{exnondet1}
 Le langage des mots qui contiennent le facteur $aba$, dénoté par la \textit{regex} $\Sigma^*aba\Sigma^*$, est reconnu par l'automate suivant :
 
 \begin{figure}[!ht]
@@ -349,6 +350,7 @@ Un tel automate a l'avantage de reconnaître très clairement le langage $\Sigma
 La grande différence entre les deux automates est que le premier utilise le non-déterminisme pour être une transcription directe de la \textit{regex}, là où le deuxième se bat avec le déterminisme pour reconnaître le langage de façon presque "accidentelle". En un sens, on est passé du domaine de la \textbf{spécification} à l'\textbf{implémentation}. La mauvaise nouvelle, c'est que les automates non-déterministes sont plus compliqués à mettre en pratique, du fait - ô surprise - du non-déterminisme, qui impose de tester énormément de chemins. La bonne nouvelle, c'est que, comme on va le voir en \ref{det}, on peut traduire automatiquement les automates non-déterministes en automates déterministes équivalents\footnote{Pour se rendre compte du miracle que c'est, on peut comparer aux langages de programmation classiques. Ce n'est pas parce qu'on a spécifié formellement, par exemple, le tri d'une liste (ce qui est déjà surprenamment non-trivial) qu'on peut automatiquement obtenir un programme réalisant cette tâche. Même une fois qu'on a codé un tel programme, selon l'algorithme chopisi, il n'est pas forcément aisé de se convaincre qu'il est correct, et encore moins de le prouver formellement. Il est donc assez \textit{cool} que tout ce passage de la spécification (la \textit{regex}) à une représentation intermédiaire (l'automate non-déterministe) à l'implémentation (le déterministe) soit automatique et sûre.}, avec bien sûr un certain coût. Mais avant de plonger dans ces histoires, on va voir encore quelques exemples d'AFND, et en étudier la formalisation.
 
 \begin{example}
+\label{incomptoo}
 On veut reconnaître le langage des mots qui contiennent le facteur $aba$ ou (inclusif) $bab$. On peut exploiter la possibilité d'avoir plusieurs états initiaux, et tout simplement produire l'automate suivant :
 
 \begin{figure}[!ht]
@@ -511,12 +513,140 @@ return false
 \section{Transformation d'automates}
 \label{transauto}
 
-%La formalisation très limitée et simple des automates en fait des programmes particulièrement simple à manipuler, comme l'illustrent les algorithmes de transformation d'automates présentés ici.
+
+La formalisation très limitée et simple des automates en fait des programmes particulièrement simple à manipuler, comme l'illustrent les algorithmes de transformation d'automates présentés ici.
 
 \subsection{Complétion}
 
+
+On peut facilement compléter un automate en rajoutant un état "poubelle", non terminal et bouclant, qui absorbera tous les transitions ajoutées.
+
+\begin{example}
+Si on complète l'automate de la figure \ref{incompauto}, on rajoute un état $P$ qui boucle sur lui-même. Il manquait dans l'automate uniquement une $b$-transition partant de l'état $1$. On rajoute donc $1 \xrightarrow{b} P$, et on obtient 
+
+\begin{figure}[!h]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.9cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state] (A)                    {$0$};
+  \node[state] (B)      [right of=A]                {$1$};
+  \node[state] (P)      [below of=B]                {$P$};
+  \node[accepting,state] (C)      [right of=B]                {$2$};
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(A) edge      [loop above]        node {$b$} (A)
+(C) edge      [loop above]        node {$a,b$} (C)
+(A) edge      []        node {$a$} (B)
+(B) edge      []        node {$b$} (P)
+(P) edge      [loop left]        node {$a,b$} (P)
+(B) edge      []        node {$a$} (C);
+\end{tikzpicture}
+\caption{Un automate complété}
+\label{incompautocor}
+\end{figure}
+\end{example}
+
+\begin{exercice}
+Compléter le premier automate de l'exemple \ref{incomptoo}.
+\end{exercice}
+
+On peut se convaincre assez facilement que la complétion ne change pas le langage reconnu par un automate : un parcours prend de nouvelles transitions ssi. il ne pouvait aller jusqu'au bout dans l'automate initial. Dans les deux cas, le mot associé n'est pas accepté, puisqu'on boucle sur un état non-terminal dans le premier cas, et on "plante" dans le second.
+
+Cette transformation se formalise également assez facilement. Soit un automate $\big \langle Q,\Sigma,q_0,F,\delta \big \rangle$, alors on renvoie l'automate \big \langle Q \cup~\{P\},\Sigma,q_0,F,\delta' \big \rangle, avec
+
+\[
+\left\{\!\begin{aligned}
+&\delta'(q,a) = \delta(q,a) &\text{ si } \delta(q,a) \text{ défini},\\[1ex]
+&\delta'(q,a) = P &\text{ si } \delta(q,a) \text{ non défini},\\[1ex]
+&\delta'(P,a) = P &\text{ pour tout } a \in \Sigma\\[1ex]
+\end{aligned}
+\]
+
+Notez qu'on met les cas $\delta'(P,a)$ à part, car (on suppose) $P \not\in Q$, ce qui implique que $\delta(P,a)$ n'a pas de sens.
+
 \subsection{Déterminisation}
 \label{det}
+
+L'algorithme présenté ici prend en entrée un AFND et renvoie un AFD reconnaissant le même langage. L'idée est que l'AFD va simuler le comportement de l'AFND, et donc, étant donné un mot, que le (seul) parcours dans l'AFD va représenter tous ceux dans l'AFND.
+
+Pour ça, l'ensemble d'états de l'AFD va être l'ensemble des combinaisons d'états de l'AFND. Par exemple, si on a dans ce derniers deux états initiaux $i_1$ et $i_2$, l'automate initial de l'AFD sera l'état $\{i_1, i_2\}$. Supposons de plus que les transitions partant de $i_1$ et $i_2$ sont les suivantes :
+
+\begin{itemize}
+\item $i_1 \xrightarrow{a} q_1$
+\item $i_1 \xrightarrow{a} q_2$
+\item $i_2 \xrightarrow{a} q_1$
+\item $i_2 \xrightarrow{a} q_3$
+\end{itemize}
+
+Tout mot commençant par $a$ lu par l'AFND peut donc faire son premier saut en $q_1$, $q_2$ ou $q_3$. On ajoute donc à l'AFD la transition $\{i_1,i_2\} \xrightarrow{a} \{q_1, q_2, q_3\}$, et ainsi de suite.
+
+Arriver, après lecture d'un mot, dans un état $X$ de l'AFD signifie donc que, dans l'AFND, on peut atterir dans chacun des états contenus dans $X$ après la lecture du même mot. Puisqu'un AFND accepte quand au moins un des parcours termine sur un état terminal, tout état de l'AFD contenant un état terminal est lui-même terminal. 
+
+\begin{example}
+\label{detex1}
+Si on essayer de déterminiser l'automate de l'exemple \ref{exnondet1}, on obtient
+
+\begin{figure}[!ht]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.9cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state] (0)                    {$0$};
+  \node[state] (1)      [right of=0]                {$0,1$};  
+  \node[state] (2)      [right of=1]                {$0,2$};
+  \node[accepting,state] (3)      [right of=2]                {$0,1,3$};
+  \node[accepting,state] (4)      [right of=3]                {$0,2,3$};
+  \node[accepting,state] (5)      [below of=4]                {$0,3$};
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(0) edge      [loop above]        node {$b$} (0)
+(0) edge      []        node {$a$} (1)
+(1) edge      [loop above]        node {$a$} (1)
+(1) edge      []        node {$b$} (2)
+(2) edge      [bend left]        node {$b$} (0)
+(2) edge      []        node {$a$} (3)
+(3) edge      [loop above]        node {$a$} (3)
+(3) edge      []        node {$b$} (4)
+(4) edge      [bend left]        node {$a$} (3)
+(4) edge      []        node {$b$} (5)
+(5) edge      [loop right]        node {$b$} (3)
+(5) edge      []        node {$a$} (3);
+\end{tikzpicture}
+\end{figure}
+
+On notera une grande proximité avec la déterminisation "à la main" qu'on avait initialement faite dans l'exemple. En effet, on a les correspondances suivantes entre les états :
+
+\begin{itemize}
+\item $0 \approx 0$
+\item $1 \approx 0,1$
+\item $2 \approx 0,2$
+\item $3 \approx 0,1,3 + 0,2,3 + 0,3$
+\end{itemize}
+\end{example}
+
+\begin{exercice}
+Déterminiser le premier automate de l'exemple \ref{incomptoo}.
+\end{exercice}
+
+La déterminisation se formalise aussi assez bien en termes de définitions. Soit un automate $\big \langle Q,\Sigma,I,F,\delta \big \rangle$, alors on renvoie l'automate \big \langle P(Q),\Sigma,\bigcup_{i \in I} i,F,\delta' \big \rangle, avec
+
+\[
+\delta'(X,a) = \bigcup_{q \in X} \delta(q,a)
+\]
+
+Noter que suivre cette définition génère un automate qui contient tout un tas d'états qui vont être inatteignables, et donc ne servir à rien. En l'appliquant sur l'exemple \ref{detex1}, on devrait notamment produire les états $\{1,2\}$ ou $\{2,3\}$. En pratique, on préfèrera donc suivre l'algorithme présenté avec les mains, qui consiste à partir de l'état initial et d'ajouter les états / transitions au fur à mesure, jusqu'à atteindre un point fixe.
+
+Il s'agit d'un résultat extrêmement important de la théorie des automates, notamment en ce qu'il nous permet d'utiliser amplement le non-déterminisme dans nos conceptions d'automates, ce dernier pouvant être éliminé par cet algorithme. Cette transformation a cependant un coût, qui peut être très élevé. En effet, le lemme \ref{cardpowerset} implique que la déterminisation d'un automate à $n$ états peut en avoir jusqu'à $2^n$.
+
+On peut commencer à voir pourquoi en re-regardant l'exemple \ref{detex1}, où on a 3 états terminaux alors qu'un seul serait suffisant : une fois qu'on a atteint l'état $\{0,1,3\}$, on ne fait que tourner entre trois états terminaux, ce qui veut dire que n'importe quel (reste de) mot sera accepté. L'algorithme de déterminisation ne s'intéresse pas au rôle des états (il est \textbf{syntaxique}, et non \textbf{sémantique}), et ne voit donc pas qu'une fusion est ici possible. De telles optimisations vont cependant nous être fournies par le prochain algorithme.
+
 
 \subsection{Minimisation}
 \label{minim}
