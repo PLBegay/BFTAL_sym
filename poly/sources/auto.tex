@@ -762,6 +762,13 @@ On a donc séparé $N_1$ en $N_2 = \{0\}$ et $N_3 = \{1,2\}$. Maintenant qu'on a
 \end{itemize}
 
 
+Pour résumer la série des séparations :
+
+\begin{center}
+\Tree[.{$\{0,1,2,3,4\}$} [.{$\{0,1,2,3\}$} [.{$\{3\}$}  ] [.{$\{0,1,2\}$} [.{$\{0\}$}  ] [.{$\{1,2\}$}  ] ] ] [.{$\{4\}$}  ] ]
+\end{center}
+
+
 On peut maintenant s'amuser à répéter l'expérience autant de fois qu'on veut, mais à partir du moment où il y a eu un tour sans changement, il n'y en aura plus jamais. On accepte alors l'hypothèse selon laquelle $1$ et $2$ appartiennent à la même classe, ont donc le même rôle et peuvent être fusionnés. On introduit donc un état $1,2$. L'état $0$ menait initialement avec $a$ à l'état $1$, il pointe donc maintenant vers $1,2$. $1$ et $2$ menaient l'un vers l'autre, ça devient une boucle en $b$ sur $1,2$. Enfin, $1,2$ mène avec $a$ vers $3$. $1$ et $2$ n'étaient pas terminaux, $1,2$ ne l'est donc pas non plus :
 
 
@@ -796,19 +803,9 @@ On peut maintenant s'amuser à répéter l'expérience autant de fois qu'on veut
 \paragraph*{Remarque} A la fin de l'exemple, on a justifié de façon un peu rapide et légère l'arrêt de l'algorithme. On n'entrera pas dans les détails ici, mais on donnera l'idée pour que le lecteur ou la lectire intéressé.e ait matière à réfléchir : l'algorithme présenté ici revient à tester - de façon efficace - les différences d'acceptation entre paires d'états pour les mots de longueur $0$, puis $1$, puis $2$, etc, jusqu'à atteindre un point fixe. Si on n'a pas de changement (ie. de séparation dans une classe) entre les mots de longueur $n$ et $n+1$, on sait que la stabilité va se propager à l'infini. En effet, soient $q_1$ et $q_2$ qui appartiennent à la même classe, et $w$ un mot de longueur $n+1$. $\delta(q_1,a)$ et $\delta(q_2,a)$ vont dans des états $q_1'$ et $q_2'$ qui appartiennent à la même classe, ce qui veut dire qu'aucun mot de longueur $\leq n+1$ ne peut les séparer. Alors $\delta^*(q_1,a.w) = \delta^*(q_1',w)$ et $\delta^*(q_2,a.w) = \delta^*(q_2',w)$ sont d'accord, et idem avec $b$. $q_1$ et $q_2$ sont donc d'accord sur les mots de longueur $n+2$. On peut itérer, ce qui implique qu'ils sont d'accord sur les mots de n'importe quelle longueur, et sont donc équivalents. 
 
 
-
-
-
-
 \begin{exercice}
 Minimiser (en utilisant l'algorithme) l'automate de l'exemple \ref{detex1}.
 \end{exercice}
-
-
-
-
-
-
 
 
 \begin{exercice}
