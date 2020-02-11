@@ -588,7 +588,7 @@ Arriver, après lecture d'un mot, dans un état $X$ de l'AFD signifie donc que, 
 
 \begin{example}
 \label{detex1}
-Si on essayer de déterminiser l'automate de l'exemple \ref{exnondet1}, on obtient
+Si on essaye de déterminiser l'automate de l'exemple \ref{exnondet1}, on obtient
 
 \begin{figure}[!ht]
 \centering
@@ -650,6 +650,238 @@ On peut commencer à voir pourquoi en re-regardant l'exemple \ref{detex1}, où o
 
 \subsection{Minimisation}
 \label{minim}
+
+On a dit dans l'exemple \ref{detex1} que plusieurs états avaient le même rôle et pouvaient être fusionnés. On va ici présenter un algorithme qui prend en entrée un automate déterministe complet\footnote{Ce qui, grâce aux deux algorithmes précédents, sont des hypothèses gratuites.} et en classe les états selon leur rôle, ce qui permet ensuite de fusionner à l'intérieur de chaque classe. On obtient alors un automate reconnaissant le même langage que celui en entrée, mais de façon minimale (par rapport au nombre d'états). On va présenter l'algorithme \textit{via} l'exemple suivant :
+
+\begin{example}
+
+Soit l'automate suivant :
+
+
+
+\begin{figure}[!ht]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.9cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state] (0)                    {$0$};
+  \node[state] (1)      [above right of=0]                {$1$};  
+  \node[state] (2)      [right of=0]                {$2$};   
+  \node[state] (3)      [below right of=0]                {$3$};    
+  \node[state,accepting] (4)      [right of=3]                {$4$};  
+
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(0) edge      []        node {$a$} (1)
+(0) edge      [loop below]        node {$b$} (0)
+(1) edge      [bend right]        node {$b$} (2)
+(1) edge      [bend right]        node {$a$} (3)
+(2) edge      []        node {$a$} (3)
+(2) edge      [bend right]        node {$b$} (1)
+(3) edge      [loop below]        node {$b$} (3)
+(3) edge      []        node {$a$} (4)
+(4) edge      [loop right]        node {$a,b$} (4);
+\end{tikzpicture}
+\end{figure}
+
+
+On disait plus haut qu'on veut regrouper les états selon leur rôle. Le rôle d'un état $q$ est l'ensemble des mots qu'il accepte, cad. l'ensemble des mots qui vont de $q$ à un état terminal, ou $\{w ~|~ \delta^*(q,w) \in F\}$. On va partir d'un regroupement très approximatif, et affiner petit à petit. 
+
+Pour commencer, on peut séparer les états terminaux des non-terminaux en deux sous-ensembles, ou classes. En effet, les premiers acceptent le mot $\epsilon$ alors que les seconds non. On divise donc notre ensemble d'états en $T = \{4\}$ et $N = \{0,1,2,3\}$. On ne va manifestement pas pouvoir affiner $T$, contrairement à $N$. Pour ça, on va regarder toutes les paires d'états de $N$ et, à chaque fois, vérifier si les deux états ont des désaccords en lisant $a$ ou $b$ :
+
+\begin{itemize}
+\item 0 vs. 1
+\begin{itemize}
+\item $\delta(0,a) = 1$ et $\delta(1,a) = 3$. Pour l'instant, $1$ et $3$ appartiennent tous les deux à $N$, ce qui veut dire qu'on suppose que $1$ accepte un mot $w$ ssi. $3$ accepte $w$. On peut donc conclure que, de ce qu'on sait, $0$ accepte un mot $a.w$ ssi. $1$ accepte $a.w$.
+\item $\delta(0,b) = 0$ et $\delta(1,b) = 2$. $0$ et $2$ appartiennent à la même classe, on suppose donc pour l'instant que $0$ accepte un mot $b.w$ ssi. $1$ accepte un mot $b.w$.
+\item[$\Rightarrow$] Pour l'instant, on conserve notre hypothèse selon laquelle $0$ et $1$ acceptent le même langage.
+\end{itemize}
+\item 0 vs. 2
+\begin{itemize}
+\item $\delta(0,a) = 1$ et $\delta(2,a) = 3$, $1$ et $3$ sont dans la même classe.
+\item $\delta(0,b) = 0$ et $\delta(2,b) = 2$. $0$ et $2$ appartiennent à la même classe.
+\item[$\Rightarrow$] Pour l'instant, on conserve notre hypothèse selon laquelle $0$ et $2$ acceptent le même langage.
+\end{itemize}
+\item 0 vs. 3
+\begin{itemize}
+\item $\delta(0,a) = 1$ et $\delta(3,a) = 4$, $1$ et $4$ ne sont pas dans la même classe, ce qui veut dire qu'il existe un mot $w$\footnote{En l'occurrence $\epsilon$, mais savoir quel mot exactement n'a pas d'importance.} sur lequel $1$ et $4$ ne sont pas d'accord, dans le sens où $1$ accepte $w$ alors que $4$ non, ou l'inverse. On en déduit donc que $0$ et $3$ sont en désaccord sur $a.w$. Puisqu'ils sont en désaccord, ils ne devraient pas être dans la même classe.
+\item[$\Rightarrow$] Pas besoin de tester avec $b$, on sait déjà qu'on va séparer $0$ et $3$.
+\end{itemize}
+\item 1 vs. 2
+\begin{itemize}
+\item $\delta(1,a) = 3$ et $\delta(2,a) = 3$, pas de souci.
+\item $\delta(1,b) = 2$ et $\delta(2,b) = 1$, idem.
+\item[$\Rightarrow$] On garde $1$ et $2$ dans la même classe.
+\end{itemize}
+\item 1 vs. 3
+\begin{itemize}
+\item $\delta(1,a) = 3$ et $\delta(3,a) = 4$. 
+\item[$\Rightarrow$] $3$ et $4$ ne sont pas dans la même classe, on doit donc séparer $1$ et $3$.
+\end{itemize}
+\item 2 vs. 3
+\begin{itemize}
+\item $\delta(2,a) = 3$ et $\delta(3,a) = 4$.
+\item[$\Rightarrow$] $3$ et $4$ ne sont pas dans la même classe, on doit donc les séparer.
+\end{itemize}
+\end{itemize}
+
+Si on résume ce premier tour de manège, $3$ est en désaccord avec $0$, $1$ et $2$, mais ces trois restent compatibles. On divise donc $N$ entre $N_1 = \{0,1,2\}$ et $N_2 = \{3\}$. Puisqu'on a scindé une classe en deux, les résultats de certains "duels" peuvent avoir changé. On refait donc une passe sur $N_1$ :
+
+\begin{itemize}
+\item 0 vs. 1
+\begin{itemize}
+\item $\delta(0,a) = 1$ et $\delta(1,a) = 3$. 
+\item[$\Rightarrow$] $1$ et $3$ étant maintenant dans des classes différentes, on doit séparer $0$ et $1$.
+\end{itemize}
+\item 0 vs. 2
+\begin{itemize}
+\item $\delta(0,a) = 1$ et $\delta(2,a) = 3$. 
+\item[$\Rightarrow$] Idem, on doit donc séparer $0$ et $2$.
+\end{itemize}
+\item 1 vs. 2
+\begin{itemize}
+\item $\delta(1,a) = 3$ et $\delta(2,a) = 3$. 
+\item $\delta(1,b) = 2$ et $\delta(2,b) = 1$. 
+\item[$\Rightarrow$] On ne sépare toujours pas $1$ et $2$.
+\end{itemize}
+\end{itemize}
+
+
+On a donc séparé $N_1$ en $N_2 = \{0\}$ et $N_3 = \{1,2\}$. Maintenant qu'on a eu une nouvelle séparation, on doit re-tester $1$ et $2$ :
+
+\begin{itemize}
+\item 1 vs. 2
+\begin{itemize}
+\item $\delta(1,a) = 3$ et $\delta(2,a) = 3$. 
+\item $\delta(1,b) = 2$ et $\delta(2,b) = 1$. 
+\item[$\Rightarrow$] On ne sépare toujours pas $1$ et $2$.
+\end{itemize}
+\end{itemize}
+
+
+On peut maintenant s'amuser à répéter l'expérience autant de fois qu'on veut, mais à partir du moment où il y a eu un tour sans changement, il n'y en aura plus jamais. On accepte alors l'hypothèse selon laquelle $1$ et $2$ appartiennent à la même classe, ont donc le même rôle et peuvent être fusionnés. On introduit donc un état $1,2$. L'état $0$ menait initialement avec $a$ à l'état $1$, il pointe donc maintenant vers $1,2$. $1$ et $2$ menaient l'un vers l'autre, ça devient une boucle en $b$ sur $1,2$. Enfin, $1,2$ mène avec $a$ vers $3$. $1$ et $2$ n'étaient pas terminaux, $1,2$ ne l'est donc pas non plus :
+
+
+
+\begin{figure}[!ht]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.9cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state] (0)                    {$0$};
+  \node[state] (2)      [right of=0]                {$1,2$};   
+  \node[state] (3)      [below right of=0]                {$3$};    
+  \node[state,accepting] (4)      [right of=3]                {$4$};  
+
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(0) edge      []        node {$a$} (2)
+(0) edge      [loop below]        node {$b$} (0)
+(2) edge      [loop right]        node {$b$} (2)
+(2) edge      []        node {$a$} (3)
+(3) edge      [loop below]        node {$b$} (3)
+(3) edge      []        node {$a$} (4)
+(4) edge      [loop right]        node {$a,b$} (4);
+\end{tikzpicture}
+\end{figure}
+
+\end{example}
+
+\paragraph*{Remarque} A la fin de l'exemple, on a justifié de façon un peu rapide et légère l'arrêt de l'algorithme. On n'entrera pas dans les détails ici, mais on donnera l'idée pour que le lecteur ou la lectire intéressé.e ait matière à réfléchir : l'algorithme présenté ici revient à tester - de façon efficace - les différences d'acceptation entre paires d'états pour les mots de longueur $0$, puis $1$, puis $2$, etc, jusqu'à atteindre un point fixe. Si on n'a pas de changement (ie. de séparation dans une classe) entre les mots de longueur $n$ et $n+1$, on sait que la stabilité va se propager à l'infini. En effet, soient $q_1$ et $q_2$ qui appartiennent à la même classe, et $w$ un mot de longueur $n+1$. $\delta(q_1,a)$ et $\delta(q_2,a)$ vont dans des états $q_1'$ et $q_2'$ qui appartiennent à la même classe, ce qui veut dire qu'aucun mot de longueur $\leq n+1$ ne peut les séparer. Alors $\delta^*(q_1,a.w) = \delta^*(q_1',w)$ et $\delta^*(q_2,a.w) = \delta^*(q_2',w)$ sont d'accord, et idem avec $b$. $q_1$ et $q_2$ sont donc d'accord sur les mots de longueur $n+2$. On peut itérer, ce qui implique qu'ils sont d'accord sur les mots de n'importe quelle longueur, et sont donc équivalents. 
+
+
+
+
+
+
+\begin{exercice}
+Minimiser (en utilisant l'algorithme) l'automate de l'exemple \ref{detex1}.
+\end{exercice}
+
+
+
+
+
+
+
+
+\begin{exercice}
+
+Minimiser l'automate suivant :
+
+\begin{figure}[!ht]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.9cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state] (0)                    {$0$};
+  \node[state] (1)      [above right of=0]                {$1$};  
+  \node[state] (2)      [below right of=0]                {$2$};   
+  \node[state] (3)      [right of=0]                {$3$};    
+  \node[state] (4)      [right of=1]                {$4$};  
+  \node[state] (5)      [right of=2]                {$5$};   
+  \node[state] (6)      [right of=3]                {$6$};   
+  \node[state] (8)      [above of=6]                {$8$};   
+  \node[state,accepting] (7)      [right of=6]                {$7$}; 
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(0) edge      []        node {$a$} (1)
+(0) edge      []        node {$b$} (2)
+(1) edge      []        node {$b$} (4)
+(1) edge      []        node {$a$} (3)
+(2) edge      []        node {$a$} (3)
+(2) edge      []        node {$b$} (5)
+(3) edge      []        node {$a,b$} (6)
+(4) edge      []        node {$a$} (8)
+(4) edge      []        node {$b$} (6)
+(5) edge      []        node {$a,b$} (6)
+(6) edge      [loop below]        node {$a$} (6)
+(6) edge      []        node {$b$} (7)
+(7) edge      [loop right]        node {$b$} (7)
+(7) edge      [bend left]        node {$a$} (6)
+(8) edge      []        node {$a$} (6)
+(8) edge      []        node {$b$} (7);
+\end{tikzpicture}
+\end{figure}
+
+\end{exercice}
+
+%On disait plus haut qu'on veut regrouper les états selon leur rôle. Le rôle d'un état $q$ est l'ensemble des mots qu'il accepte, cad. l'ensemble des mots qui vont de $q$ à un état terminal, cad. $\{w ~|~ \exists f \in F,~q \xrightarrow{w} f\}$. On va partir d'un regroupement très approximatif, et affiner petit à petit. 
+
+%Pour commencer, on peut séparer les états terminaux des non-terminaux. En effet, les premiers acceptent le mot $\epsilon$ alors que les seconds non. On divise donc notre ensemble d'états en $T = \{7\}$ et $N = \{0,1,2,3,4,5,6,8\}$. On ne va manifestement pas pouvoir affiner $T$, contrairement à $N$. Pour ça, on va regarder toutes les paires d'états de $N$ et, à chaque fois, vérifier si les deux états ont des désaccords en lisant $a$ ou $b$ :
+
+%\begin{itemize}
+%\item 0 vs. 1
+%\begin{itemize}
+%\item $\delta(0,a) = 1$ et $\delta(1,a) = 3$. Pour l'instant, $1$ et $3$ appartiennent tous les deux à $3$, ce qui veut dire qu'on suppose que $1$ accepte un mot $w$ ssi. $3$ accepte $w$. On peut donc conclure que, de ce qu'on sait, $0$ accepte un mot $a.w$ ssi. $1$ accepte $a.w$.
+%\item $\delta(0,b) = 2$ et $\delta(1,b) = 4$. $2$ et $4$ appartiennent à la même classe, on suppose donc pour l'instant que $0$ accepte un mot $b.w$ ssi. $1$ accepte un mot $b.w$.
+%\item[$\Rightarrow$] Pour l'instant, on conserve notre hypothèse selon laquelle $0$ et $1$ acceptent le même langage.
+%\end{itemize}
+%\item 0 vs. 2
+%\begin{itemize}
+%\item $\delta(0,a) = 1$ et $\delta(2,a) = 3$, $1$ et $3$ sont dans la même classe.
+%\item $\delta(0,b) = 2$ et $\delta(2,b) = 5$. $2$ et $5$ appartiennent à la même classe.
+%\item[$\Rightarrow$] Pour l'instant, on conserve notre hypothèse selon laquelle $0$ et $2$ acceptent le même langage.
+%\end{itemize}
+%\end{itemize}
+%\item 0 vs. 2
+%\begin{itemize}
+%\item $\delta(0,a) = 1$ et $\delta(2,a) = 3$, $1$ et $3$ sont dans la même classe.
+%\item $\delta(0,b) = 2$ et $\delta(2,b) = 5$. $2$ et $5$ appartiennent à la même classe.
+%\item[$\Rightarrow$] Pour l'instant, on conserve notre hypothèse selon laquelle $0$ et $2$ acceptent le même langage.
+%\end{itemize}
+%\end{itemize}
+
+
 
 \section{Propriétés de clôture}
 \label{cloture}
