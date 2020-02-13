@@ -556,7 +556,7 @@ Compléter le premier automate de l'exemple \ref{incomptoo}.
 
 On peut se convaincre assez facilement que la complétion ne change pas le langage reconnu par un automate : un parcours prend de nouvelles transitions ssi. il ne pouvait aller jusqu'au bout dans l'automate initial. Dans les deux cas, le mot associé n'est pas accepté, puisqu'on boucle sur un état non-terminal dans le premier cas, et on "plante" dans le second.
 
-Cette transformation se formalise également assez facilement. Soit un automate $\big \langle Q,\Sigma,q_0,F,\delta \big \rangle$, alors on renvoie l'automate \big \langle Q \cup~\{P\},\Sigma,q_0,F,\delta' \big \rangle, avec
+Cette transformation se formalise également assez facilement. Soit un automate déterministe $\big \langle Q,\Sigma,q_0,F,\delta \big \rangle$, alors on renvoie l'AFD \big \langle Q \cup~\{P\},\Sigma,q_0,F,\delta' \big \rangle, avec
 
 \[
 \left\{\!\begin{aligned}
@@ -567,6 +567,10 @@ Cette transformation se formalise également assez facilement. Soit un automate 
 \]
 
 Notez qu'on met les cas $\delta'(P,a)$ à part, car (on suppose) $P \not\in Q$, ce qui implique que $\delta(P,a)$ n'a pas de sens.
+
+\begin{exercice}
+Donner la formalisation de la complétion d'un automate non-déterministe.
+\end{exercice}
 
 \subsection{Déterminisation}
 \label{det}
