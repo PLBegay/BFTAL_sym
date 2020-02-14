@@ -600,15 +600,548 @@ La \textit{regex} correspondant à cet automate est $a(b\Sigma^*ba + ba)$. On au
 \section{Transformation d'automates}
 \label{transauto}
 
-%La formalisation très limitée et simple des automates en fait des programmes particulièrement simple à manipuler, comme l'illustrent les algorithmes de transformation d'automates présentés ici.
-
 \subsection{Complétion}
+
+
+\begin{exercice}
+\label{ndetcomp}
+Compléter l'automate suivant :
+
+
+\begin{figure}[!ht]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.9cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state] (0)                    {$0$};
+  \node[state] (1)      [right of=0]                {$1$};  
+  \node[state] (2)      [right of=1]                {$2$};
+  \node[accepting,state] (3)      [right of=2]                {$3$};
+
+  \node[initial,state] (4)  [below of=0]            {$4$};
+  \node[state] (5)      [right of=4]                {$5$};  
+  \node[state] (6)      [right of=5]                {$6$};
+  \node[accepting,state] (7)      [right of=6]                {$7$};
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(0) edge      [loop above]        node {$a,b$} (0)
+(0) edge      []        node {$a$} (1)
+(1) edge      []        node {$b$} (2)
+(2) edge      []        node {$a$} (3)
+(3) edge      [loop above]        node {$a,b$} (3)
+(4) edge      [loop above]        node {$a,b$} (4)
+(4) edge      []        node {$b$} (5)
+(5) edge      []        node {$a$} (6)
+(6) edge      []        node {$b$} (7)
+(7) edge      [loop above]        node {$a,b$} (7);
+
+\end{tikzpicture}
+\end{figure}
+\end{exercice}
+
+\begin{correction*}
+On obtient 
+
+
+\begin{figure}[!ht]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.9cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state] (0)                    {$0$};
+  \node[state] (1)      [right of=0]                {$1$};  
+  \node[state] (2)      [right of=1]                {$2$};
+  \node[accepting,state] (3)      [right of=2]                {$3$};
+  \node[state] (P)      [below right=0.7cm and 0.7cm of 1]                {$P$};
+  \node[initial,state] (4)  [below of=0]            {$4$};
+  \node[state] (5)      [right of=4]                {$5$};  
+  \node[state] (6)      [right of=5]                {$6$};
+  \node[accepting,state] (7)      [right of=6]                {$7$};
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(0) edge      [loop above]        node {$a,b$} (0)
+(0) edge      []        node {$a$} (1)
+(1) edge      []        node {$a$} (P)
+(1) edge      []        node {$b$} (2)
+(2) edge      []        node {$a$} (3)
+(2) edge      []        node {$b$} (P)
+(3) edge      [loop above]        node {$a,b$} (3)
+(4) edge      [loop above]        node {$a,b$} (4)
+(4) edge      []        node {$b$} (5)
+(5) edge      []        node {$b$} (P)
+(5) edge      []        node {$a$} (6)
+(6) edge      []        node {$a$} (P)
+(6) edge      []        node {$b$} (7)
+(P) edge      [loop left]        node {$a,b$} (P)
+(7) edge      [loop above]        node {$a,b$} (7);
+
+\end{tikzpicture}
+\end{figure}
+\end{correction*}
+
+
+\begin{exercice}
+Donner la formalisation de la complétion d'un automate non-déterministe.
+\end{exercice}
+
+\begin{correction*}
+
+Soit un automate non-déterministe $\big \langle Q,\Sigma,I,F,\delta \big \rangle$, sa version complétée est \newline $\big \langle Q \cup~\{P\},\Sigma,I,F,\delta' \big \rangle$, avec
+
+%TODO: remplacer par un cases
+\[
+\left\{\!\begin{aligned}
+&\delta'(q,a) = \delta(q,a) &\text{ si } \delta(q,a) \neq \emptyset,\\[1ex]
+&\delta'(q,a) = \{P\} &\text{ si } \delta(q,a) = \emptyset,\\[1ex]
+&\delta'(P,a) = \{P\} &\text{ pour tout } a \in \Sigma\\[1ex]
+\end{aligned} \right 
+\]
+\end{correction*}
 
 \subsection{Déterminisation}
 \label{det}
 
+\begin{exercice}
+Déterminiser l'automate de l'exercice \ref{ndetcomp}.
+\end{exercice}
+
+\begin{correction*}
+
+L'automate à déterminiser a deux états initiaux : $0$ et $4$. On commence donc en créant un état initial représentant $0$ et $4$ :
+
+
+\begin{figure}[!ht]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.5cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state] (04)                    {$0,4$};
+\end{tikzpicture}
+\end{figure}
+
+La lettre $a$ permet de passer de $0$ à $0$ ou $1$, et fait boucler sur $4$. Au total, quand on est en $0,4$ et qu'on lit un $a$, on a le choix entre $0$, $1$ et $4$. De même, en lisant un $b$, on peut aller en $0$, $4$ ou $5$. On obtient donc les premières transtitions suivantes :
+
+
+
+\begin{figure}[!ht]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.5cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state] (04)                    {$0,4$};
+  \node[state] (014)    [above right of=04]                {$0,1,4$};
+  \node[state] (045)    [below right of=04]                {$0,4,5$};
+  
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(04) edge     []        node {$a$} (014)
+(04) edge     []        node {$b$} (045);
+
+\end{tikzpicture}
+\end{figure}
+
+On itère : \newpage
+
+\begin{figure}[!ht]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.5cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state] (04)                    {$0,4$};
+  \node[state] (014)    [above right of=04]                {$0,1,4$};
+  \node[state] (045)    [below right of=04]                {$0,4,5$};
+  \node[state] (0245)    [right of=014]                {$0,2,4,5$};
+  \node[state] (0146)    [right of=045]                {$0,1,4,6$};
+
+  
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(04) edge     []        node {$a$} (014)
+(04) edge     []        node {$b$} (045)
+(014) edge    [loop above]        node {$a$} (014)
+(045) edge    [loop below]        node {$b$} (045)
+(014) edge     []        node {$b$} (0245)
+(045) edge     []        node {$a$} (0146);
+
+\end{tikzpicture}
+\end{figure}
+
+Quand on lit un $a$ depuis $0$, $2$, $4$ ou $5$, on peut atteindre $0$, $1$, $3$, $4$ ou $6$, on crée donc l'état correspondant. $3$ étant un état terminal dans l'automate initial, $0,1,3,4,6$ l'est aussi. Un $b$ par contre nous emmène seulement en $0$, $4$ ou $5$. Cette état existant déjà dans notre automate, on pointe dessus. En faisant le même raisonnement avec $0,1,4,6$, on obtient 
+
+\begin{figure}[!ht]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.5cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state] (04)                    {$0,4$};
+  \node[state] (014)    [above right of=04]                {$0,1,4$};
+  \node[state] (045)    [below right of=04]                {$0,4,5$};
+  \node[state] (0245)    [right of=014]                {$0,2,4,5$};
+  \node[state] (0146)    [right of=045]                {$0,1,4,6$};
+  \node[state,accepting] (01346)    [right of=0245]                {$0,1,3,4,6$};
+  \node[state,accepting] (02457)    [right of=0146]                {$0,2,4,5,7$};
+  
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(04) edge     []        node {$a$} (014)
+(04) edge     []        node {$b$} (045)
+(014) edge    [loop above]        node {$a$} (014)
+(045) edge    [loop below]        node {$b$} (045)
+(014) edge     []        node {$b$} (0245)
+(045) edge     []        node {$a$} (0146)
+(0245) edge    [bend right=17]        node {$b$} (045)
+(0146) edge    [bend right=17]        node {$a$} (014)
+(0245) edge    []        node {$a$} (01346)
+(0146) edge    []        node {$b$} (02457);
+
+\end{tikzpicture}
+\end{figure}
+
+En continuant comme ça, on arrive à 
+
+
+\begin{figure}[!ht]
+%	\hspace{-2cm}
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3.4cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state] (04)                    {$0,4$};
+  \node[state] (014)    [above of=04]                {$0,1,4$};
+  \node[state] (045)    [below of=04]                {$0,4,5$};
+  \node[state] (0245)    [right of=014]                {$0,2,4,5$};
+  \node[state] (0146)    [right of=045]                {$0,1,4,6$};
+  \node[state,accepting] (01346)    [right of=0245]                {$0,1,3,4,6$};
+  \node[state,accepting] (02457)    [right of=0146]                {$0,2,4,5,7$};
+  \node[state,accepting] (0134)    [above left =0.6cm and 1cm of 01346]                {$0,1,3,4$};
+  \node[state,accepting] (0457)    [below left=0.6cm and 1cm of 02457]                {$0,4,5,7$};
+  \node[state,accepting] (02345)    [above = 0.5cm of 01346]                {$0,2,3,4,5$};
+  \node[state,accepting] (01467)    [below = 0.5cm of 02457]                {$0,1,4,6,7$};
+  \node[state,accepting] (0345)    [right of=02345]                {$0,3,4,5$};
+  \node[state,accepting] (0147)    [right of=01467]                {$0,1,4,7$};
+  \node[state,accepting] (023457)    [below left=0.3cm and 0.8cm of 01346]                {$0,2,3,4,5,7$};
+  \node[state,accepting] (013467)    [above left=0.3cm and 0.8cm of 02457]                {$0,1,3,4,6,7$};
+  \node[state,accepting] (03457)    [right =2cm of 023457]                {$0,3,4,5,7$};
+  \node[state,accepting] (01347)    [right =2cm of 013467]                {$0,1,3,4,7$};
+
+  
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(04) edge     []        node {$a$} (014)
+(04) edge     []        node {$b$} (045)
+(014) edge    [loop above]        node {$a$} (014)
+(045) edge    [loop below]        node {$b$} (045)
+(014) edge     []        node {$b$} (0245)
+(045) edge     []        node {$a$} (0146)
+(0245) edge    []        node [pos=0.7] {$b$} (045)
+(0146) edge    []        node [pos=0.7] {$a$} (014)
+(0245) edge    []        node {$a$} (01346)
+(0146) edge    []        node {$b$} (02457)
+(01346) edge    []        node {$a$} (0134)
+(02457) edge    []        node {$b$} (0457)
+(01346) edge    []        node {$b$} (023457)
+(02457) edge    []        node {$a$} (013467)
+(0134) edge    [loop left]        node {$a$} (0134)
+(0457) edge    [loop left]        node {$b$} (0457)
+(0134) edge    []        node {$b$} (02345)
+(0457) edge    []        node {$a$} (01467)
+(02345) edge    []        node {$a$} (01346)
+(01467) edge    []        node [pos=0.3] {$b$} (02457)
+(02345) edge    []        node {$b$} (0345)
+(01467) edge    []        node {$a$} (0147)
+(01346) edge    []        node {$a$} (0134)
+(02457) edge    []        node {$b$} (0457)
+(0345) edge    []        node {$a$} (01346)
+(0147) edge    []        node {$b$} (02457)
+(0345) edge    [loop above]        node {$b$} (0345)
+(0147) edge    [loop below]        node {$a$} (0147)
+(023457) edge    [bend right=20]        node {$a$} (013467)
+(013467) edge    [bend right=20]        node {$b$} (023457)
+(023457) edge    []        node {$b$} (03457)
+(013467) edge    []        node {$a$} (01347)
+(03457) edge    []        node [pos=0.3] {$a$} (013467)
+(01347) edge    []        node [pos=0.3] {$b$} (023457)
+(03457) edge    [loop right]        node {$b$} (03457)
+(01347) edge    [loop right]        node {$a$} (01347);
+
+\end{tikzpicture}
+\end{figure}
+
+\end{correction*}
+\newpage
+
 \subsection{Minimisation}
 \label{minim}
+
+
+\begin{exercice}
+Minimiser (en utilisant l'algorithme) l'automate 
+
+
+\begin{figure}[!ht]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.9cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state] (0)                    {$0$};
+  \node[state] (1)      [right of=0]                {$1$};  
+  \node[state] (2)      [right of=1]                {$2$};
+  \node[accepting,state] (3)      [right of=2]                {$3$};
+  \node[accepting,state] (4)      [right of=3]                {$4$};
+  \node[accepting,state] (5)      [below of=4]                {$5$};
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(0) edge      [loop above]        node {$b$} (0)
+(0) edge      []        node {$a$} (1)
+(1) edge      [loop above]        node {$a$} (1)
+(1) edge      []        node {$b$} (2)
+(2) edge      [bend left]        node {$b$} (0)
+(2) edge      []        node {$a$} (3)
+(3) edge      [loop above]        node {$a$} (3)
+(3) edge      []        node {$b$} (4)
+(4) edge      [bend left]        node {$a$} (3)
+(4) edge      []        node {$b$} (5)
+(5) edge      [loop right]        node {$b$} (3)
+(5) edge      []        node {$a$} (3);
+\end{tikzpicture}
+\end{figure}
+\end{exercice}
+
+\newpage
+
+\begin{correction*}
+
+On a $N = \{0,1,2\}$ d'un côté, et $F = \{3,4,5\}$ de l'autre. On va d'abord s'intéresser à $N$.
+
+\begin{itemize}
+\item 0 vs 1
+\begin{itemize}
+\item $\delta(0,a) = 1 = \delta(1,a)$
+\item $\delta(1,b) = 0 \in N$ et $\delta(1,b) = 2 \in N$
+\item[$\Rightarrow$] Pas de raison de séparer pour l'instant
+\end{itemize}
+\item 0 vs 2
+\begin{itemize}
+\item $\delta(0,a) = 1 \in N$ et $\delta(2,a) = 3 \in F$
+\item[$\Rightarrow$] On va devoir séparer 0 et 2
+\end{itemize}
+\item 1 vs 2
+\begin{itemize}
+\item $\delta(1,a) = 1 \in N$ et $\delta(2,a) = 3 \in F$
+\item[$\Rightarrow$] On va devoir séparer 1 et 2
+\end{itemize}
+\end{itemize}
+
+On peut donc séparer $N$ en $N_1 = \{0,1\}$ et $N_2 = \{2\}$. On a maintenant le choix d'étudier $N_1$ ou $F$. On choisit (un peu bêtement) $F$.
+
+\begin{itemize}
+\item 3 vs 4
+\begin{itemize}
+\item $\delta(3,a) = 3 = \delta(4,a)$
+\item $\delta(3,b) = 4 \in F$ et $\delta(4,b) = 5 \in F$
+\item[$\Rightarrow$] Pas de raison de séparer pour l'instant
+\end{itemize}
+\item 3 vs 5
+\begin{itemize}
+\item $\delta(3,a) = 3 = \delta(5,a)$
+\item $\delta(3,b) = 4 \in F$ et $\delta(5,b) = 5 \in F$
+\item[$\Rightarrow$] Pas de raison de séparer pour l'instant
+\end{itemize}
+\item 4 vs 5
+\begin{itemize}
+\item $\delta(4,a) = 3 = \delta(5,a)$
+\item $\delta(4,b) = 5 = \delta(5,b)$
+\item[$\Rightarrow$] Pas de raison de séparer pour l'instant
+\end{itemize}\end{itemize}
+
+On laisse donc $F$ en l'étant. On s'intéresse maintenant à $N_1$ : 
+
+\begin{itemize}
+\item 0 vs 1
+\begin{itemize}
+\item $\delta(0,a) = 1 = \delta(1,a)$
+\item $\delta(0,b) = 0 \in N_1$ et $\delta(1,b) = 2 \in N_1$
+\item[$\Rightarrow$] On sépare $0$ et $1$.
+\end{itemize}
+\end{itemize}
+
+On a donc maintenant $N_3 = \{0\}$, $N_4 = \{1\}$, $N_2 = \{2\}$ et $F = \{3,4,5\}$. Puisqu'on a eu un changement (casser $N_1$ en deux), on devrait refaire la vérification pour $F$ faite plus haut, au cas où le résultat aurait changé. Ceci dit, on peut remarquer qu'aucun état de $F$ n'envoie directement en $0$ ou $1$, et donc que $F$ resterait insécable. On peut donc en fusionner les états et obtenir 
+
+
+\begin{figure}[!ht]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.9cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state] (0)                    {$0$};
+  \node[state] (1)      [right of=0]                {$1$};  
+  \node[state] (2)      [right of=1]                {$2$};
+  \node[accepting,state] (3)      [right of=2]                {$3,4,5$};
+
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(0) edge      [loop above]        node {$b$} (0)
+(0) edge      []        node {$a$} (1)
+(1) edge      [loop above]        node {$a$} (1)
+(1) edge      []        node {$b$} (2)
+(2) edge      [bend left]        node {$b$} (0)
+(2) edge      []        node {$a$} (3)
+(3) edge      [loop above]        node {$a,b$} (3);
+\end{tikzpicture}
+\end{figure}
+
+\end{correction*}
+
+
+\begin{exercice}
+
+Minimiser l'automate suivant :
+
+\begin{figure}[!ht]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.9cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state] (0)                    {$0$};
+  \node[state] (1)      [above right of=0]                {$1$};  
+  \node[state] (2)      [below right of=0]                {$2$};   
+  \node[state] (3)      [right of=0]                {$3$};    
+  \node[state] (4)      [right of=1]                {$4$};  
+  \node[state] (5)      [right of=2]                {$5$};   
+  \node[state] (6)      [right of=3]                {$6$};   
+  \node[state] (8)      [above of=6]                {$8$};   
+  \node[state,accepting] (7)      [right of=6]                {$7$}; 
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(0) edge      []        node {$a$} (1)
+(0) edge      []        node {$b$} (2)
+(1) edge      []        node {$b$} (4)
+(1) edge      []        node {$a$} (3)
+(2) edge      []        node {$a$} (3)
+(2) edge      []        node {$b$} (5)
+(3) edge      []        node {$a,b$} (6)
+(4) edge      []        node {$a$} (8)
+(4) edge      []        node {$b$} (6)
+(5) edge      []        node {$a,b$} (6)
+(6) edge      [loop below]        node {$a$} (6)
+(6) edge      []        node {$b$} (7)
+(7) edge      [loop right]        node {$b$} (7)
+(7) edge      [bend left]        node {$a$} (6)
+(8) edge      []        node {$a$} (6)
+(8) edge      []        node {$b$} (7);
+\end{tikzpicture}
+\end{figure}
+
+\end{exercice}
+
+\begin{correction*}
+
+
+On divise donc notre ensemble d'états en $F = \{7\}$ et $N = \{0,1,2,3,4,5,6,8\}$. On ne va manifestement pas pouvoir affiner $F$, contrairement à $N$. Pour ça, on va regarder toutes les paires d'états de $N$ et, à chaque fois, vérifier si les deux états ont des désaccords en lisant $a$ ou $b$ :
+
+\begin{itemize}
+\item 0 vs. 1
+\begin{itemize}
+\item $\delta(0,a) = 1$ et $\delta(1,a) = 3$. Pour l'instant, $1$ et $3$ appartiennent tous les deux à $3$, ce qui veut dire qu'on suppose que $1$ accepte un mot $w$ ssi. $3$ accepte $w$. On peut donc conclure que, de ce qu'on sait, $0$ accepte un mot $a.w$ ssi. $1$ accepte $a.w$.
+\item $\delta(0,b) = 2$ et $\delta(1,b) = 4$. $2$ et $4$ appartiennent à la même classe, on suppose donc pour l'instant que $0$ accepte un mot $b.w$ ssi. $1$ accepte un mot $b.w$.
+\item[$\Rightarrow$] Pour l'instant, on conserve notre hypothèse selon laquelle $0$ et $1$ acceptent le même langage.
+\end{itemize}
+\item 0 vs. 2
+\begin{itemize}
+\item $\delta(0,a) = 1$ et $\delta(2,a) = 3$, $1$ et $3$ sont dans la même classe.
+\item $\delta(0,b) = 2$ et $\delta(2,b) = 5$. $2$ et $5$ appartiennent à la même classe.
+\item[$\Rightarrow$] Pour l'instant, on conserve notre hypothèse selon laquelle $0$ et $2$ acceptent le même langage.
+\end{itemize}
+
+\item[] Pour préserver ce qu'il me reste de santé mentale, je ne vais pas détailler tout le reste.
+
+\item 0 vs. 3 / 0 vs. 4 / 0 vs. 5 / 1 vs. 2 / 1 vs. 3 / 1 vs. 4 / 1 vs. 5 / 2 vs. 3 / 2 vs. 4 / 2 vs. 5 / 3 vs. 4 / 3 vs. 5 / 4 vs. 5 $\Rightarrow$ compatibilité, donc pas de séparation
+
+\item 0 vs. 6 / 0 vs. 8 / 1 vs. 6 / 1 vs. 8 / 2 vs. 6 / 2 vs. 8 / 3 vs. 6 / 3 vs. 8 / 5 vs. 6 / 4 vs. 8 / 5 vs. 6 / 5 vs. 8 $\Rightarrow$ incompatibilité (à chaque fois à cause de la transition en $b$).
+
+\item 6 vs. 8 $\Rightarrow$ compatibilité
+
+\item[$\Rightarrow$] On sépare $N$ en $N_1 = \{0,1,2,3,4,5\}$ et $N_2 = \{6,8\}$
+
+\end{itemize}
+
+On peut noter que $6$ et $8$ pointent exactement sur les mêmes états pour les deux lettres, on peut donc être sûr qu'on n'arrivera pas à les séparer, quoi qu'il arrive à $N_1$. On s'intéresse donc à ce dernier.
+
+\begin{itemize}
+
+\item Les seuls états qu'on va sortir sont ceux qui pointent vers $N_2$, cad. $\{3,4,5\}$. On peut en effet vérifier qu'ils sont tous incompatibles avec $0$, $1$ et $2$, et qu'ils sont compatibles entre eux.
+
+\end{itemize}
+
+
+On divise donc $N_1$ en $N_3 = \{0,1,2\}$ et $N_4 = \{3,4,5\}$. On regarde $N_3$ :
+
+\begin{itemize}
+
+\item $1$ et $2$ vont vers $N_4$ avec $b$ alors que $0$ reste en $N_3$. $1$ et $2$ envoient vers le même état avec $a$. 
+\end{itemize}
+
+On divise $N_3$ en $N_5 = \{0\}$ et $N_6 = \{1,2\}$. En plus de ces deux ensembles, on a $N_4 = \{3,4,5\}$, $N_2 = \{6,8\}$ et $F = \{7\}$.
+En repassant sur chacun de ces ensembles, on se rend compte qu'on ne peut faire aucune séparation. On peut donc fusionner les états de chaque classe et obtenir 
+
+
+\begin{figure}[!ht]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.9cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state] (0)                    {$0$};
+  \node[state] (12)      [right of=0]                {$1,2$};  
+  \node[state] (345)      [right of=12]                {$3,4,5$};   
+  \node[state] (68)      [right of=345]                {$6,8$};    
+  \node[state,accepting] (7)      [right of=68]                {$7$};  
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(0) edge      []        node {$a,b$} (12)
+(12) edge      []        node {$a,b$} (345)
+(345) edge      []        node {$a,b$} (68)
+(68) edge      [loop above]        node {$a$} (68)
+(68) edge      []        node {$b$} (7)
+(7) edge      [loop above]        node {$b$} (7)
+(7) edge      [bend left]        node {$a$} (68);
+\end{tikzpicture}
+\end{figure}
+
+Cad. l'automate acceptant les mots d'au moins 4 lettres terminant par un $b$. La version initiale de l'automate était non-minimale en ce qu'elle distinguait en plusieurs états la lecture de $a$ ou de $b$ alors qu'au fond, on ne s'intéressait qu'à la longueur.
+
+\end{correction*}
 
 \section{Propriétés de clôture}
 \label{cloture}
