@@ -558,6 +558,7 @@ On peut se convaincre assez facilement que la complétion ne change pas le langa
 
 Cette transformation se formalise également assez facilement. Soit un automate déterministe $\big \langle Q,\Sigma,q_0,F,\delta \big \rangle$, alors on renvoie l'AFD \big \langle Q \cup~\{P\},\Sigma,q_0,F,\delta' \big \rangle, avec
 
+%TODO: remplacer par un cases
 \[
 \left\{\!\begin{aligned}
 &\delta'(q,a) = \delta(q,a) &\text{ si } \delta(q,a) \text{ défini},\\[1ex]
@@ -636,16 +637,20 @@ On notera une grande proximité avec la déterminisation "à la main" qu'on avai
 \end{example}
 
 \begin{exercice}
-Déterminiser le premier automate de l'exemple \ref{incomptoo}.
+Déterminiser le premier automate de l'exemple \ref{incomptoo}. (la correction de cet exercice contient, contrairement à l'exemple ci-dessus, quelques étapes intermédiaires).
 \end{exercice}
 
-La déterminisation se formalise aussi assez bien en termes de définitions. Soit un automate $\big \langle Q,\Sigma,I,F,\delta \big \rangle$, alors on renvoie l'automate \big \langle P(Q),\Sigma,\bigcup_{i \in I} i,F,\delta' \big \rangle, avec
+La déterminisation se formalise aussi assez bien en termes de définitions. Soit un automate $\big \langle Q,\Sigma,I,F,\delta \big \rangle$, alors on renvoie l'automate \big \langle P(Q),\Sigma,\bigcup_{i \in I} i,F',\delta' \big \rangle, avec
 
 \[
 \delta'(X,a) = \bigcup_{q \in X} \delta(q,a)
 \]
 
-Noter que suivre cette définition génère un automate qui contient tout un tas d'états qui vont être inatteignables, et donc ne servir à rien. En l'appliquant sur l'exemple \ref{detex1}, on devrait notamment produire les états $\{1,2\}$ ou $\{2,3\}$. En pratique, on préfèrera donc suivre l'algorithme présenté avec les mains, qui consiste à partir de l'état initial et d'ajouter les états / transitions au fur à mesure, jusqu'à atteindre un point fixe.
+\[
+F' = \{X \in P(Q) ~|~ X~\cap~F \enq \emptysub\}
+\]
+
+Notez que suivre cette définition génère un automate qui contient tout un tas d'états qui vont être inatteignables, et donc ne servir à rien. En l'appliquant sur l'exemple \ref{detex1}, on devrait notamment produire les états $\{1,2\}$ ou $\{2,3\}$. En pratique, on préfèrera donc suivre l'algorithme présenté avec les mains, qui consiste à partir de l'état initial et d'ajouter les états / transitions au fur à mesure, jusqu'à atteindre un point fixe.
 
 Il s'agit d'un résultat extrêmement important de la théorie des automates, notamment en ce qu'il nous permet d'utiliser amplement le non-déterminisme dans nos conceptions d'automates, ce dernier pouvant être éliminé par cet algorithme. Cette transformation a cependant un coût, qui peut être très élevé. En effet, le lemme \ref{cardpowerset} implique que la déterminisation d'un automate à $n$ états peut en avoir jusqu'à $2^n$.
 
@@ -804,7 +809,7 @@ On peut maintenant s'amuser à répéter l'expérience autant de fois qu'on veut
 
 \end{example}
 
-\paragraph*{Remarque} A la fin de l'exemple, on a justifié de façon un peu rapide et légère l'arrêt de l'algorithme. On n'entrera pas dans les détails ici, mais on donnera l'idée pour que le lecteur ou la lectire intéressé.e ait matière à réfléchir : l'algorithme présenté ici revient à tester - de façon efficace - les différences d'acceptation entre paires d'états pour les mots de longueur $0$, puis $1$, puis $2$, etc, jusqu'à atteindre un point fixe. Si on n'a pas de changement (ie. de séparation dans une classe) entre les mots de longueur $n$ et $n+1$, on sait que la stabilité va se propager à l'infini. En effet, soient $q_1$ et $q_2$ qui appartiennent à la même classe, et $w$ un mot de longueur $n+1$. $\delta(q_1,a)$ et $\delta(q_2,a)$ vont dans des états $q_1'$ et $q_2'$ qui appartiennent à la même classe, ce qui veut dire qu'aucun mot de longueur $\leq n+1$ ne peut les séparer. Alors $\delta^*(q_1,a.w) = \delta^*(q_1',w)$ et $\delta^*(q_2,a.w) = \delta^*(q_2',w)$ sont d'accord, et idem avec $b$. $q_1$ et $q_2$ sont donc d'accord sur les mots de longueur $n+2$. On peut itérer, ce qui implique qu'ils sont d'accord sur les mots de n'importe quelle longueur, et sont donc équivalents. 
+\paragraph*{Remarque} A la fin de l'exemple, on a justifié de façon un peu rapide et légère l'arrêt de l'algorithme. On n'entrera pas dans les détails ici, mais on donnera l'idée pour que le lecteur ou la lectrice intéressé.e ait matière à réfléchir : l'algorithme présenté ici revient à tester - de façon efficace - les différences d'acceptation entre paires d'états pour les mots de longueur $0$, puis $1$, puis $2$, etc, jusqu'à atteindre un point fixe. Si on n'a pas de changement (ie. de séparation dans une classe) entre les mots de longueur $n$ et $n+1$, on sait que la stabilité va se propager à l'infini. En effet, soient $q_1$ et $q_2$ qui appartiennent à la même classe, et $w$ un mot de longueur $n+1$. $\delta(q_1,a)$ et $\delta(q_2,a)$ vont dans des états $q_1'$ et $q_2'$ qui appartiennent à la même classe, ce qui veut dire qu'aucun mot de longueur $\leq n+1$ ne peut les séparer. Alors $\delta^*(q_1,a.w) = \delta^*(q_1',w)$ et $\delta^*(q_2,a.w) = \delta^*(q_2',w)$ sont d'accord, et idem avec $b$. $q_1$ et $q_2$ sont donc d'accord sur les mots de longueur $n+2$. On peut itérer, ce qui implique qu'ils sont d'accord sur les mots de n'importe quelle longueur, et sont donc équivalents. 
 
 
 \begin{exercice}
@@ -855,33 +860,6 @@ Minimiser l'automate suivant :
 \end{figure}
 
 \end{exercice}
-
-%On disait plus haut qu'on veut regrouper les états selon leur rôle. Le rôle d'un état $q$ est l'ensemble des mots qu'il accepte, cad. l'ensemble des mots qui vont de $q$ à un état terminal, cad. $\{w ~|~ \exists f \in F,~q \xrightarrow{w} f\}$. On va partir d'un regroupement très approximatif, et affiner petit à petit. 
-
-%Pour commencer, on peut séparer les états terminaux des non-terminaux. En effet, les premiers acceptent le mot $\epsilon$ alors que les seconds non. On divise donc notre ensemble d'états en $T = \{7\}$ et $N = \{0,1,2,3,4,5,6,8\}$. On ne va manifestement pas pouvoir affiner $T$, contrairement à $N$. Pour ça, on va regarder toutes les paires d'états de $N$ et, à chaque fois, vérifier si les deux états ont des désaccords en lisant $a$ ou $b$ :
-
-%\begin{itemize}
-%\item 0 vs. 1
-%\begin{itemize}
-%\item $\delta(0,a) = 1$ et $\delta(1,a) = 3$. Pour l'instant, $1$ et $3$ appartiennent tous les deux à $3$, ce qui veut dire qu'on suppose que $1$ accepte un mot $w$ ssi. $3$ accepte $w$. On peut donc conclure que, de ce qu'on sait, $0$ accepte un mot $a.w$ ssi. $1$ accepte $a.w$.
-%\item $\delta(0,b) = 2$ et $\delta(1,b) = 4$. $2$ et $4$ appartiennent à la même classe, on suppose donc pour l'instant que $0$ accepte un mot $b.w$ ssi. $1$ accepte un mot $b.w$.
-%\item[$\Rightarrow$] Pour l'instant, on conserve notre hypothèse selon laquelle $0$ et $1$ acceptent le même langage.
-%\end{itemize}
-%\item 0 vs. 2
-%\begin{itemize}
-%\item $\delta(0,a) = 1$ et $\delta(2,a) = 3$, $1$ et $3$ sont dans la même classe.
-%\item $\delta(0,b) = 2$ et $\delta(2,b) = 5$. $2$ et $5$ appartiennent à la même classe.
-%\item[$\Rightarrow$] Pour l'instant, on conserve notre hypothèse selon laquelle $0$ et $2$ acceptent le même langage.
-%\end{itemize}
-%\end{itemize}
-%\item 0 vs. 2
-%\begin{itemize}
-%\item $\delta(0,a) = 1$ et $\delta(2,a) = 3$, $1$ et $3$ sont dans la même classe.
-%\item $\delta(0,b) = 2$ et $\delta(2,b) = 5$. $2$ et $5$ appartiennent à la même classe.
-%\item[$\Rightarrow$] Pour l'instant, on conserve notre hypothèse selon laquelle $0$ et $2$ acceptent le même langage.
-%\end{itemize}
-%\end{itemize}
-
 
 
 \section{Propriétés de clôture}
