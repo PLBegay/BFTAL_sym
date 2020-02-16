@@ -556,7 +556,7 @@ Compléter le premier automate de l'exemple \ref{incomptoo}.
 
 On peut se convaincre assez facilement que la complétion ne change pas le langage reconnu par un automate : un parcours prend de nouvelles transitions ssi. il ne pouvait aller jusqu'au bout dans l'automate initial. Dans les deux cas, le mot associé n'est pas accepté, puisqu'on boucle sur un état non-terminal dans le premier cas, et on "plante" dans le second.
 
-Cette transformation se formalise également assez facilement. Soit un automate déterministe $\big \langle Q,\Sigma,q_0,F,\delta \big \rangle$, alors on renvoie l'AFD \big \langle Q \cup~\{P\},\Sigma,q_0,F,\delta' \big \rangle, avec
+Cette transformation se formalise également assez facilement. Soit un automate déterministe $\big \langle Q,\Sigma,q_0,F,\delta \big \rangle$, alors on renvoie l'AFD $\big \langle Q \cup~\{P\},\Sigma,q_0,F,\delta' \big \rangle$, avec
 
 %TODO: remplacer par un cases
 \[
@@ -640,19 +640,19 @@ On notera une grande proximité avec la déterminisation "à la main" qu'on avai
 Déterminiser le premier automate de l'exemple \ref{incomptoo}. (la correction de cet exercice contient, contrairement à l'exemple ci-dessus, quelques étapes intermédiaires).
 \end{exercice}
 
-La déterminisation se formalise aussi assez bien en termes de définitions. Soit un automate $\big \langle Q,\Sigma,I,F,\delta \big \rangle$, alors on renvoie l'automate \big \langle P(Q),\Sigma,\bigcup_{i \in I} i,F',\delta' \big \rangle, avec
+La déterminisation se formalise aussi assez bien en termes de définitions. Soit un automate $\big \langle Q,\Sigma,I,F,\delta \big \rangle$, alors on renvoie l'automate $\big \langle P(Q),\Sigma,\bigcup_{i \in I} i,F',\delta' \big \rangle$, avec
 
 \[
 \delta'(X,a) = \bigcup_{q \in X} \delta(q,a)
 \]
 
 \[
-F' = \{X \in P(Q) ~|~ X~\cap~F \enq \emptysub\}
+F' = \{X \in P(Q) ~|~ X~\cap~F \neq \emptyset\}
 \]
 
 Notez que suivre cette définition génère un automate qui contient tout un tas d'états qui vont être inatteignables, et donc ne servir à rien. En l'appliquant sur l'exemple \ref{detex1}, on devrait notamment produire les états $\{1,2\}$ ou $\{2,3\}$. En pratique, on préfèrera donc suivre l'algorithme présenté avec les mains, qui consiste à partir de l'état initial et d'ajouter les états / transitions au fur à mesure, jusqu'à atteindre un point fixe.
 
-Il s'agit d'un résultat extrêmement important de la théorie des automates, notamment en ce qu'il nous permet d'utiliser amplement le non-déterminisme dans nos conceptions d'automates, ce dernier pouvant être éliminé par cet algorithme. Cette transformation a cependant un coût, qui peut être très élevé. En effet, le lemme \ref{cardpowerset} implique que la déterminisation d'un automate à $n$ états peut en avoir jusqu'à $2^n$.
+Il s'agit d'un résultat extrêmement important de la théorie des automates, puisqu'il établit l'équivalence entre automates finis déterministes et non-déterministes. Pour montrer qu'un langage est reconnaissable par un AFD, on pourra se contenter de fournir un AFND. D'un point de vue plus pratique, on pourra abondamment utiliser le non-déterminisme dans nos conceptions d'automates, ce dernier pouvant être éliminé par cet algorithme. Cette transformation a cependant un coût, qui peut être très élevé. En effet, le lemme \ref{cardpowerset} implique que la déterminisation d'un automate à $n$ états peut en avoir jusqu'à $2^n$.
 
 On peut commencer à voir pourquoi en re-regardant l'exemple \ref{detex1}, où on a 3 états terminaux alors qu'un seul serait suffisant : une fois qu'on a atteint l'état $\{0,1,3\}$, on ne fait que tourner entre trois états terminaux, ce qui veut dire que n'importe quel (reste de) mot sera accepté. L'algorithme de déterminisation ne s'intéresse pas au rôle des états (il est \textbf{syntaxique}, et non \textbf{sémantique}), et ne voit donc pas qu'une fusion est ici possible. De telles optimisations vont cependant nous être fournies par le prochain algorithme.
 
@@ -861,14 +861,165 @@ Minimiser l'automate suivant :
 
 \end{exercice}
 
+\section{Limite de la reconnaissance par automates finis}
+
+On s'est jusqu'ici amusé à écrire des automates qui reconnaissent tel ou tel langage, sans jamais faillir. Le théorème suivant va être notre premier échec.
+
+\begin{theorem}
+
+Il n'existe pas d'automate fini reconnaissant le langage $L = \{a^nb^n~|~n \in \mathcal{N}\}$
+
+\end{theorem}
+
+\begin{proof}
+On va procéder par l'absurde (voir \ref{abs}), et donc supposer qu'il existe un automate fini $A$ reconnaissant $L$. Grâce aux algorithmes vus précédemment, on peut supposer que $A$ est déterministe et complet (puisque s'il ne l'est pas, on peut en générer un qui l'est et reconnaît également $L$).
+
+L'ensemble d'états de $A$, appelé $Q$, est par définition fini, de cardinal $|Q|$. $L$ contient tous les mots de la forme $a^nb^n$, et notamment $a^{|Q|}b^{|Q|}$. Il existe donc dans $A$ un chemin 
+
+\[
+q_0 \xrightarrow{a} q_1 \xrightarrow{a} ... \xrightarrow{a} q_{|Q|} \xrightarrow{b} q_{|Q|+1} \xrightarrow{b} ... \xrightarrow{b} q_{2|Q|}
+\]
+
+dans $A$, avec $q_0$ initial et $q_{2|Q|}$ terminal. On note que, en lisant les $a$, on parcourt $|Q|+1$ états. D'après le \href{https://fr.wikipedia.org/wiki/Principe_des_tiroirs}{principe des tiroirs (à chaussettes)}, au moins un état est visité deux fois. On a donc $i$ et $j$ tels que $0 \leq i < j \leq |Q|$ et $q_i = q_j$. $A$ accepte alors le mot $a^{|Q|-(j-i)}b^{|Q|}$ via le chemin
+
+\[
+q_0 \xrightarrow{a} q_1 \xrightarrow{a} ... \xrightarrow{a} q_{i} \xrightarrow{a} q_{j+1} \xrightarrow{a} ... \xrightarrow{a} q_{|Q|} \xrightarrow{b} q_{|Q|+1} \xrightarrow{b} ... \xrightarrow{b} q_{2|Q|}
+\]
+
+Autrement dit, on a dans la lecture de $a^{|Q|}b^{|Q|}$ une lecture dans le passage sur les $a$, et on peut obtenir une nouvelle lecture en retirant le contenu de la boucle (la partie entre $i$ et $j$). Visuellement, ça ressemble au passage de 
+
+\hspace{-1.5cm}
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=1cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+    \node[state,initial] (0) {$q_0$};
+      \node        (dots) [right=of 0] {$\cdots$}; 
+    \node[state] (ij) [right=of dots] {$q_i = q_j$};
+    \node[state] (i1) [above right=of ij] {$q_{i+1}$};    
+    \node (ii) [above= 2cm of ij] {$\cdots$};    
+    \node[state] (i2) [above left= of ij] {$q_{j-1}$};    
+    \node[state] (j1) [right=of ij] {$q_{j+1}$};    
+    \node        (bdots) [right=of j1] {$\cdots$}; 
+    \node[state] (q) [right=of bdots] {$q_{|Q|}$}; 
+    \node[state] (q1) [right=of q] {$q_{|Q|+1}$};    
+    \node        (cdots) [right=of q1] {$\cdots$}; 
+    \node[state,accepting] (qf) [right=of cdots] {$q_{2|Q|}$};    
+
+    \path
+    (0) edge node {a} (dots)  
+    (dots) edge node {a} (ij) 
+    (ij) edge node {a} (i1) 
+    (i1) edge node {a} (ii) 
+    (ii) edge  node {a} (i2) 
+    (i2) edge node {a} (ij)  
+    (ij) edge node {a} (j1) 
+    (j1) edge node {a} (bdots) 
+    (bdots) edge node {a} (q) 
+    (q) edge  node {b} (q1) 
+    (q1) edge  node {b} (cdots)
+    (cdots) edge  node {b} (qf)
+    ; %end path 
+
+\end{tikzpicture} 
+
+à
+
+\hspace{-1,5cm}
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=1cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+    \node[state,initial] (0) {$q_0$};
+      \node        (dots) [right=of 0] {$\cdots$}; 
+    \node[state] (ij) [right=of dots] {$q_i = q_j$};
+    \node[state] (j1) [right=of ij] {$q_{j+1}$};    
+    \node        (bdots) [right=of j1] {$\cdots$}; 
+    \node[state] (q) [right=of bdots] {$q_{|Q|}$}; 
+    \node[state] (q1) [right=of q] {$q_{|Q|+1}$};    
+    \node        (cdots) [right=of q1] {$\cdots$}; 
+    \node[state,accepting] (qf) [right=of cdots] {$q_{2|Q|}$};    
+
+    \path
+    (0) edge node {a} (dots)  
+    (dots) edge node {a} (ij) 
+    (ij) edge node {a} (j1) 
+    (j1) edge node {a} (bdots) 
+    (bdots) edge node {a} (q) 
+    (q) edge  node {b} (q1) 
+    (q1) edge  node {b} (cdots)
+    (cdots) edge  node {b} (qf)
+    ; %end path 
+
+\end{tikzpicture} 
+
+
+Or, le mot maintenant lu, $a^{|Q|-(j-i)}b^{|Q|}$, n'appartient pas au langage reconnu par l'automate. On obtient donc un paradoxe, ce qui veut dire que l'automate $A$ n'existait pas en premier lieu.
+\end{proof}
+
+Au-delà de la preuve, comment expliquer l'impossibilité pour un automate fini de reconnaître ce langage ? On comparera à l'exemple \ref{exemplePI}, où on pouvait raisonner \textit{modulo}, sans retenir toute l'information (le nombre de $a$ et de $b$ lus) mais seulement une abstraction, simplifiée et finie (la parité du nombre de $a$ et de $b$). Ici, quand on commence a lire des $b$, on doit avoir enregistré le nombre précis de $a$ lus, pour vérifier qu'on en a bien le même nombre. Or, le nombre de $a$ n'est pas borné, et la seule mémoire disponible dans un automate est les états.
+
+Si on avait le droit à une infinité d'états, on pourrait essayer d'écrire, de manière finie, un automate infini comme celui de la figure \ref{infini}. Le domaine des automates infinis existe bel et bien, mais n'est pas au programme de ce cours. On évoquera, dans la partie \ref{grammaires}, une autre approche consistant à ajouter aux automates une deuxième forme de mémoire, potentiellement infinie mais aisément représentable de manière finie.
+
+\begin{figure}[H]
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=1cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+    \node[state,initial,accepting] (0) {$0_a$};
+    \node[state] (1) [right=of 0] {$1_a$};
+    \node[state] (2) [right=of 1] {$2_a$};
+    \node[state] (3) [right=of 2] {$3_a$};
+    \node[state] (4) [right=of 3] {$4_a$};
+      \node        (dots) [right=of 4] {$\cdots$}; 
+    \node[state,accepting] (b0) [below=of 0] {$0_b$};
+    \node[state] (b1) [right=of b0] {$1_b$};    
+    \node[state] (b2) [right=of b1] {$2_b$};    
+    \node[state] (b3) [right=of b2] {$3_b$};    
+    \node[state] (b4) [right=of b3] {$4_b$};    
+    \node        (bdots) [right=of b4] {$\cdots$}; 
+
+    \path
+    (0) edge node {a} (1)  
+    (1) edge node {a} (2) 
+    (2) edge node {a} (3) 
+    (3) edge node {a} (4) 
+    (4) edge  node {a} (dots) 
+    (1) edge node {b} (b0) 
+    (2) edge node {b} (b1) 
+    (3) edge node {b} (b2) 
+    (4) edge  node {b} (b3) 
+
+    (bdots) edge  node {b} (b4) 
+    (b4) edge  node {b} (b3) 
+    (b3) edge  node {b} (b2) 
+    (b2) edge  node {b} (b1) 
+    (b1) edge  node {b} (b0) 
+
+    ; %end path 
+
+\end{tikzpicture}  
+\caption{Un exemple d'automate infini}
+\label{infini}
+\end{figure}
 
 \section{Propriétés de clôture}
 \label{cloture}
-\subsection{Union}
 
-\subsection{Intersection}
+%On dit qu'un ensemble $E$ est clos sous une opération binaire $\cric$ si, pour tous éléments $x$ et $y$ de $E$, $x \cric y$ appartient également à $E$. Dit autrement, $E$ est clos sous une opération $\cric$ ssi. l'application de $\cric$ à ses éléments ne fait pas sortir de l'ensemble. On va regarder si les langages définissables par 
+
+\subsection{Union}
 
 \subsection{Concaténation}
 
+\subsection{Intersection}
+
 \subsection{Itération}
+
+\subsection{Complémentaire}
+
+
 
