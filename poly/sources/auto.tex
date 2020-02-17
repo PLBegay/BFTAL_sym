@@ -558,13 +558,11 @@ On peut se convaincre assez facilement que la complétion ne change pas le langa
 
 Cette transformation se formalise également assez facilement. Soit un automate déterministe $\big \langle Q,\Sigma,q_0,F,\delta \big \rangle$, alors on renvoie l'AFD $\big \langle Q \cup~\{P\},\Sigma,q_0,F,\delta' \big \rangle$, avec
 
-%TODO: remplacer par un cases
 \[
-\left\{\!\begin{aligned}
-&\delta'(q,a) = \delta(q,a) &\text{ si } \delta(q,a) \text{ défini},\\[1ex]
-&\delta'(q,a) = P &\text{ si } \delta(q,a) \text{ non défini},\\[1ex]
-&\delta'(P,a) = P &\text{ pour tout } a \in \Sigma\\[1ex]
-\end{aligned}
+\begin{cases}
+\delta'(q,a) = \delta(q,a) &\text{ si } \delta(q,a) \text{ défini},\\[1ex]
+\delta'(q,a) = P &\text{ si } \delta(q,a) \text{ non défini},\\[1ex]
+\delta'(P,a) = P &\text{ pour tout } a \in \Sigma  \end{cases}
 \]
 
 Notez qu'on met les cas $\delta'(P,a)$ à part, car (on suppose) $P \not\in Q$, ce qui implique que $\delta(P,a)$ n'a pas de sens.
@@ -811,6 +809,7 @@ On peut maintenant s'amuser à répéter l'expérience autant de fois qu'on veut
 
 \paragraph*{Remarque} A la fin de l'exemple, on a justifié de façon un peu rapide et légère l'arrêt de l'algorithme. On n'entrera pas dans les détails ici, mais on donnera l'idée pour que le lecteur ou la lectrice intéressé.e ait matière à réfléchir : l'algorithme présenté ici revient à tester - de façon efficace - les différences d'acceptation entre paires d'états pour les mots de longueur $0$, puis $1$, puis $2$, etc, jusqu'à atteindre un point fixe. Si on n'a pas de changement (ie. de séparation dans une classe) entre les mots de longueur $n$ et $n+1$, on sait que la stabilité va se propager à l'infini. En effet, soient $q_1$ et $q_2$ qui appartiennent à la même classe, et $w$ un mot de longueur $n+1$. $\delta(q_1,a)$ et $\delta(q_2,a)$ vont dans des états $q_1'$ et $q_2'$ qui appartiennent à la même classe, ce qui veut dire qu'aucun mot de longueur $\leq n+1$ ne peut les séparer. Alors $\delta^*(q_1,a.w) = \delta^*(q_1',w)$ et $\delta^*(q_2,a.w) = \delta^*(q_2',w)$ sont d'accord, et idem avec $b$. $q_1$ et $q_2$ sont donc d'accord sur les mots de longueur $n+2$. On peut itérer, ce qui implique qu'ils sont d'accord sur les mots de n'importe quelle longueur, et sont donc équivalents. 
 
+\paragraph*{Remarque bis} On peut accélérer l'utilisation de cet algorithme en remarquant que la relation "être d'accord" est \textbf{transitive} : étant donnée une partition des états, si $q_1$ et $q_2$ sont d'accord d'une part, et $q_2$ et $q_3$ le sont d'autre part, alors $q_1$ et $q_3$ le sont également. De même, si $q_1$ et $q_2$ sont d'accord et que $q_2$ n'est pas d'accord avec $q_3$, alors ce dernier ne l'est pas avec $q_1$. On va donc pouvoir s'épargner pas mal de vérifications, comme illustré dans les corrections des deux exercices suivant.
 
 \begin{exercice}
 Minimiser (en utilisant l'algorithme) l'automate de l'exemple \ref{detex1}.
@@ -867,7 +866,7 @@ On s'est jusqu'ici amusé à écrire des automates qui reconnaissent tel ou tel 
 
 \begin{theorem}
 
-Il n'existe pas d'automate fini reconnaissant le langage $L = \{a^nb^n~|~n \in \mathcal{N}\}$
+Il n'existe pas d'automate fini reconnaissant le langage $L = \{a^nb^n~|~n \in \mathbb{N}\}$
 
 \end{theorem}
 

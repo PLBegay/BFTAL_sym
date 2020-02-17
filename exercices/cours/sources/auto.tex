@@ -694,14 +694,15 @@ Donner la formalisation de la complétion d'un automate non-déterministe.
 
 Soit un automate non-déterministe $\big \langle Q,\Sigma,I,F,\delta \big \rangle$, sa version complétée est \newline $\big \langle Q \cup~\{P\},\Sigma,I,F,\delta' \big \rangle$, avec
 
-%TODO: remplacer par un cases
 \[
-\left\{\!\begin{aligned}
-&\delta'(q,a) = \delta(q,a) &\text{ si } \delta(q,a) \neq \emptyset,\\[1ex]
-&\delta'(q,a) = \{P\} &\text{ si } \delta(q,a) = \emptyset,\\[1ex]
-&\delta'(P,a) = \{P\} &\text{ pour tout } a \in \Sigma\\[1ex]
-\end{aligned} \right 
+\begin{cases}
+\delta'(q,a) = \delta(q,a) &\text{ si } \delta(q,a) \neq \emptyset,\\[1ex]
+\delta'(q,a) = \{P\} &\text{ si } \delta(q,a) = \emptyset,\\[1ex]
+\delta'(P,a) = \{P\} &\text{ pour tout } a \in \Sigma\\[1ex]
+ \end{cases}
 \]
+
+
 \end{correction*}
 
 \subsection{Déterminisation}
