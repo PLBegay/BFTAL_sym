@@ -941,18 +941,14 @@ On a $N = \{0,1,2\}$ d'un côté, et $F = \{3,4,5\}$ de l'autre. On va d'abord s
 \begin{itemize}
 \item $\delta(0,a) = 1 = \delta(1,a)$
 \item $\delta(1,b) = 0 \in N$ et $\delta(1,b) = 2 \in N$
-\item[$\Rightarrow$] Pas de raison de séparer pour l'instant
+\item[$\Rightarrow$] 0 et 1 sont d'accord
 \end{itemize}
 \item 0 vs 2
 \begin{itemize}
 \item $\delta(0,a) = 1 \in N$ et $\delta(2,a) = 3 \in F$
-\item[$\Rightarrow$] On va devoir séparer 0 et 2
+\item[$\Rightarrow$] 0 et 2 ne sont pas d'accord, on va devoir les séparer
 \end{itemize}
-\item 1 vs 2
-\begin{itemize}
-\item $\delta(1,a) = 1 \in N$ et $\delta(2,a) = 3 \in F$
-\item[$\Rightarrow$] On va devoir séparer 1 et 2
-\end{itemize}
+\item Pas besoin de tester 1 vs 2, puisqu'on sait déjà que 1 va être avec 0, et donc séparé de 2.
 \end{itemize}
 
 On peut donc séparer $N$ en $N_1 = \{0,1\}$ et $N_2 = \{2\}$. On a maintenant le choix d'étudier $N_1$ ou $F$. On choisit (un peu bêtement) $F$.
@@ -962,20 +958,16 @@ On peut donc séparer $N$ en $N_1 = \{0,1\}$ et $N_2 = \{2\}$. On a maintenant l
 \begin{itemize}
 \item $\delta(3,a) = 3 = \delta(4,a)$
 \item $\delta(3,b) = 4 \in F$ et $\delta(4,b) = 5 \in F$
-\item[$\Rightarrow$] Pas de raison de séparer pour l'instant
+\item[$\Rightarrow$] 3 d'accord avec 4
 \end{itemize}
 \item 3 vs 5
 \begin{itemize}
 \item $\delta(3,a) = 3 = \delta(5,a)$
 \item $\delta(3,b) = 4 \in F$ et $\delta(5,b) = 5 \in F$
-\item[$\Rightarrow$] Pas de raison de séparer pour l'instant
+\item[$\Rightarrow$] 3 d'accord avec 5
 \end{itemize}
-\item 4 vs 5
-\begin{itemize}
-\item $\delta(4,a) = 3 = \delta(5,a)$
-\item $\delta(4,b) = 5 = \delta(5,b)$
-\item[$\Rightarrow$] Pas de raison de séparer pour l'instant
-\end{itemize}\end{itemize}
+\item Pas besoin de tester 4 vs 5, puisqu'ils sont tous les deux d'accord avec 3.
+\end{itemize}
 
 On laisse donc $F$ en l'étant. On s'intéresse maintenant à $N_1$ : 
 
@@ -1073,25 +1065,23 @@ On divise donc notre ensemble d'états en $F = \{7\}$ et $N = \{0,1,2,3,4,5,6,8\
 \begin{itemize}
 \item $\delta(0,a) = 1$ et $\delta(1,a) = 3$. Pour l'instant, $1$ et $3$ appartiennent tous les deux à $3$, ce qui veut dire qu'on suppose que $1$ accepte un mot $w$ ssi. $3$ accepte $w$. On peut donc conclure que, de ce qu'on sait, $0$ accepte un mot $a.w$ ssi. $1$ accepte $a.w$.
 \item $\delta(0,b) = 2$ et $\delta(1,b) = 4$. $2$ et $4$ appartiennent à la même classe, on suppose donc pour l'instant que $0$ accepte un mot $b.w$ ssi. $1$ accepte un mot $b.w$.
-\item[$\Rightarrow$] Pour l'instant, on conserve notre hypothèse selon laquelle $0$ et $1$ acceptent le même langage.
+\item[$\Rightarrow$] Pour l'instant, on conserve notre hypothèse selon laquelle $0$ et $1$ acceptent le même langage. Ils sont donc dans la même classe.
 \end{itemize}
 \item 0 vs. 2
 \begin{itemize}
 \item $\delta(0,a) = 1$ et $\delta(2,a) = 3$, $1$ et $3$ sont dans la même classe.
 \item $\delta(0,b) = 2$ et $\delta(2,b) = 5$. $2$ et $5$ appartiennent à la même classe.
-\item[$\Rightarrow$] Pour l'instant, on conserve notre hypothèse selon laquelle $0$ et $2$ acceptent le même langage.
+\item[$\Rightarrow$] Pour l'instant, on conserve notre hypothèse selon laquelle $0$ et $2$ acceptent le même langage. 2 rejoint donc la classe de 0 et 1.
 \end{itemize}
-
 \item[] Pour préserver ce qu'il me reste de santé mentale, je ne vais pas détailler tout le reste.
-
-\item 0 vs. 3 / 0 vs. 4 / 0 vs. 5 / 1 vs. 2 / 1 vs. 3 / 1 vs. 4 / 1 vs. 5 / 2 vs. 3 / 2 vs. 4 / 2 vs. 5 / 3 vs. 4 / 3 vs. 5 / 4 vs. 5 $\Rightarrow$ compatibilité, donc pas de séparation
-
-\item 0 vs. 6 / 0 vs. 8 / 1 vs. 6 / 1 vs. 8 / 2 vs. 6 / 2 vs. 8 / 3 vs. 6 / 3 vs. 8 / 5 vs. 6 / 4 vs. 8 / 5 vs. 6 / 5 vs. 8 $\Rightarrow$ incompatibilité (à chaque fois à cause de la transition en $b$).
-
-\item 6 vs. 8 $\Rightarrow$ compatibilité
-
+\item 0 vs. 3 : compatibilité. 3 est donc mis avec 0, 1 et 2.
+\item 0 vs. 4 : compatibilité. 4 est donc mis avec 0, 1, 2 et 3.
+\item 0 vs. 5 : compatibilité. 5 est donc mis avec 0, 1, 2 et 3, 4.
+\item 0 vs. 6 : incompatibilité. 6 est mis à part.
+\item 0 vs. 8 : incompatibilité. 8 est mis à part.
+\item[] On sait ue 6 et 8 ne vont pas dans l'ensemble $0,1,2,3,4,5$, mais il reste à déterminer s'ils vont ensemble ou s'ils restent chacun dans leur coin.
+\item 6 vs. 8 : compatibilité, on classe $6$ et $8$ ensemble.
 \item[$\Rightarrow$] On sépare $N$ en $N_1 = \{0,1,2,3,4,5\}$ et $N_2 = \{6,8\}$
-
 \end{itemize}
 
 On peut noter que $6$ et $8$ pointent exactement sur les mêmes états pour les deux lettres, on peut donc être sûr qu'on n'arrivera pas à les séparer, quoi qu'il arrive à $N_1$. On s'intéresse donc à ce dernier.
