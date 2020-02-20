@@ -373,6 +373,7 @@ On propose une méthode pour éliminer les $\epsilon$-transitions s'appuyant sur
 \item Si $q_j \in \epsilon^+(q_i)$ et $q_k \in \delta(q_j,\epsilon)$, alors $q_k \in \epsilon^+(q_i)$
 \end{enumerate}
 \caption{Définition de $\epsilon^+$}
+\label{eplusdef}
 \end{figure}
  
  
@@ -401,9 +402,11 @@ A partir d'un automate non-déterministe avec $\epsilon$-transitions  $\big \lan
 \label{algo}
 \end{figure}
 \vspace{2cm}
-\paragraph*{Question 1} Pour chaque automate ($A_1$ à $A_6$), calculez la fonction $\epsilon^+$\footnote{Vous devriez donner par exemple $\epsilon^+(q_1) = \{q_1,q_2\}$, $\epsilon^+(q_2) = \{\}$ etc...} et appliquez l'algorithme.
+\paragraph*{Question 1} Pour chaque automate ($A_1$ à $A_6$), calculez la fonction $\epsilon^+$ en vous servant de la définition en figure \ref{eplusdef}. Vous devriez donner l'image de chaque état, par exemple $\epsilon^+(q_1) = \{q_1,q_2\}$, $\epsilon^+(q_2) = \emptyset$ etc. 
 
-\paragraph*{Question 2} Essayez d'expliquer en français la fonction $\epsilon^+$ et l'algorithme comme si vous vouliez me convaincre qu'ils font correctement leur boulot (ce qui est le cas)\footnote{Notez que rien n'est gratuit dans l'algorithme et que chaque \textit{morceau} a un sens. Vous devriez donc tout mentionner.}. Vous pouvez vous aider d'exemples, soit tirés de la question précédente, soit originaux.
+\paragraph*{Question 2} Pour chaque automate ($A_1$ à $A_6$), appliquez l'algorithme de la figure \ref{algo}. Vous pouvez dessiner le résultat. Pas besoin de détailler tous les calculs. 
+
+\paragraph*{Question 3} Essayez d'expliquer en français la fonction $\epsilon^+$ et l'algorithme comme si vous vouliez me convaincre qu'ils font correctement leur boulot (ce qui est le cas)\footnote{Notez que rien n'est gratuit dans l'algorithme et que chaque \textit{morceau} a un sens. Vous devriez donc tout mentionner.}. Vous pouvez vous aider d'exemples, soit tirés de la question précédente, soit originaux.
 
 \section{Formalisation}
 
@@ -414,7 +417,7 @@ A partir d'un automate non-déterministe avec $\epsilon$-transitions  $\big \lan
 
 \section{Propriétés de clôture}
 
-\paragraph*{Question 5} Etant donnés des AFND (version $\epsilon$) représentant les expressions $e_1$ et $e_2$, expliquer comment construire des automates reconnaissant les expressions $e_1 + e_2$, $e_1.e_2$ et $e_1^*$.
+\paragraph*{Question 5} Etant donnés des AFND (version $\epsilon$) représentant deux expressions rationnelles quelconques $e_1$ et $e_2$, expliquez, en vous aidant de schémas, comment construire des automates reconnaissant les expressions $e_1 + e_2$, $e_1.e_2$ et $e_1^*$.
 
 \paragraph*{Question bonus} Répondre à la question précédente en utilisant la formalisation des automates.
 
