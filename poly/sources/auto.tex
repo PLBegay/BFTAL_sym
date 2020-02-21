@@ -1008,7 +1008,7 @@ Si on avait le droit à une infinité d'états, on pourrait essayer d'écrire, d
 \section{Propriétés de clôture}
 \label{cloture}
 
-On dit qu'un ensemble $E$ est clos sous une opération binaire $\circ$ si, pour tous éléments $x$ et $y$ de $E$, $x \circ y$ appartient également à $E$. Dit autrement, $E$ est clos sous une opération $\circ$ ssi. l'application de $\circ$ à ses éléments ne fait pas sortir de l'ensemble. On va regarder ici si les langages définissables par automates, ou \textbf{langages rationnels}, sont clos sous les opérations sur les langages.
+On dit qu'un ensemble $E$ est clos sous une opération binaire $\circ$ si, pour tous éléments $x$ et $y$ de $E$, $x \circ y$ appartient également à $E$. Dit autrement, $E$ est clos sous $\circ$ ssi. l'application de $\circ$ à ses éléments ne fait pas sortir de l'ensemble. On va regarder ici si les langages définissables par automates, ou \textbf{langages rationnels}, sont clos sous les opérations sur les langages.
 
 \paragraph*{Remarque} Les trois premiers points de cette section se présentent plus simplement en utilisant les $\epsilon$-transitions. On renverra pour ça à la correction du DM correspondant.
 
@@ -1040,7 +1040,7 @@ Les \textbf{langages rationnels} sont clos par concaténation, i.e. pour tous la
 
 \begin{proof}
 
-Si $L_1$ et $L_2$ sont rationnels, il existe des automates finis $A_1$ et $A_2$ qui reconnaissent $L_1$ et $L_2$, respectivement. On veut reconnaître $L_1.L_2 = \{u.v ~|~ u \in L_1 ~\wedge~v \in L_2\}$, l'astuce va être de mettre $A_1$ et $A_2$ l'un après l'autre en rajoutant des transitions pour que, à chaque fois qu'on finit de lire un mot $u$ accepté par $A_1$, au lieu d'accepter, on va en un état initial de $A_2$ en lire un deuxième $v$. La figure \ref{concatscheme} illustre schématiquement cette transformation.
+Si $L_1$ et $L_2$ sont rationnels, il existe des automates finis $A_1$ et $A_2$ qui reconnaissent $L_1$ et $L_2$, respectivement. On veut reconnaître $L_1.L_2 = \{u.v ~|~ u \in L_1 ~\wedge~v \in L_2\}$, l'astuce va être de mettre $A_1$ et $A_2$ l'un après l'autre en rajoutant des transitions pour que, à chaque fois qu'on finit de lire un mot $u$ accepté par $A_1$, au lieu d'accepter, on va en un état initial de $A_2$ en lire un deuxième $v$. La figure \ref{concatscheme} illustre schématiquement cette transformation sur un exemple.
 
 
 
@@ -1065,8 +1065,8 @@ Si $L_1$ et $L_2$ sont rationnels, il existe des automates finis $A_1$ et $A_2$ 
 
     \path
     (0) edge node {a,b} (3)  
-    (1) edge node {b} (3) 
-    (2) edge node {b} (3) 
+    (1) edge [pos=0.37] node {b} (3) 
+    (2) edge [pos=0.15] node {b} (3) 
     (2) edge node {a} (4) 
     (5) edge node {a} (7) 
     (4) edge [bend right] node {b} (8) 
@@ -1097,8 +1097,8 @@ Si $L_1$ et $L_2$ sont rationnels, il existe des automates finis $A_1$ et $A_2$ 
 
     \path
     (0) edge node {a,b} (3)  
-    (1) edge node {b} (3) 
-    (2) edge node {b} (3) 
+    (1) edge [pos=0.37] node {b} (3) 
+    (2) edge [pos=0.15] node {b} (3) 
     (2) edge node {a} (4) 
     (5) edge node {a} (7) 
     (0) edge [bend left=20] node {a,b} (5) 
@@ -1142,10 +1142,65 @@ I' = I_1 \cup I_2&\text{ si } A_1 \text{ accepte pas le mot vide}
 
 Si $A_1$ accepte le mot vide, on veut pouvoir considérer cette possibilité et commencer la lecture en $A_2$ directement. Sinon, on passe forcément par $A_1$. On peut vérifier facilement si un automate accepte ou non $\epsilon$ : c'est le cas ssi. au moins un de ses états initiaux est terminal. 
 
-Pas besoin de faire attention pour les états finaux : si $A_2$ accepte le mot vide, au moins un de ses états initiaux est terminal, ce qui veut dire que les transitions qu'on ajoute permettront d'accepter un mot de $L_1$.
+Pas besoin de faire attention pour les états terminaux : si $A_2$ accepte le mot vide, au moins un de ses états initiaux est terminal, ce qui veut dire que les transitions qu'on ajoute permettront d'accepter un mot de $L_1$.
 \end{proof}
 
-%TODO: exemple
+\begin{example}
+Soient $L_1 = \{w ~|~|w|_a$ pair et $|w|_b impair\}$ et $L_2 = \Sigma^*(aba+bab)\Sigma^*$. On peut reconnaître $L_1.L_2$ en combinant les automates des exemples \ref{exemplePI} et \ref{incomptoo}. Les états $PP$ et $II$ envoie dans un état terminal, avec $b$ et $a$ respectivement. On leur rajoute donc les mêmes transitions pour les états $0$ et $4$, et on rend ces derniers non-initiaux. On obtient au final :
+
+
+\begin{figure}[H]
+\hspace{-2cm}
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.9cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state] (PP)                    {$PP$};
+  \node[state] (IP)      [above right of=PP]                {$IP$};  \node[state] (II)      [below right of=IP]                {$II$};
+  \node[accepting,state] (PI)      [below right of=PP]                {$PI$};
+  \node[state] (0) [above right=0.8cm and 2cm of II]                   {$0$};
+  \node[state] (1)      [right of=0]                {$1$};  
+  \node[state] (2)      [right of=1]                {$2$};
+  \node[accepting,state] (3)      [right of=2]                {$3$};
+
+  \node[state] (4)  [below of=0]            {$4$};
+  \node[state] (5)      [right of=4]                {$5$};  
+  \node[state] (6)      [right of=5]                {$6$};
+  \node[accepting,state] (7)      [right of=6]                {$7$};
+
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(PP) edge      [bend right]        node {$a$} (IP)
+(PP) edge      [bend right]        node {$b$} (PI)
+(PP) edge      [bend left=90]        node {$b$} (0)
+(PP) edge      [bend right=90]        node {$b$} (4)
+(PI) edge      [bend right]        node {$a$} (II)
+(PI) edge      [bend right]        node {$b$} (PP)
+(IP) edge      [bend right]        node {$a$} (PP)
+(IP) edge      [bend right]        node {$b$} (II)
+(II) edge      [bend right]        node {$a$} (PI)
+(II) edge      []        node {$a$} (0)
+(II) edge      []        node {$a$} (4)
+(II) edge      [bend right]        node {$b$} (IP)
+(0) edge      [loop above]        node {$a,b$} (0)
+(0) edge      []        node {$a$} (1)
+(1) edge      []        node {$b$} (2)
+(2) edge      []        node {$a$} (3)
+(3) edge      [loop above]        node {$a,b$} (3)
+(4) edge      [loop above]        node {$a,b$} (4)
+(4) edge      []        node {$b$} (5)
+(5) edge      []        node {$a$} (6)
+(6) edge      []        node {$b$} (7)
+(7) edge      [loop above]        node {$a,b$} (7);
+;
+\end{tikzpicture}
+\end{figure}
+
+Notez que si on avait pris pour $L_1$ le langage des mots avec un nombre pair de $a$ et de $b$, cad. avec $PP$ terminal, les états $0$ et $4$ seraient restés initiaux pour pouvoir accepter, par exemple, $aba$.
+
+\end{example}
 
 \subsection{Itération}
 
