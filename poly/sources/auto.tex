@@ -1008,15 +1008,148 @@ Si on avait le droit à une infinité d'états, on pourrait essayer d'écrire, d
 \section{Propriétés de clôture}
 \label{cloture}
 
-%On dit qu'un ensemble $E$ est clos sous une opération binaire $\cric$ si, pour tous éléments $x$ et $y$ de $E$, $x \cric y$ appartient également à $E$. Dit autrement, $E$ est clos sous une opération $\cric$ ssi. l'application de $\cric$ à ses éléments ne fait pas sortir de l'ensemble. On va regarder si les langages définissables par 
+On dit qu'un ensemble $E$ est clos sous une opération binaire $\circ$ si, pour tous éléments $x$ et $y$ de $E$, $x \circ y$ appartient également à $E$. Dit autrement, $E$ est clos sous une opération $\circ$ ssi. l'application de $\circ$ à ses éléments ne fait pas sortir de l'ensemble. On va regarder ici si les langages définissables par automates, ou \textbf{langages rationnels}, sont clos sous les opérations sur les langages.
+
+\paragraph*{Remarque} Les trois premiers points de cette section se présentent plus simplement en utilisant les $\epsilon$-transitions. On renverra pour ça à la correction du DM correspondant.
 
 \subsection{Union}
 
+\begin{theorem}
+Les \textbf{langages rationnels} sont clos par union, i.e. pour tous langages $L_1$ et $L_2$ reconnaissables par automate fini, il existe un automate fini reconnaissant $L_1 \cup L_2$.
+\end{theorem}
+
+\begin{proof}
+
+Si $L_1$ et $L_2$ sont rationnels, il existe des automates finis $A_1$ et $A_2$ qui reconnaissent $L_1$ et $L_2$, respectivement. Pour plus de généralité, on va supposer $A_1$ et $A_2$ non-déterministes. $L_1 \cup L_2$ est reconnu par "$A_1$ et $A_2$ posés à côté l'un de l'autre". Plus formellement, soient $A_1 = \big \langle Q_1, \Sigma_1, \delta_1, I_1, F_1\big \rangle$ et $A_1 = \big \langle Q_2, \Sigma_2, \delta_2, I_2, F_2\big \rangle$, alors $L_1 \cup L_2$ est reconnu par $\big \langle Q_1 \cup Q_2, \Sigma_1 \cup \Sigma_2, \delta', I_1 \cup I_2, F_1 \cup F_2\big \rangle$ avec 
+
+\[
+\begin{cases}
+\delta'(q,a) = \delta_1(q,a) &\text{ si } q \in Q_1,\\[1ex]
+\delta'(q,a) = \delta_2(q,a) &\text{ si } q \in Q_2\end{cases}
+\]
+
+\end{proof}
+
+C'est exactement l'astuce qui a été utilisée dans l'exemple \ref{incomptoo}, où on a effectivement "mis ensemble" deux automates.
+
 \subsection{Concaténation}
 
-\subsection{Intersection}
+\begin{theorem}
+Les \textbf{langages rationnels} sont clos par concaténation, i.e. pour tous langages $L_1$ et $L_2$ reconnaissables par automate fini, il existe un automate fini reconnaissant $L_1.L_2$.
+\end{theorem}
+
+\begin{proof}
+
+Si $L_1$ et $L_2$ sont rationnels, il existe des automates finis $A_1$ et $A_2$ qui reconnaissent $L_1$ et $L_2$, respectivement. On veut reconnaître $L_1.L_2 = \{u.v ~|~ u \in L_1 ~\wedge~v \in L_2\}$, l'astuce va être de mettre $A_1$ et $A_2$ l'un après l'autre en rajoutant des transitions pour que, à chaque fois qu'on finit de lire un mot $u$ accepté par $A_1$, au lieu d'accepter, on va en un état initial de $A_2$ en lire un deuxième $v$. La figure \ref{concatscheme} illustre schématiquement cette transformation.
+
+
+
+\begin{figure*}[ht]
+    \centering
+    \begin{subfigure}[b]{0.5\textwidth}
+        \centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=1cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+    \node[state] (0) {$0$};
+    \node[state] (1) [below=of 0] {$1$};
+    \node[state] (2) [below=of 1] {$2$};
+    \node[state,accepting] (3) [right=of 0] {$f_1$};
+    \node[state,accepting] (4) [right=of 2] {$f_2$};
+    \node[state] (5) [right=of 4] {$i_2$};
+    \node[] (6) [above=of 3] {...};
+    \node[] (8) [below=of 4] {...};
+    \node[] (7) [right=of 5] {...};
+
+    \path
+    (0) edge node {a,b} (3)  
+    (1) edge node {b} (3) 
+    (2) edge node {b} (3) 
+    (2) edge node {a} (4) 
+    (5) edge node {a} (7) 
+    (4) edge [bend right] node {b} (8) 
+    (3) edge [] node {a,b} (6) 
+    ; %end path 
+
+\end{tikzpicture}  
+\caption{Deux automates voisins isolés ...}
+%\label{infini}
+    \end{subfigure}%
+    ~ 
+    \begin{subfigure}[b]{0.5\textwidth}
+        \centering
+	\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=1cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+    \node[state] (0) {$0$};
+    \node[state] (1) [below=of 0] {$1$};
+    \node[state] (2) [below=of 1] {$2$};
+    \node[state] (3) [right=of 0] {$f_1$};
+    \node[state] (4) [right=of 2] {$f_2$};
+    \node[state] (5) [right=of 4] {$i_2$};
+    \node[] (6) [above=of 3] {...};
+    \node[] (8) [below=of 4] {...};
+    \node[] (7) [right=of 5] {...};
+
+    \path
+    (0) edge node {a,b} (3)  
+    (1) edge node {b} (3) 
+    (2) edge node {b} (3) 
+    (2) edge node {a} (4) 
+    (5) edge node {a} (7) 
+    (0) edge [bend left=20] node {a,b} (5) 
+    (1) edge [bend left=20] node {b} (5) 
+    (2) edge [bend left] node {a,b} (5) 
+    (4) edge [bend right] node {b} (8) 
+    (3) edge [] node {a,b} (6) 
+    ; %end path 
+
+\end{tikzpicture}  
+\caption{maintenant reliés}
+%\label{infini}
+    \end{subfigure}
+    \caption{Concaténation d'automates}
+    \label{concatscheme}
+\end{figure*}
+
+\newpage
+
+Soit un mot $w = u.v$ avec $u \in L_1$ et $v \in L_2$. $u$ étant accepté par $A_1$, sa lecture en partant d'un état initial nous amène en $f_1$ ou $f_2$. Dans la version transformée, $u$ seul n'est plus accepté, mais la lecture de sa dernière lettre nous envoie en $i_2$. Or, $v$ est accepté par $A_2$, ce qui veut dire qu'il va nous envoyer de $i_2$ à un état terminal de $A_2$.
+
+
+
+Plus formellement, soient $A_1 = \big \langle Q_1, \Sigma_1, \delta_1, I_1, F_1\big \rangle$ et $A_1 = \big \langle Q_2, \Sigma_2, \delta_2, I_2, F_2\big \rangle$, alors $L_1.L_2$ est reconnu par $\big \langle Q_1 \cup Q_2, \Sigma_1 \cup \Sigma_2, \delta', I', F_2\big \rangle$ avec 
+
+\[
+\begin{cases}
+\delta'(q,a) = \delta_1(q,a) &\text{ si } q \in Q_1 ~\wedge~\delta_1(q,a) \cap F_1 = \emptyset,\\[1ex]
+\delta'(q,a) = \delta_1(q,a) \cup I_2 &\text{ si } q \in Q_1 ~\wedge~\delta_1(q,a) \cap F_1 \neq \emptyset,\\[1ex]
+\delta'(q,a) = \delta_2(q,a) &\text{ si } q \in Q_2\end{cases}
+\]
+
+Ainsi, chaque fois qu'un état de $A_1$ mène à un état terminal du même automate, on rajoute une transition avec la même lettre vers tous les états initiaux de $A_2$. Les transitions de $A_2$ ne changent pas.
+
+\[
+\begin{cases}
+I' = I_1 &\text{ si } A_1 \text{ n'accepte pas le mot vide},\\[1ex]
+I' = I_1 \cup I_2&\text{ si } A_1 \text{ accepte pas le mot vide}
+\end{cases}
+\]
+
+Si $A_1$ accepte le mot vide, on veut pouvoir considérer cette possibilité et commencer la lecture en $A_2$ directement. Sinon, on passe forcément par $A_1$. On peut vérifier facilement si un automate accepte ou non $\epsilon$ : c'est le cas ssi. au moins un de ses états initiaux est terminal. 
+
+Pas besoin de faire attention pour les états finaux : si $A_2$ accepte le mot vide, au moins un de ses états initiaux est terminal, ce qui veut dire que les transitions qu'on ajoute permettront d'accepter un mot de $L_1$.
+\end{proof}
+
+%TODO: exemple
 
 \subsection{Itération}
+
+\subsection{Intersection}
 
 \subsection{Complémentaire}
 
