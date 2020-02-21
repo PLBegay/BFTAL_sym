@@ -865,7 +865,7 @@ Minimiser l'automate suivant :
 On s'est jusqu'ici amusé à écrire des automates qui reconnaissent tel ou tel langage, sans jamais faillir. Le théorème suivant va être notre premier échec.
 
 \begin{theorem}
-
+\label{anbn}
 Il n'existe pas d'automate fini reconnaissant le langage $L = \{a^nb^n~|~n \in \mathbb{N}\}$
 
 \end{theorem}
@@ -1005,7 +1005,7 @@ Si on avait le droit à une infinité d'états, on pourrait essayer d'écrire, d
 \label{infini}
 \end{figure}
 
-\section{Propriétés de clôture}
+\section{Propriétés de clôture des langages reconnus par automates}
 \label{cloture}
 
 On dit qu'un ensemble $E$ est clos sous une opération binaire $\circ$ si, pour tous éléments $x$ et $y$ de $E$, $x \circ y$ appartient également à $E$. Dit autrement, $E$ est clos sous $\circ$ ssi. l'application de $\circ$ à ses éléments ne fait pas sortir de l'ensemble. On va regarder ici si les langages définissables par automates, ou \textbf{langages rationnels}, sont clos sous les opérations sur les langages.
@@ -1204,9 +1204,401 @@ Notez que si on avait pris pour $L_1$ le langage des mots avec un nombre pair de
 
 \subsection{Itération}
 
+
+\begin{theorem}
+Les \textbf{langages rationnels} sont clos par concaténation, i.e. pour tout langage $L$ reconnaissable par automate fini, il existe un automate fini reconnaissant $L^*$.
+\end{theorem}
+
+\begin{proof}
+On veut reconnaître des mots de la forme $u_1.u_2...u_n$ avec $u_i \in L$ pour tout $i$. On ajoute un état spécial, $S$, qui sera le seul initial et terminal, et qui sera le début et la fin de tout tour de manège. La construction de l'automate ressemble ensuite à celle de la concaténation, en ce qu'on rajoute des transitions qui, quand on s'apprête à accéder à un état terminal, nous permettent également de revenir à $S$. Dualement, pour toute transition $q \xrightarrow{c} q'$ avec $q$ initial, on ajoute la transition $S \xrightarrow{c} q'$. Ainsi, en lisant la dernière lettre de $u_1$, on peut revenir dans un état initial pour lire $u_2$ et ainsi de suite.
+
+Plus formellement, soient $A = \big \langle Q, \Sigma, \delta, I, F\big \rangle$, alors $L^*$ est reconnu par $\big \langle Q \cup \{S\}, \Sigma, \delta', \{S\}, \{S\} \big \rangle$ avec 
+
+\[
+\begin{cases}
+\delta'(q,a) = \delta(q,a) &\text{ si } \delta(q,a) \cap F = \emptyset,\\[1ex]
+\delta'(q,a) = \delta(q,a) \cup \{S\} &\text{ si } \delta(q,a) \cap F \neq \emptyset,\\[1ex]
+\delta'(S,a) = \displaystyle\bigcup_{i \in I} \delta(i,a) & 
+\end{cases}
+\]
+
+\end{proof}
+
+\begin{example}
+\label{itex}
+Soit $L = \{w \in \Sigma^*~|~|w|_a$ pair et $|w|_b$ impair$\}$. $L^*$ est reconnu par l'automate suivant : 
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=4cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[state] (PP)                    {$PP$};
+  \node[state] (IP)      [above right of=PP]                {$IP$};  \node[state] (II)      [below right of=IP]                {$II$};
+  \node[state] (PI)      [below right of=PP]                {$PI$};
+  \node[initial,accepting,state] (S)      [above=2cm of PI]                {$S$};
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(PP) edge      [bend right]        node {$a$} (IP)
+(PP) edge      [bend right]        node {$b$} (PI)
+(PI) edge      [bend right]        node {$a$} (II)
+(PI) edge      [bend right=10]        node {$b$} (PP)
+(IP) edge      [bend right]        node {$a$} (PP)
+(IP) edge      [bend right]        node {$b$} (II)
+(II) edge      [bend right]        node {$a$} (PI)
+(II) edge      [bend right]        node {$b$} (IP)
+
+(II) edge      []        node {$a$} (S)
+(PP) edge      [bend right]        node {$b$} (S)
+(S) edge      []        node {$b$} (PI)
+(S) edge      []        node {$a$} (IP)
+
+;
+\end{tikzpicture}
+\end{figure}
+
+\end{example}
+
+\begin{exercice}
+Définir, en français, le langage étudié dans l'exemple \ref{itex}.
+\end{exercice}
+
+\begin{exercice}
+Est-il nécessaire dans la transformation de rendre non-terminaux les états qui l'étaient dans l'automate original ?
+\end{exercice}
+
+\begin{exercice}
+Pourquoi était-il indispensable d'introduire un nouvel état dans la transformation ?
+\end{exercice}
+
 \subsection{Intersection}
+
+\begin{theorem}
+Les \textbf{langages rationnels} sont clos par intersection, i.e. pour tous langages $L_1$ and $L_2$ reconnaissables par automate fini, il existe un automate fini reconnaissant $L_1 \cap L_2$.
+\end{theorem}
+
+\begin{proof}
+Soient $A_1$ et $A_2$ des automates reconnaissant $L_1$ et $L_2$. Comme dans l'algorithme de déterminisation, on va utiliser un automate pour en simuler un autre, ou en l'occurrence deux, en utilisant comme états des couples d'états de $A_1$ / $A_2$. Si par exemple on a dans $q_1 \xrightarrow{c} q_1'$ dans $A_1$ et $q_2 \xrightarrow{c} q_2'$ dans $A_2$, alors on aura dans l'automate de $L_1 \cap L_2$
+
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=4cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[state] (1)                    {$q_1, q_2$};
+  \node[state] (2)      [right of=1]                {$q_1',q_2'$}; 
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(1) edge      []        node {$c$} (2)
+;
+\end{tikzpicture}
+\end{figure}
+
+Ce faisant, la lecture d'un mot exécute celles du même mot à la fois dans $A_1$ (parties gauches des différents états) et dans $A_2$ (parties droites). On veut commencer au début des deux automates, les états initiaux seront donc l'ensemble des $i_1,i_2$ tels que $i_1$ est initial dans $A_1$ et $i_2$ dans $A_2$. On ne veut accepter un mot que s'il appartient aux deux langages, cad. ssi. il serait accepté par les deux langages. Les états terminaux sont donc ceux de la forme $f_1, f_2$, où $f_1$ et $f_2$ sont tous les deux terminaux dans leurs automates respectifs.
+
+Plus formellement, soient $A_1 = \big \langle Q_1, \Sigma_1, \delta_1, I_1, F_1\big \rangle$ et $A_1 = \big \langle Q_2, \Sigma_2, \delta_2, I_2, F_2\big \rangle$, alors $L_1 \cap L_2$ est reconnu par $\big \langle Q_1 \times Q_2, \Sigma_1 \cap \Sigma_2, \delta', I_1 \times I_2, F_1 \times F_2\big \rangle$ avec $\delta(\big \langle q_1, q_2 \big \rangle,a) = \delta_1(q_1,a) \times \delta_2(q_2,a)$.
+
+Par coquetterie et amour inconditionnel des homomorphismes, on mentionnera la jolie définition de $\delta'$ dans le cas déterministe :
+
+\[
+\delta(\big \langle q_1, q_2 \big \rangle,a) = \big \langle \delta_1(q_1,a), \delta_2(q_2,a) \big \rangle
+\]
+
+\end{proof}
+
+\begin{example}
+\label{interex}
+On veut reconnaître le langage des mots qui contiennent les facteurs $aba$ et $bab$. Les facteurs se chevauchant, écrire directement un tel automate n'est pas totalement évident. On va utiliser l'algorithme d'intersection, dans sa version déterministe ou non. On choisit ici la première option. On commence donc en rappelant les AFD reconnaissant les deux langages à mêler : 
+
+
+\begin{figure}[!ht]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.9cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state] (0)                    {$0$};
+  \node[state] (1)      [right of=0]                {$1$};  
+  \node[state] (2)      [right of=1]                {$2$};
+  \node[accepting,state] (3)      [right of=2]                {$3$};
+
+  \node[initial,state] (4)  [below of=0]            {$0$};
+  \node[state] (5)      [right of=4]                {$1$};  
+  \node[state] (6)      [right of=5]                {$2$};
+  \node[accepting,state] (7)      [right of=6]                {$3$};
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(0) edge      [loop above]        node {$b$} (0)
+(0) edge      []        node {$a$} (1)
+(1) edge      [loop above]        node {$a$} (1)
+(1) edge      []        node {$b$} (2)
+(2) edge      []        node {$a$} (3)
+(2) edge      [bend left]        node {$b$} (0)
+(3) edge      [loop above]        node {$a,b$} (3)
+(4) edge      [loop above]        node {$a$} (4)
+(4) edge      []        node {$b$} (5)
+(5) edge      [loop below]        node {$b$} (5)
+(5) edge      []        node {$a$} (6)
+(6) edge      []        node {$b$} (7)
+(6) edge      [bend right]        node {$a$} (4)
+(7) edge      [loop below]        node {$a,b$} (7);
+
+\end{tikzpicture}
+\end{figure}
+
+On part de l'état $0,0$. Vu que $a$ nous emmène de $0$ en $1$ dans le premier automate et de $0$ en $0$ dans le second, $0,0$ va en $1,0$ et $1,0$ en lisant $a$, et ainsi de suite. On obtient au final l'automate suivant :
+
+
+\begin{figure}[H]
+\hspace{-1cm}
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state] (00)                    {$0,0$};
+  \node[state] (10)      [above right of=00]                {$1,0$};  
+  \node[state] (01)      [below right of=00]                {$0,1$};
+  \node[state] (21)      [right of=10]                {$2,1$};  
+  \node[state] (12)      [right of=01]                {$1,2$};
+  \node[state] (32)      [right of=21]                {$3,2$};  
+  \node[state] (23)      [right of=12]                {$2,3$};  
+  \node[state,accepting] (33)      [below = 1.5cm of 32]                {$3,3$};
+  \node[state] (30)      [right of=32]                {$3,0$};  
+  \node[state] (03)      [right of=23]                {$0,3$};  
+  \node[state] (31)      [right of=30]                {$3,1$};  
+  \node[state] (13)      [right of=03]                {$1,3$};  
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(00) edge     []        node {$a$} (10)
+(00) edge     []        node {$b$} (01)
+(10) edge     [loop above]        node {$a$} (10)
+(10) edge     []        node {$b$} (21)
+(01) edge     [loop below]        node {$b$} (01)
+(01) edge     []        node {$a$} (12)
+(21) edge     [pos=0.8]        node {$b$} (01)
+(12) edge     [pos=0.8]        node {$a$} (10)
+(21) edge     []        node {$a$} (32)
+(12) edge     []        node {$b$} (23)
+(32) edge     []        node {$a$} (30)
+(32) edge     []        node {$b$} (33)
+(23) edge     []        node {$b$} (03)
+(23) edge     []        node {$a$} (33)
+(30) edge     [loop above]        node {$a$} (30)
+(30) edge     []        node {$b$} (31)
+(03) edge     [loop below]        node {$b$} (03)
+(03) edge     []        node {$a$} (13)
+(31) edge     [loop above]        node {$b$} (31)
+(13) edge     [loop below]        node {$a$} (13)
+(31) edge     [bend left=40]        node {$a$} (32)
+(13) edge     [bend right=40]        node {$b$} (23)
+(33) edge     [loop left]        node {$a,b$} (33)
+;
+
+\end{tikzpicture}
+\end{figure}
+\end{example}
+
+\begin{exercice}
+Minimiser l'automate de l'exemple \ref{interex}.
+\end{exercice}
+
+\begin{exercice}
+Appliquer l'algorithme d'intersection sur les versions non-déterministes des automates de l'exemple \ref{interex} (cf. l'exemple \ref{incomptoo}).
+\end{exercice}
 
 \subsection{Complémentaire}
 
 
+\begin{theorem}
+Les \textbf{langages rationnels} sont clos par complémentaire, i.e. pour tout langage $L$ reconnaissable par automate fini, il existe un automate fini reconnaissant $\overline{L}$, cad. le langage des mots qui n'appartiennent pas à $L$.
+\end{theorem}
 
+\begin{proof}
+Puisqu'on veut reconnaître ce qui ne l'était pas, et ne plus reconnaître ce qui l'était, une idée assez naturelle est d'inverser les états terminaux et non-terminaux. Il y a cependant deux subtilités.
+
+Il faut d'abord que l'état soit déterministe. En effet, si on a un AFND et un mot ayant dans l'automate deux chemins, un menant à un état terminal et un menant à un état non-terminal, alors le mot sera accepté avant et après inversion. On peut observer ce phénomène concrètement avec le mot $a$ et l'automate  
+
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state] (0)                    {$0$};
+  \node[state,accepting] (1)      [above right=1cm and 2cm of 0]                {$1$};  
+  \node[state] (2)      [below right=1cm and 2cm of 0]                 {$2$};  
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(0) edge     []        node {$a$} (1)
+(0) edge     []        node {$a$} (2)
+;
+
+\end{tikzpicture}
+\end{figure}
+
+De plus, l'automate doit être complet. En effet, un chemin non-existant reste non-existant malgré une inversion des terminaux et non-terminaux. Par exemple le mot $a$ n'est pas reconnu par l'automate 
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state] (0)                    {$0$};
+\end{tikzpicture}
+\end{figure}
+
+ni par l'automate 
+
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state,accepting] (0)                    {$0$};
+\end{tikzpicture}
+\end{figure}
+
+Si on complète le premier automate, on obtient 
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state] (0)                    {$0$};
+  \node[state] (P) [right of=0]                    {$P$};
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(0) edge     []        node {$a,b$} (P)
+(P) edge     [loop right]        node {$a,b$} (P)
+;
+
+\end{tikzpicture}
+\end{figure}
+
+qui ne reconnait toujours aucun mot. En calculant son complémentaire, on obtient
+
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state,accepting] (0)                    {$0$};
+  \node[state,accepting] (P) [right of=0]                    {$P$};
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(0) edge     []        node {$a,b$} (P)
+(P) edge     [loop right]        node {$a,b$} (P)
+;
+
+\end{tikzpicture}
+\end{figure}
+
+qui accepte tous les mots.
+
+\end{proof}
+
+\begin{example}
+On veut un automate pour les mots qui ne contiennent pas le facteur $aba$. En reprenant un exemple qu'on a déjà trop vu, on obtient 
+
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.9cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state,accepting] (0)                    {$0$};
+  \node[state,accepting] (1)      [right of=0]                {$1$};  
+  \node[state,accepting] (2)      [right of=1]                {$2$};
+  \node[state] (3)      [right of=2]                {$3$};
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(0) edge      [loop above]        node {$b$} (0)
+(0) edge      []        node {$a$} (1)
+(1) edge      [loop above]        node {$a$} (1)
+(1) edge      []        node {$b$} (2)
+(2) edge      []        node {$a$} (3)
+(2) edge      [bend left]        node {$b$} (0)
+(3) edge      [loop above]        node {$a,b$} (3)
+;
+
+\end{tikzpicture}
+\end{figure}
+\end{example}
+
+\begin{exercice}
+Donner un automate des mots ne terminant pas par $aba$.
+\end{exercice}
+
+%TODO: clôture par morphisme ?
+
+\subsection{Conséquences pour les langages non-reconnus}
+
+On a vu que les langages rationnels pouvaient se construire en combinant d'autres langages rationnels, ce qui nous permet de montrer facilement que tout un tas de langages reconnaissables par un automate fini. Mais ces propriétés de clôture permettent aussi, assez ironiquement, de montrer facilement que pas mal de langages ne sont pas reconnaissables.
+
+\begin{theorem}
+Le langage $L = \{w ~|~ |w|_a = |w|_b\}$, cad. l'ensemble des mots contenant autant de $a$ que de $b$, n'est pas un langage rationnel.
+\end{theorem}
+
+\begin{proof}
+On pourrait essayer d'adapter la preuve du théorème \ref{anbn}, mais ça serait beaucoup plus désagréable que d'utiliser la clôture par intersection. En effet, le langage $\{a^nb^n ~|~n \in \mathbb{N}\}$ peut être défini comme l'intersection de $a^*b^*$ et $L$. Or, $a^*b^*$ est rationnel, car reconnu par l'automate suivant :
+
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.9cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state,accepting] (0)                    {$0$};
+  \node[state,accepting] (1)      [right of=0]                {$1$};  
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(0) edge      [loop above]        node {$a$} (0)
+(0) edge      []        node {$b$} (1)
+(1) edge      [loop above]        node {$b$} (1)
+;
+
+\end{tikzpicture}
+\end{figure} 
+
+Si $L$ était rationnel, $a^*b^* \cap L = \{a^nb^n ~|~ n \in \mathbb{N}\}$ le serait également, ce qui n'est pas le cas (cf. théorème \ref{anbn}). On en déduit donc que $L$ n'est pas rationnel.
+
+\end{proof}
+
+\begin{exercice}
+Montrer que le langage $\{w \in \{a,b,c\}^* ~|~ |w|_a = |w|_b\}$ est non-rationnel.
+\end{exercice}
