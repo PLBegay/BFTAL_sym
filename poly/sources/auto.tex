@@ -1146,7 +1146,7 @@ Pas besoin de faire attention pour les états terminaux : si $A_2$ accepte le mo
 \end{proof}
 
 \begin{example}
-Soient $L_1 = \{w ~|~|w|_a$ pair et $|w|_b impair\}$ et $L_2 = \Sigma^*(aba+bab)\Sigma^*$. On peut reconnaître $L_1.L_2$ en combinant les automates des exemples \ref{exemplePI} et \ref{incomptoo}. Les états $PP$ et $II$ envoie dans un état terminal, avec $b$ et $a$ respectivement. On leur rajoute donc les mêmes transitions pour les états $0$ et $4$, et on rend ces derniers non-initiaux. On obtient au final :
+Soient $L_1 = \{w ~|~|w|_a$ pair et $|w|_b$ impair$\}$ et $L_2 = \Sigma^*(aba+bab)\Sigma^*$. On peut reconnaître $L_1.L_2$ en combinant les automates des exemples \ref{exemplePI} et \ref{incomptoo}. Les états $PP$ et $II$ envoie dans un état terminal, avec $b$ et $a$ respectivement. On leur rajoute donc les mêmes transitions pour les états $0$ et $4$, et on rend ces derniers non-initiaux. On obtient au final :
 
 
 \begin{figure}[H]
@@ -1308,6 +1308,8 @@ Par coquetterie et amour inconditionnel des homomorphismes, on mentionnera la jo
 \]
 
 \end{proof}
+
+\paragraph*{Remarque} L'intersection de deux automates est déterministe ssi. les deux automates sont déterministes.
 
 \begin{example}
 \label{interex}
