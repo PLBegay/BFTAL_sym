@@ -1,4 +1,73 @@
 \chapter{Théorème de Kleene}
 \label{hierarchie}
 
-TODO
+On a pour l'instant utilisé les expressions rationnelles pour décrire les langages reconnus par des automates, et utilisé des automates pour implémenter des expressions rationnelles. On a cependant vu que l'expressivité des automates était limitée, en ce qu'il existe de nombreux langages qu'ils ne peuvent reconnaître. On peut donc légitimement se demander si les expressions rationnelles sont plus ou moins expressives que les automates finis.
+
+Le mathématicien Stephen C. Kleene (1909 - 1994) répond à cette question via le théorème qui porte son nom :
+
+\begin{theorem}{\textbf{(Théorème de Kleene)}}
+Les langages représentable par expression rationnelle sont exactement ceux reconnus par automate fini.
+\end{theorem}
+
+L'égalité entre deux ensembles $A$ et $B$ équivaut à la double inclusion entre les mêmes ensembles, cad. $A \subseteq B \wedge B \subseteq A$. On va donc chercher une preuve que chaque langage représentable par \textit{regex} est reconnaissable par automate fini, et inversement. Ces deux sous-théorèmes admettent aujourd'hui de nombreuses preuves, notamment constructives, cad. sous la forme d'algorithmes qui réalisent la transformation d'une \textit{regex} en automate, et inversement. Cette section présente plusieurs de ces algorithmes.
+
+\section{Des expressions rationnelles aux automates}
+
+On veut prouver ici le théorème suivant :
+
+\begin{theorem}
+Les langages représentable par expression rationnelle sont également reconnus par automate fini.
+\end{theorem}
+
+\begin{proof}
+On rappelle la définition des expressions rationnelles : 
+
+\begin{tabular}{cccl}
+$e$ & $\textcolor{black}{::=}$ & & $\epsilon$\\
+& & $|$&  $a \in \Sigma$\\
+& & $|$&  $e_1.e_2$\\
+& & $|$&  $e_1+e_2$\\
+& & $|$&  $e_1^*$\\
+\end{tabular}
+
+L'expression $\epsilon$ est clairement reconnu par l'automate 
+
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.9cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+  \node[initial,state,accepting] (0)                    {$0$};
+  
+\end{tikzpicture}
+\end{figure}
+
+L'expression $a$ quant à elle est reconnue par 
+
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.9cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state] (0)                    {$0$};
+  \node[state,accepting] (1)      [right of=0]                {$1$};
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(0) edge      []        node {$a$} (1);
+
+\end{tikzpicture}
+\end{figure}
+
+On peut donc traduire en automates les cas de base des expressions rationnelles. Quant aux cas récursifs, on les a en fait déjà traités en \ref{cloture} : pour construire un automate reconnaissant $e_1 + e_2$, on construit des automates $A_1$ et $A_2$ reconnaissant $e_1$ et $e_2$, et on applique la construction de l'union. On procède de même avec la concaténation pour $e_1e_2$ et l'itération pour $e^*$.
+\end{proof}
+
+%\paragraph*{Remarque} Les constructions vues pour les propriétés de clôture ne sont pas optimales. L'\href{https://fr.wikipedia.org/wiki/Algorithme_de_Thompson}{algorithme de Thomson} utilise les mêmes idées mais utilise les $\epsilon-transitions$ pour qu'il n'y ait pas plus d'un état initial et un état terminal tout au long de la construction de l'automate, ce qui permet de borner plus finement sa taille.
+
+%TODO : Glushkov
