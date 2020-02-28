@@ -1210,65 +1210,67 @@ Les langages reconnaissables par automate fini sont clos par concaténation, i.e
 \end{theorem}
 
 \begin{proof}
-On veut reconnaître des mots de la forme $u_1.u_2...u_n$ avec $u_i \in L$ pour tout $i$. On ajoute un état spécial, $S$, qui sera le seul initial et terminal, et qui sera le début et la fin de tout tour de manège. La construction de l'automate ressemble ensuite à celle de la concaténation, en ce qu'on rajoute des transitions qui, quand on s'apprête à accéder à un état terminal, nous permettent également de revenir à $S$. Dualement, pour toute transition $q \xrightarrow{c} q'$ avec $q$ initial, on ajoute la transition $S \xrightarrow{c} q'$. Ainsi, en lisant la dernière lettre de $u_1$, on peut revenir dans un état initial pour lire $u_2$ et ainsi de suite.
-
-Plus formellement, soient $A = \big \langle Q, \Sigma, \delta, I, F\big \rangle$, alors $L^*$ est reconnu par $\big \langle Q \cup \{S\}, \Sigma, \delta', \{S\}, \{S\} \big \rangle$ avec 
-
-\[
-\begin{cases}
-\delta'(q,a) = \delta(q,a) &\text{ si } \delta(q,a) \cap F = \emptyset,\\[1ex]
-\delta'(q,a) = \delta(q,a) \cup \{S\} &\text{ si } \delta(q,a) \cap F \neq \emptyset,\\[1ex]
-\delta'(S,a) = \displaystyle\bigcup_{i \in I} \delta(i,a) & 
-\end{cases}
-\]
-
+TODO.
 \end{proof}
+%On veut reconnaître des mots de la forme $u_1.u_2...u_n$ avec $u_i \in L$ pour tout $i$. On ajoute un état spécial, $S$, qui sera le seul initial et terminal, et qui sera le début et la fin de tout tour de manège. La construction de l'automate ressemble ensuite à celle de la concaténation, en ce qu'on rajoute des transitions qui, quand on s'apprête à accéder à un état terminal, nous permettent également de revenir à $S$. Dualement, pour toute transition $q \xrightarrow{c} q'$ avec $q$ initial, on ajoute la transition $S \xrightarrow{c} q'$. Ainsi, en lisant la dernière lettre de $u_1$, on peut revenir dans un état initial pour lire $u_2$ et ainsi de suite.
 
-\begin{example}
-\label{itex}
-Soit $L = \{w \in \Sigma^*~|~|w|_a$ pair et $|w|_b$ impair$\}$. $L^*$ est reconnu par l'automate suivant : 
+%Plus formellement, soient $A = \big \langle Q, \Sigma, \delta, I, F\big \rangle$, alors $L^*$ est reconnu par $\big \langle Q \cup \{S\}, \Sigma, \delta', \{S\}, \{S\} \big \rangle$ avec 
 
-\begin{figure}[H]
-\centering
-\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=4cm,
-                    semithick]
-  \tikzstyle{every state}=[fill=white,text=black]
-  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+%\[
+%\begin{cases}
+%\delta'(q,a) = \delta(q,a) &\text{ si } \delta(q,a) \cap F = \emptyset,\\[1ex]
+%\delta'(q,a) = \delta(q,a) \cup \{S\} &\text{ si } \delta(q,a) \cap F \neq \emptyset,\\[1ex]
+%\delta'(S,a) = \displaystyle\bigcup_{i \in I} \delta(i,a) & 
+%\end{cases}
+%\]
+
+%\end{proof}
+
+%\begin{example}
+%\label{itex}
+%Soit $L = \{w \in \Sigma^*~|~|w|_a$ pair et $|w|_b$ impair$\}$. $L^*$ est reconnu par l'automate suivant : 
+
+%\begin{figure}[H]
+%\centering
+%\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=4cm,
+%                    semithick]
+%  \tikzstyle{every state}=[fill=white,text=black]
+%  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
 
 
-  \node[state] (PP)                    {$PP$};
-  \node[state] (IP)      [above right of=PP]                {$IP$};  \node[state] (II)      [below right of=IP]                {$II$};
-  \node[state] (PI)      [below right of=PP]                {$PI$};
-  \node[initial,accepting,state] (S)      [above=2cm of PI]                {$S$};
+%  \node[state] (PP)                    {$PP$};
+%  \node[state] (IP)      [above right of=PP]                {$IP$};  \node[state] (II)      [below right of=IP]                {$II$};
+%  \node[state] (PI)      [below right of=PP]                {$PI$};
+%  \node[initial,accepting,state] (S)      [above=2cm of PI]                {$S$};
 
-  \path %(I) edge[loop above]              node {$a,b$} (I)
-(PP) edge      [bend right]        node {$a$} (IP)
-(PP) edge      [bend right]        node {$b$} (PI)
-(PI) edge      [bend right]        node {$a$} (II)
-(PI) edge      [bend right=10]        node {$b$} (PP)
-(IP) edge      [bend right]        node {$a$} (PP)
-(IP) edge      [bend right]        node {$b$} (II)
-(II) edge      [bend right]        node {$a$} (PI)
-(II) edge      [bend right]        node {$b$} (IP)
+%  \path %(I) edge[loop above]              node {$a,b$} (I)
+%(PP) edge      [bend right]        node {$a$} (IP)
+%(PP) edge      [bend right]        node {$b$} (PI)
+%(PI) edge      [bend right]        node {$a$} (II)
+%(PI) edge      [bend right=10]        node {$b$} (PP)
+%(IP) edge      [bend right]        node {$a$} (PP)
+%(IP) edge      [bend right]        node {$b$} (II)
+%(II) edge      [bend right]        node {$a$} (PI)
+%(II) edge      [bend right]        node {$b$} (IP)
 
-(II) edge      []        node {$a$} (S)
-(PP) edge      [bend right]        node {$b$} (S)
-(S) edge      []        node {$b$} (PI)
-(S) edge      []        node {$a$} (IP)
+%(II) edge      []        node {$a$} (S)
+%(PP) edge      [bend right]        node {$b$} (S)
+%(S) edge      []        node {$b$} (PI)
+%(S) edge      []        node {$a$} (IP)
 
-;
-\end{tikzpicture}
-\end{figure}
+%;
+%\end{tikzpicture}
+%\end{figure}
 
-\end{example}
+%\end{example}
 
-\begin{exercice}
-Est-il nécessaire dans la transformation de rendre non-terminaux les états qui l'étaient dans l'automate original ?
-\end{exercice}
+%\begin{exercice}
+%Est-il nécessaire dans la transformation de rendre non-terminaux les états qui l'étaient dans l'automate original ?
+%\end{exercice}
 
-\begin{exercice}
-Pourquoi était-il indispensable d'introduire un nouvel état dans la transformation ?
-\end{exercice}
+%\begin{exercice}
+%Pourquoi était-il indispensable d'introduire un nouvel état dans la transformation ?
+%\end{exercice}
 
 \subsection{Intersection}
 

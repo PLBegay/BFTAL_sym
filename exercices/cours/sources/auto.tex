@@ -1144,21 +1144,21 @@ Cad. l'automate acceptant les mots d'au moins 4 lettres terminant par un $b$. La
 
 \subsection{Itération}
 
-\begin{exercice}
-Est-il nécessaire dans la transformation de rendre non-terminaux les états qui l'étaient dans l'automate original ?
-\end{exercice}
+%\begin{exercice}
+%Est-il nécessaire dans la transformation de rendre non-terminaux les états qui l'étaient dans l'automate original ?
+%\end{exercice}
 
-\begin{correction*}
-Non, puisque toute transition vers un état anciennement terminal est copiée pour mener à $S$, qui l'est. Toute lecture terminant dans un état de $F$ peut donc également s'achever dans $S$, ce qui implque que laisser les états de $F$ terminaux permettrait juste de choisir son état d'acceptation.
-\end{correction*}
+%\begin{correction*}
+%Non, puisque toute transition vers un état anciennement terminal est copiée pour mener à $S$, qui l'est. Toute lecture terminant dans un état de $F$ peut donc également s'achever dans $S$, ce qui implque que laisser les états de $F$ terminaux permettrait juste de choisir son état d'acceptation.
+%\end{correction*}
 
-\begin{exercice}
-Pourquoi était-il indispensable d'introduire un nouvel état dans la transformation ?
-\end{exercice}
+%\begin{exercice}
+%Pourquoi était-il indispensable d'introduire un nouvel état dans la transformation ?
+%\end{exercice}
 
-\begin{correction*}
-$L^*$ contient le mot vide pour tout langage $L$, on a donc besoin d'un état initial terminal. Cependant, rendre l'état initial d'origine terminal peut parasiter les calculs en faisant accepter des mots n'appartenant pas à $L^*$. Dans l'exemple 3.5.2 du poly, rendre $PP$ initial plutôt que créer $S$ ferait accepter $aa$, qui n'appartient pas à $L^*$ (tout mot de $L^*$, à l'exception d'$\epsilon$, contient au moins un $b$).   
-\end{correction*}
+%\begin{correction*}
+%$L^*$ contient le mot vide pour tout langage $L$, on a donc besoin d'un état initial terminal. Cependant, rendre l'état initial d'origine terminal peut parasiter les calculs en faisant accepter des mots n'appartenant pas à $L^*$. Dans l'exemple 3.5.2 du poly, rendre $PP$ initial plutôt que créer $S$ ferait accepter $aa$, qui n'appartient pas à $L^*$ (tout mot de $L^*$, à l'exception d'$\epsilon$, contient au moins un $b$).   
+%\end{correction*}
 
 \subsection{Intersection}
 
