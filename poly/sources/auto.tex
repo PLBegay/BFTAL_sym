@@ -1020,7 +1020,7 @@ Les langages reconnaissables par automate fini sont clos par union, i.e. pour to
 
 \begin{proof}
 
-Si $L_1$ et $L_2$ sont rationnels, il existe des automates finis $A_1$ et $A_2$ qui reconnaissent $L_1$ et $L_2$, respectivement. Pour plus de généralité, on va supposer $A_1$ et $A_2$ non-déterministes. $L_1 \cup L_2$ est reconnu par "$A_1$ et $A_2$ posés à côté l'un de l'autre". Plus formellement, soient $A_1 = \big \langle Q_1, \Sigma_1, \delta_1, I_1, F_1\big \rangle$ et $A_1 = \big \langle Q_2, \Sigma_2, \delta_2, I_2, F_2\big \rangle$, alors $L_1 \cup L_2$ est reconnu par $\big \langle Q_1 \cup Q_2, \Sigma_1 \cup \Sigma_2, \delta', I_1 \cup I_2, F_1 \cup F_2\big \rangle$ avec 
+Si $L_1$ et $L_2$ sont reconnaissables par automate fini, il existe des automates $A_1$ et $A_2$ qui reconnaissent $L_1$ et $L_2$, respectivement. Pour plus de généralité, on va supposer $A_1$ et $A_2$ non-déterministes. $L_1 \cup L_2$ est reconnu par "$A_1$ et $A_2$ posés à côté l'un de l'autre". Plus formellement, soient $A_1 = \big \langle Q_1, \Sigma_1, \delta_1, I_1, F_1\big \rangle$ et $A_1 = \big \langle Q_2, \Sigma_2, \delta_2, I_2, F_2\big \rangle$, alors $L_1 \cup L_2$ est reconnu par $\big \langle Q_1 \cup Q_2, \Sigma_1 \cup \Sigma_2, \delta', I_1 \cup I_2, F_1 \cup F_2\big \rangle$ avec 
 
 \[
 \begin{cases}
@@ -1040,7 +1040,7 @@ Les langages reconnaissables par automate fini sont clos par concaténation, i.e
 
 \begin{proof}
 
-Si $L_1$ et $L_2$ sont rationnels, il existe des automates finis $A_1$ et $A_2$ qui reconnaissent $L_1$ et $L_2$, respectivement. On veut reconnaître $L_1.L_2 = \{u.v ~|~ u \in L_1 ~\wedge~v \in L_2\}$, l'astuce va être de mettre $A_1$ et $A_2$ l'un après l'autre en rajoutant des transitions pour que, à chaque fois qu'on finit de lire un mot $u$ accepté par $A_1$, au lieu d'accepter, on va en un état initial de $A_2$ en lire un deuxième $v$. La figure \ref{concatscheme} illustre schématiquement cette transformation sur un exemple.
+Si $L_1$ et $L_2$ sont reconnaissables par automate fini, il existe des automates $A_1$ et $A_2$ qui reconnaissent $L_1$ et $L_2$, respectivement. On veut reconnaître $L_1.L_2 = \{u.v ~|~ u \in L_1 ~\wedge~v \in L_2\}$, l'astuce va être de mettre $A_1$ et $A_2$ l'un après l'autre en rajoutant des transitions pour que, à chaque fois qu'on finit de lire un mot $u$ accepté par $A_1$, au lieu d'accepter, on va en un état initial de $A_2$ en lire un deuxième $v$. La figure \ref{concatscheme} illustre schématiquement cette transformation sur un exemple.
 
 
 
@@ -1570,7 +1570,7 @@ Le langage $L = \{w ~|~ |w|_a = |w|_b\}$, cad. l'ensemble des mots contenant aut
 \end{theorem}
 
 \begin{proof}
-On pourrait essayer d'adapter la preuve du théorème \ref{anbn}, mais ça serait beaucoup plus désagréable que d'utiliser la clôture par intersection. En effet, le langage $\{a^nb^n ~|~n \in \mathbb{N}\}$ peut être défini comme l'intersection de $a^*b^*$ et $L$. Or, $a^*b^*$ est rationnel, car reconnu par l'automate suivant :
+On pourrait essayer d'adapter la preuve du théorème \ref{anbn}, mais ça serait beaucoup plus désagréable que d'utiliser la clôture par intersection. En effet, le langage $\{a^nb^n ~|~n \in \mathbb{N}\}$ peut être défini comme l'intersection de $a^*b^*$ et $L$. Or, $a^*b^*$ est reconnu par l'automate suivant :
 
 
 \begin{figure}[H]
@@ -1593,10 +1593,10 @@ On pourrait essayer d'adapter la preuve du théorème \ref{anbn}, mais ça serai
 \end{tikzpicture}
 \end{figure} 
 
-Si $L$ était rationnel, $a^*b^* \cap L = \{a^nb^n ~|~ n \in \mathbb{N}\}$ le serait également, ce qui n'est pas le cas (cf. théorème \ref{anbn}). On en déduit donc que $L$ n'est pas rationnel.
+Si $L$ était reconnu par un automate fini, $a^*b^* \cap L = \{a^nb^n ~|~ n \in \mathbb{N}\}$ le serait également, ce qui n'est pas le cas (cf. théorème \ref{anbn}). On en déduit donc que $L$ n'est pas reconnaissable par automate.
 
 \end{proof}
 
 \begin{exercice}
-Montrer que le langage $\{w \in \{a,b,c\}^* ~|~ |w|_a = |w|_b\}$ est non-rationnel.
+Montrer que le langage $\{w \in \{a,b,c\}^* ~|~ |w|_a = |w|_b\}$ n'est pas reconnaissable par automate.
 \end{exercice}
