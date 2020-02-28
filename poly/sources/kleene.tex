@@ -291,20 +291,20 @@ L'état initial est $\top$ ssi. $E(e) = \top$. Pour les premières transitions, 
 D(\epsilon) = \emptyset \\
 D(a) = \{a\} \\
 D(e_1+e_2) = D(e_1) \cup D(e_2) \\
-D(e_1.e_2) = D(e_1) & \text{Si } e_1 \text{ n'accepte pas le mot vide}\\
+D(e_1.e_2) = D(e_1) & \text{Si } e_1 \text{ n'accepte pas le mot vide, cad. si }\neg E(e_1)\\
 D(e_1.e_2) = D(e_1) \cup D(e_2) & \text{sinon}  \\
 D(e^*) = D(e)
 \end{cases}
 \]
 
-De même, on a besoin de savoir quelles lettres peuvent finir les mots du langage dénoté par une expression : 
+On ajoute une transition $0 \xrightarrow{q} q$ pour tout $q \in D(e)$. De même, on a besoin de savoir quelles lettres peuvent finir les mots du langage dénoté par une expression : 
 
 \[
 \begin{cases}
 F(\epsilon) = \emptyset \\
 F(a) = \{a\} \\
 F(e_1+e_2) = F(e_1) \cup F(e_2) \\
-F(e_1.e_2) = F(e_2) & \text{Si } e_2 \text{ n'accepte pas le mot vide}\\
+F(e_1.e_2) = F(e_2) & \text{Si } e_2 \text{ n'accepte pas le mot vide, cad. si} \neg E(e_2)\\f
 F(e_1.e_2) = F(e_1) \cup F(e_2) & \text{sinon}  \\
 F(e^*) = F(e)
 \end{cases}
@@ -318,7 +318,7 @@ Tout les états de $F$ sont terminaux. En plus des premières transitions, on ve
 P(\epsilon) = \emptyset \\
 P(a) = \emptyset \\
 P(e_1+e_2) = P(e_1) \cup P(e_2) \\
-P(e_1.e_2) = P(e_1) \cup P(e_2) \cup F(e_1).P(e_2) \\
+P(e_1.e_2) = P(e_1) \cup P(e_2) \cup F(e_1).D(e_2) \\
 P(e^*) = P(e) \cup F(e).D(e) 
 \end{cases}
 \]
