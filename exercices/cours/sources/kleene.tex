@@ -1,0 +1,152 @@
+\chapter{Théorème de Kleene}
+\label{hierarchie}
+
+\section{Des expressions rationnelles aux automates}
+
+\subsection{Traduction récursive}
+
+\subsection{Traduction linéaire}
+
+
+
+\begin{exercice}
+Utiliser l'algorithme de Glushkov pour traduire en automate l'expression \newline $e = (bb)^*(b(a+b)^*)^*$
+\end{exercice}
+
+\begin{correction*}
+On commence par réécrire $e$ en $(b_1b_2)^*(b_3(a_4+b_5)^*)^*$. On peut ensuite calculer les images des fonctions $E$, $D$, $F$ et $P$.
+
+L'expression contient-elle le mot vide, et l'état initial est-il terminal ?\vspace{0.3cm}
+
+\begin{itemize}
+\item[] $E((b_1b_2)^*(b_3(a_4+b_5)^*)^*)$
+\item[$=$] $E((b_1b_2)^*) \wedge E((b_3(a_4+b_5)^*)^*)$
+\item[$=$] $\top \wedge \top$
+\item[$=$] $\top$
+\end{itemize}
+
+\vspace{0.3cm}Quelles sont les premières lettres des mots de l'expression, et donc les transitions partant de l'état initial ?\vspace{0.3cm}
+
+\begin{itemize}
+\item[] $D((b_1b_2)^*(b_3(a_4+b_5)^*)^*)$
+\item[$=$] $D((b_1b_2)^*) \cup D((b_3(a_4+b_5)^*)^*)$
+\item[$=$] $D(b_1b_2) \cup D(b_3(a_4+b_5)^*)$
+\item[$=$] $D(b_1) \cup D(b_3)$
+\item[$=$] $\{b_1\} \cup \{b_3\}$
+\item[$=$] $\{b_1,b_3\}$
+\end{itemize}
+
+\vspace{0.3cm}Quelles sont les dernières lettres des mots de l'expression, et donc les états terminaux ?\vspace{0.3cm}
+
+\begin{itemize}
+\item[] $F((b_1b_2)^*(b_3(a_4+b_5)^*)^*)$
+\item[$=$] $F((b_1b_2)^*) \cup F((b_3(a_4+b_5)^*)^*)$
+\item[$=$] $F(b_1b_2) \cup F(b_3(a_4+b_5)^*)$
+\item[$=$] $D(b_2) \cup F(b_3) \cup F((a_4+a_5)^*)$
+\item[$=$] $D(b_2) \cup F(b_3) \cup F(a_4+a_5)$
+\item[$=$] $D(b_2) \cup F(b_3) \cup F(a_4) \cup F(a_5)$
+\item[$=$] $\{b_2\} \cup \{b_3\} \cup \{a_4\} \cup \{a_5\}$
+\item[$=$] $\{b_2,b_3,a_4,a_5\}$
+\end{itemize}
+
+\vspace{0.3cm}Et enfin, quelles lettres peuvent se suivre dans les mots de l'expression ?\vspace{0.3cm}
+
+\begin{itemize}
+\item[] $P((b_1b_2)^*(b_3(a_4+b_5)^*)^*)$
+\item[$=$] $P((b_1b_2)^*) \cup P((b_3(a_4+b_5)^*)^*) \cup F((b_1b_2)^*).D((b_3(a_4+b_5)^*)^*)$
+\item[$=$] $P((b_1b_2)^*) \cup P((b_3(a_4+b_5)^*)^*) \cup \{b_2\}.\{b.3\}$
+\item[$=$] $P((b_1b_2)^*) \cup P((b_3(a_4+b_5)^*)^*) \cup \{b_2.b_3\}$
+\item[$=$] $P(b_1b_2) \cup F(b_1b_2).D(b_1b_2) \cup P((b_3(a_4+b_5)^*)^*) \cup \{b_2.b_3\}$
+\item[$=$] $P(b_1b_2) \cup \{b_2.b_1\} \cup P((b_3(a_4+b_5)^*)^*) \cup \{b_2.b_3\}$
+\item[$=$] $P(b_1) \cup P(b_2) \cup F(b_1).D(b_2) \cup \{b_2.b_1\} \cup P((b_3(a_4+b_5)^*)^*) \cup \{b_2.b_3\}$
+\item[$=$] $\emptyset \cup \emptyset \cup \{b_1.b_2\} \cup \{b_2.b_1\} \cup P((b_3(a_4+b_5)^*)^*) \cup \{b_2.b_3\}$
+\item[$=$] $\{b_1.b_2, b_2.b_1, b_2.b_3\} \cup P((b_3(a_4+b_5)^*)^*)$
+
+\item[$=$] $\{b_1.b_2, b_2.b_1, b_2.b_3\} \cup P(b_3(a_4+b_5)^*) \cup F(b_3(a_4+b_5)^*).D(b_3(a_4+b_5)^*)$
+
+\item[$=$] $\{b_1.b_2, b_2.b_1, b_2.b_3\} \cup P(b_3(a_4+b_5)^*) \cup \{b_3,a_4,b_5\}.\{b_3\}$
+\item[$=$] $\{b_1.b_2, b_2.b_1, b_2.b_3\} \cup P(b_3(a_4+b_5)^*) \cup \{b_3.b_3,a_4.b_3,b_5.b_3\}$
+\item[$=$] $\{b_1.b_2, b_2.b_1, b_2.b_3, b_3.b_3, a_4.b_3, b_5.b_3\} \cup P(b_3(a_4+b_5)^*)$
+\item[$=$] $\{b_1.b_2, b_2.b_1, b_2.b_3, b_3.b_3, a_4.b_3, b_5.b_3\} \cup P(b_3) \cup P((a_4+b_5)^*) \cup D(b_3).F((a_4+b_5)^*)$
+\item[$=$] $\{b_1.b_2, b_2.b_1, b_2.b_3, b_3.b_3, a_4.b_3, b_5.b_3\} \cup \emptyset \cup P((a_4+b_5)^*) \cup \{b_3\}.\{a_4,b_5\}$
+\item[$=$] $\{b_1.b_2, b_2.b_1, b_2.b_3, b_3.b_3, b_3.a_4, b_3.b_5, a_4.b_3, b_5.b_3\} \cup P((a_4+b_5)^*)$
+\item[$=$] $\{b_1.b_2, b_2.b_1, b_2.b_3, b_3.b_3, b_3.a_4, b_3.b_5, a_4.b_3, b_5.b_3\} \cup P(a_4+b_5) \cup F(a_4+b_5).D(a_4+b_5)$
+\item[$=$] $\{b_1.b_2, b_2.b_1, b_2.b_3, b_3.b_3, b_3.a_4, b_3.b_5, a_4.b_3, b_5.b_3\} \cup P(a_4) \cup P(b_5) \cup \{a_4,b_5\}.\{a_4,b_5\}$
+\item[$=$] $\{b_1.b_2, b_2.b_1, b_2.b_3, b_3.b_3, b_3.a_4, b_3.b_5, a_4.b_3, b_5.b_3\} \cup \emptyset \cup \emptyset \cup \{a_4.a_4,a_4.b_5,b_5.a_4,b_5.b_5\}$
+\item[$=$] $\{b_1.b_2, b_2.b_1, b_2.b_3, b_3.b_3, b_3.a_4, b_3.b_5, a_4.b_3, b_5.b_3,a_4.a_4,a_4.b_5,b_5.a_4,b_5.b_5\}$
+\end{itemize}
+
+\vspace{0.3cm}On obtient donc l'automate suivant :
+
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.5cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+  \node[initial,state,accepting] (0)                    {$0$};
+  \node[state] (1)   [right of=0]                {$b_1$};
+  \node[state,accepting] (2)    [right of=1]     {$b_2$};
+  \node[state,accepting] (3)             [right of=2]       {$b_3$};
+  \node[state,accepting] (4)        [right of=3]            {$a_4$};
+  \node[state,accepting] (5)     [right of=4]               {$b_5$};
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(0) edge      []        node {$b_1$} (1)
+(0) edge      [bend left]        node {$b_3$} (3)
+(1) edge      [bend left]        node {$b_2$} (2)
+(2) edge      [bend left]        node {$b_1$} (1)
+(2) edge      []        node {$b_3$} (3)
+(3) edge      [loop above]        node {$b_3$} (3)
+(3) edge      [bend left]        node {$a_4$} (4)
+(3) edge      [bend left=55]        node {$b_5$} (5)
+(4) edge      [bend left]        node {$b_3$} (3)
+(5) edge      [bend left=55]        node {$b_3$} (3)
+(4) edge      [loop above]        node {$a_4$} (4)
+(5) edge      [loop above]        node {$b_5$} (5)
+(4) edge      [bend left]        node {$b_5$} (5)
+(5) edge      [bend left]        node {$a_4$} (4)
+;
+
+\end{tikzpicture}
+\end{figure}
+
+qui se "déspécialise" en 
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.5cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+  \node[initial,state,accepting] (0)                    {$0$};
+  \node[state] (1)   [right of=0]                {$1$};
+  \node[state,accepting] (2)    [right of=1]     {$2$};
+  \node[state,accepting] (3)             [right of=2]       {$3$};
+  \node[state,accepting] (4)        [right of=3]            {$4$};
+  \node[state,accepting] (5)     [right of=4]               {$5$};
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(0) edge      []        node {$b$} (1)
+(0) edge      [bend left]        node {$b$} (3)
+(1) edge      [bend left]        node {$b$} (2)
+(2) edge      [bend left]        node {$b$} (1)
+(2) edge      []        node {$b$} (3)
+(3) edge      [loop above]        node {$b$} (3)
+(3) edge      [bend left]        node {$a$} (4)
+(3) edge      [bend left=55]        node {$b$} (5)
+(4) edge      [bend left]        node {$b$} (3)
+(5) edge      [bend left=55]        node {$b$} (3)
+(4) edge      [loop above]        node {$a$} (4)
+(5) edge      [loop above]        node {$b$} (5)
+(4) edge      [bend left]        node {$b$} (5)
+(5) edge      [bend left]        node {$a$} (4)
+;
+
+\end{tikzpicture}
+\end{figure}
+
+\end{correction*}
