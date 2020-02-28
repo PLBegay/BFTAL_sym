@@ -1008,14 +1008,14 @@ Si on avait le droit à une infinité d'états, on pourrait essayer d'écrire, d
 \section{Propriétés de clôture des langages reconnus par automates}
 \label{cloture}
 
-On dit qu'un ensemble $E$ est clos sous une opération binaire $\circ$ si, pour tous éléments $x$ et $y$ de $E$, $x \circ y$ appartient également à $E$. Dit autrement, $E$ est clos sous $\circ$ ssi. l'application de $\circ$ à ses éléments ne fait pas sortir de l'ensemble. On va regarder ici si les langages définissables par automates, ou \textbf{langages rationnels}, sont clos sous les opérations sur les langages.
+On dit qu'un ensemble $E$ est clos sous une opération binaire $\circ$ si, pour tous éléments $x$ et $y$ de $E$, $x \circ y$ appartient également à $E$. Dit autrement, $E$ est clos sous $\circ$ ssi. l'application de $\circ$ à ses éléments ne fait pas sortir de l'ensemble. On va regarder ici si les langages reconnaissables par automate fini sont clos sous les opérations sur les langages.
 
 \paragraph*{Remarque} Les trois premiers points de cette section se présentent plus simplement en utilisant les $\epsilon$-transitions. On renverra pour ça à la correction du DM correspondant.
 
 \subsection{Union}
 
 \begin{theorem}
-Les \textbf{langages rationnels} sont clos par union, i.e. pour tous langages $L_1$ et $L_2$ reconnaissables par automate fini, il existe un automate fini reconnaissant $L_1 \cup L_2$.
+Les langages reconnaissables par automate fini sont clos par union, i.e. pour tous langages $L_1$ et $L_2$ reconnaissables par automate fini, il existe un automate fini reconnaissant $L_1 \cup L_2$.
 \end{theorem}
 
 \begin{proof}
@@ -1035,7 +1035,7 @@ C'est exactement l'astuce qui a été utilisée dans l'exemple \ref{incomptoo}, 
 \subsection{Concaténation}
 
 \begin{theorem}
-Les \textbf{langages rationnels} sont clos par concaténation, i.e. pour tous langages $L_1$ et $L_2$ reconnaissables par automate fini, il existe un automate fini reconnaissant $L_1.L_2$.
+Les langages reconnaissables par automate fini sont clos par concaténation, i.e. pour tous langages $L_1$ et $L_2$ reconnaissables par automate fini, il existe un automate fini reconnaissant $L_1.L_2$.
 \end{theorem}
 
 \begin{proof}
@@ -1206,7 +1206,7 @@ Notez que si on avait pris pour $L_1$ le langage des mots avec un nombre pair de
 
 
 \begin{theorem}
-Les \textbf{langages rationnels} sont clos par concaténation, i.e. pour tout langage $L$ reconnaissable par automate fini, il existe un automate fini reconnaissant $L^*$.
+Les langages reconnaissables par automate fini sont clos par concaténation, i.e. pour tout langage $L$ reconnaissable par automate fini, il existe un automate fini reconnaissant $L^*$.
 \end{theorem}
 
 \begin{proof}
@@ -1273,7 +1273,7 @@ Pourquoi était-il indispensable d'introduire un nouvel état dans la transforma
 \subsection{Intersection}
 
 \begin{theorem}
-Les \textbf{langages rationnels} sont clos par intersection, i.e. pour tous langages $L_1$ and $L_2$ reconnaissables par automate fini, il existe un automate fini reconnaissant $L_1 \cap L_2$.
+Les langages reconnaissables par automate fini sont clos par intersection, i.e. pour tous langages $L_1$ and $L_2$ reconnaissables par automate fini, il existe un automate fini reconnaissant $L_1 \cap L_2$.
 \end{theorem}
 
 \begin{proof}
@@ -1371,7 +1371,7 @@ On part de l'état $0,0$. Vu que $a$ nous emmène de $0$ en $1$ dans le premier 
   \node[state] (12)      [right of=01]                {$1,2$};
   \node[state] (32)      [right of=21]                {$3,2$};  
   \node[state] (23)      [right of=12]                {$2,3$};  
-  \node[state,accepting] (33)      [below = 1.5cm of 32]                {$3,3$};
+  \node[state,accepting] (33)      [below = 1.25cm of 32]                {$3,3$};
   \node[state] (30)      [right of=32]                {$3,0$};  
   \node[state] (03)      [right of=23]                {$0,3$};  
   \node[state] (31)      [right of=30]                {$3,1$};  
@@ -1419,7 +1419,7 @@ Appliquer l'algorithme d'intersection sur les versions non-déterministes des au
 
 
 \begin{theorem}
-Les \textbf{langages rationnels} sont clos par complémentaire, i.e. pour tout langage $L$ reconnaissable par automate fini, il existe un automate fini reconnaissant $\overline{L}$, cad. le langage des mots qui n'appartiennent pas à $L$.
+Les langages reconnaissables par automate fini sont clos par complémentaire, i.e. pour tout langage $L$ reconnaissable par automate fini, il existe un automate fini reconnaissant $\overline{L}$, cad. le langage des mots qui n'appartiennent pas à $L$.
 \end{theorem}
 
 \begin{proof}
@@ -1563,10 +1563,10 @@ Donner un automate des mots ne terminant pas par $aba$.
 
 \subsection{Conséquences pour les langages non-reconnus}
 
-On a vu que les langages rationnels pouvaient se construire en combinant d'autres langages rationnels, ce qui nous permet de montrer facilement que tout un tas de langages reconnaissables par un automate fini. Mais ces propriétés de clôture permettent aussi, assez ironiquement, de montrer facilement que pas mal de langages ne sont pas reconnaissables.
+On a vu que les langages reconnaissables par automate fini pouvaient se construire en combinant d'autres langages reconnaissables par automate fini, ce qui nous permet de montrer facilement que tout un tas de langages sont eux-mêmes reconnaissables par un automate fini. Mais ces propriétés de clôture permettent aussi, assez ironiquement, de montrer facilement que pas mal de langages ne le sont pas.
 
 \begin{theorem}
-Le langage $L = \{w ~|~ |w|_a = |w|_b\}$, cad. l'ensemble des mots contenant autant de $a$ que de $b$, n'est pas un langage rationnel.
+Le langage $L = \{w ~|~ |w|_a = |w|_b\}$, cad. l'ensemble des mots contenant autant de $a$ que de $b$, n'est pas reconnaissable par automate fini.
 \end{theorem}
 
 \begin{proof}
