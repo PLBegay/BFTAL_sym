@@ -2,11 +2,12 @@
 # You want latexmk to *always* run, because make does not have all the info.
 # Also, include non-file targets in .PHONY so they are run regardless of any
 # file of the given name existing.
-.PHONY: epsilon.pdf all clean
+.PHONY: epsilon.pdf correction.pdf all clean
 
 # The first rule in a Makefile is the one executed by default ("make"). It
 # should always be the "all" rule, so that "make" and "make all" are identical.
 all: epsilon.pdf
+correction: correction.pdf
 
 # CUSTOM BUILD RULES
 
@@ -32,6 +33,10 @@ all: epsilon.pdf
 
 epsilon.pdf: epsilon.tex
 	latexmk -pdf -f -pdflatex="pdflatex -interaction=nonstopmode" -use-make -outdir="../pdf" epsilon.tex
+
+correction.pdf: correction.tex
+	latexmk -pdf -f -pdflatex="pdflatex -interaction=nonstopmode" -use-make -outdir="../pdf" correction.tex
+
 
 clean:
 	latexmk -CA
