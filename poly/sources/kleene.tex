@@ -72,7 +72,7 @@ L'expression $a$ quant à elle est reconnue par
 On peut donc traduire en automates les cas de base des expressions rationnelles. Quant aux cas récursifs, on les a en fait déjà traités en \ref{cloture} : pour construire un automate reconnaissant $e_1 + e_2$, on construit des automates $A_1$ et $A_2$ reconnaissant $e_1$ et $e_2$, et on applique la construction de l'union. On procède de même avec la concaténation pour $e_1e_2$ et l'itération pour $e^*$.
 \end{proof}
 
-%\paragraph*{Remarque} Les constructions vues pour les propriétés de clôture ne sont pas optimales. L'\href{https://fr.wikipedia.org/wiki/Algorithme_de_Thompson}{algorithme de Thomson} utilise les mêmes idées mais utilise les $\epsilon-transitions$ pour qu'il n'y ait pas plus d'un état initial et un état terminal tout au long de la construction de l'automate, ce qui permet de borner plus finement sa taille.
+\paragraph*{Remarque} Les constructions vues pour les propriétés de clôture ne sont pas optimales. L'\href{https://fr.wikipedia.org/wiki/Algorithme_de_Thompson}{algorithme de Thomson} utilise les mêmes idées mais s'assure qu'il n'y ait pas plus d'un état initial et un état terminal (différents) tout au long de la construction de l'automate, ce qui permet de borner plus finement sa taille, et de faciliter la concaténation (on fusionne l'état terminal gauche et l'état initial droit).
 
 \subsection{Traduction linéaire}
 
