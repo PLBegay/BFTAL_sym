@@ -278,7 +278,7 @@ Les automates finis qu'on a vus jusqu'ici sont déterministes, en ce qu'un autom
 
 \subsection{Principe général}
 
-Le non-déterminisme se manifeste de deux façons. On a d'abord les $\epsilon$-transitions, qui seront étudiées à part dans le cadre d'un DM. Ici, on se concentrera sur la possibilité d'avoir plusieurs transitions pour le même couple état $\times$ lettre, ainsi que plusieurs états initiaux.
+Le non-déterminisme se manifeste de trios façons. On a d'abord les $\epsilon$-transitions, qui sont des transitions "gratuites". Ces dernières sont présentées et illustrées dans le premier DM\footnote{L'introduction du DM présente, pour rendre les exercices pertinents, les automates avec $\epsilon$-transitions comme une alternative aux AFND qu'on présente dans ce document. Comme le dit la correction, on peut en fait réunir $\epsilon$-transitions, choix entre plusieurs transitions et la présence de plusieurs états initiaux sous une même banière, car l'expressivité n'en est pas changée.}. Ici, on se concentrera sur la possibilité d'avoir plusieurs transitions pour le même couple état $\times$ lettre, ainsi que plusieurs états initiaux.
 
 On peut donc maintenant avoir dans un automate plusieurs chemins pour un même mot, chemins qui vont chacun mener ou non à un état terminal. On accepte tout mot qui mène à un état terminal via au moins un chemin.
 
