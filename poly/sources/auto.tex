@@ -277,10 +277,12 @@ On a introduit en \ref{reappart} l'expression rationnelle $e = ((\Sigma^*baaba^+
 Les automates finis qu'on a vus jusqu'ici sont déterministes, en ce qu'un automate admet au maximum une seule transition par lettre, et donc que tout mot n'a lui-même pas plus d'un chemin. On va ici voir une nouvelle classe d'automates, les automates finis non-déterministes (AFND, ou \textit{NDFA} pour \textit{non-deterministic finite automaton/a}), qui vont justement nous libérer de cette contrainte.
 
 \subsection{Principe général}
+\label{introndfa}
+Le non-déterminisme se manifeste de trois façons : les $\epsilon$-transitions, qui sont des transitions "gratuites", la possibilité d'avoir plusieurs transitions pour le même couple état $\times$ lettre, et celle d'avoir plusieurs états initiaux.
 
-Le non-déterminisme se manifeste de trios façons. On a d'abord les $\epsilon$-transitions, qui sont des transitions "gratuites". Ces dernières sont présentées et illustrées dans le premier DM\footnote{L'introduction du DM présente, pour rendre les exercices pertinents, les automates avec $\epsilon$-transitions comme une alternative aux AFND qu'on présente dans ce document. Comme le dit la correction, on peut en fait réunir $\epsilon$-transitions, choix entre plusieurs transitions et la présence de plusieurs états initiaux sous une même banière, car l'expressivité n'en est pas changée.}. Ici, on se concentrera sur la possibilité d'avoir plusieurs transitions pour le même couple état $\times$ lettre, ainsi que plusieurs états initiaux.
+Les $\epsilon$-transitions sont présentées et illustrées dans le premier DM. Ce dernier présente notamment un algorithme permettant de les éliminer, cad. qui prend en entrée un automate et en génère un acceptant le même langage sans $\epsilon$-transitions. Les $\epsilon$-transitions sont donc une commodité qu'on peut au choix ignorer ou utiliser. Pour ne pas alourdir le présent document, on l'y ignorera, à l'exception des sous-sections \ref{clotconcat} et \ref{clotiter}, significativement simplifiées par l'utilisation d'$\epsilon$-transitions.
 
-On peut donc maintenant avoir dans un automate plusieurs chemins pour un même mot, chemins qui vont chacun mener ou non à un état terminal. On accepte tout mot qui mène à un état terminal via au moins un chemin.
+Concentrons nous sur les choix de transitions et d'états initiaux. On peut	 maintenant avoir dans un automate plusieurs chemins pour un même mot, chemins qui vont chacun mener ou non à un état terminal. On accepte tout mot qui mène à un état terminal via au moins un chemin.
 
 \begin{example}
 \label{exnondet1}
@@ -1010,8 +1012,6 @@ Si on avait le droit à une infinité d'états, on pourrait essayer d'écrire, d
 
 On dit qu'un ensemble $E$ est clos sous une opération binaire $\circ$ si, pour tous éléments $x$ et $y$ de $E$, $x \circ y$ appartient également à $E$. Dit autrement, $E$ est clos sous $\circ$ ssi. l'application de $\circ$ à ses éléments ne fait pas sortir de l'ensemble. On va regarder ici si les langages reconnaissables par automate fini sont clos sous les opérations sur les langages.
 
-\paragraph*{Remarque} Les trois premiers points de cette section se présentent plus simplement en utilisant les $\epsilon$-transitions. On renverra pour ça à la correction du DM correspondant.
-
 \subsection{Union}
 
 \begin{theorem}
@@ -1033,14 +1033,14 @@ Si $L_1$ et $L_2$ sont reconnaissables par automate fini, il existe des automate
 C'est exactement l'astuce qui a été utilisée dans l'exemple \ref{incomptoo}, où on a effectivement "mis ensemble" deux automates.
 
 \subsection{Concaténation}
-
+\label{clotconcat}
 \begin{theorem}
 Les langages reconnaissables par automate fini sont clos par concaténation, i.e. pour tous langages $L_1$ et $L_2$ reconnaissables par automate fini, il existe un automate fini reconnaissant $L_1.L_2$.
 \end{theorem}
 
 \begin{proof}
 
-Si $L_1$ et $L_2$ sont reconnaissables par automate fini, il existe des automates $A_1$ et $A_2$ qui reconnaissent $L_1$ et $L_2$, respectivement. On veut reconnaître $L_1.L_2 = \{u.v ~|~ u \in L_1 ~\wedge~v \in L_2\}$, l'astuce va être de mettre $A_1$ et $A_2$ l'un après l'autre en rajoutant des transitions pour que, à chaque fois qu'on finit de lire un mot $u$ accepté par $A_1$, au lieu d'accepter, on va en un état initial de $A_2$ en lire un deuxième $v$. La figure \ref{concatscheme} illustre schématiquement cette transformation sur un exemple.
+Si $L_1$ et $L_2$ sont reconnaissables par automate fini, il existe des AF $A_1$ et $A_2$ qui reconnaissent $L_1$ et $L_2$, respectivement. On veut reconnaître $L_1.L_2 = \{u.v ~|~ u \in L_1 ~\wedge~v \in L_2\}$, l'astuce va être de mettre $A_1$ et $A_2$ l'un après l'autre en rajoutant des $\epsilon$-transitions pour que, à chaque fois qu'on finit de lire un mot $u$ accepté par $A_1$, au lieu d'accepter, on puisse aller vers un état initial de $A_2$ en lire un deuxième $v$. Dualement au fait qu'on ne veuille plus accepter dès la fin d'une lecture en $A_1$, on ne veut pas pouvoir commencer en $A_2$. La figure \ref{concatscheme} illustre schématiquement cette transformation sur un exemple.
 
 
 
@@ -1058,10 +1058,12 @@ Si $L_1$ et $L_2$ sont reconnaissables par automate fini, il existe des automate
     \node[state] (2) [below=of 1] {$2$};
     \node[state,accepting] (3) [right=of 0] {$f_1$};
     \node[state,accepting] (4) [right=of 2] {$f_2$};
-    \node[state] (5) [right=of 4] {$i_2$};
+    \node[initial,state] (5) [right=of 4] {$i_2$};
     \node[] (6) [above=of 3] {...};
     \node[] (8) [below=of 4] {...};
     \node[] (7) [right=of 5] {...};
+    \node[initial,state] (9) [above=of 5] {$i_1$};
+    \node[] (10) [right=of 9] {...};
 
     \path
     (0) edge node {a,b} (3)  
@@ -1069,6 +1071,8 @@ Si $L_1$ et $L_2$ sont reconnaissables par automate fini, il existe des automate
     (2) edge [pos=0.15] node {b} (3) 
     (2) edge node {a} (4) 
     (5) edge node {a} (7) 
+    (9) edge node {b} (10) 
+    (3) edge [loop right] node {a} (3) 
     (4) edge [bend right] node {b} (8) 
     (3) edge [] node {a,b} (6) 
     ; %end path 
@@ -1094,6 +1098,8 @@ Si $L_1$ et $L_2$ sont reconnaissables par automate fini, il existe des automate
     \node[] (6) [above=of 3] {...};
     \node[] (8) [below=of 4] {...};
     \node[] (7) [right=of 5] {...};
+    \node[state] (9) [above=of 5] {$i_1$};
+    \node[] (10) [right=of 9] {...};
 
     \path
     (0) edge node {a,b} (3)  
@@ -1101,11 +1107,14 @@ Si $L_1$ et $L_2$ sont reconnaissables par automate fini, il existe des automate
     (2) edge [pos=0.15] node {b} (3) 
     (2) edge node {a} (4) 
     (5) edge node {a} (7) 
-    (0) edge [bend left=20] node {a,b} (5) 
-    (1) edge [bend left=20] node {b} (5) 
-    (2) edge [bend left] node {a,b} (5) 
     (4) edge [bend right] node {b} (8) 
     (3) edge [] node {a,b} (6) 
+    (9) edge node {b} (10) 
+    (3) edge node {$\epsilon$} (5)
+    (3) edge node {$\epsilon$} (9)
+    (4) edge node {$\epsilon$} (5)
+    (4) edge node {$\epsilon$} (9) 
+    (3) edge [loop right] node {a} (3) 
     ; %end path 
 
 \end{tikzpicture}  
@@ -1118,40 +1127,38 @@ Si $L_1$ et $L_2$ sont reconnaissables par automate fini, il existe des automate
 
 \newpage
 
-Soit un mot $w = u.v$ avec $u \in L_1$ et $v \in L_2$. $u$ étant accepté par $A_1$, sa lecture en partant d'un état initial nous amène en $f_1$ ou $f_2$. Dans la version transformée, $u$ seul n'est plus accepté, mais la lecture de sa dernière lettre nous envoie en $i_2$. Or, $v$ est accepté par $A_2$, ce qui veut dire qu'il va nous envoyer de $i_2$ à un état terminal de $A_2$.
+Soit un mot $w = u.v$ avec $u \in L_1$ et $v \in L_2$. $u$ étant accepté par $A_1$, sa lecture en partant d'un état initial nous amène en $f_1$ ou $f_2$. Dans la version transformée, $u$ seul n'est plus accepté, mais les $\epsilon$-transitions partant de $f_1$ et $f_2$ nous permettent de nous "téléporter" en $i_1$ ou $i_2$. Or, $v$ est accepté par $A_2$, ce qui veut dire qu'il va nous envoyer de l'un ou l'autre à un état terminal de $A_2$.
 
 
 
-Plus formellement, soient $A_1 = \big \langle Q_1, \Sigma_1, \delta_1, I_1, F_1\big \rangle$ et $A_1 = \big \langle Q_2, \Sigma_2, \delta_2, I_2, F_2\big \rangle$, alors $L_1.L_2$ est reconnu par $\big \langle Q_1 \cup Q_2, \Sigma_1 \cup \Sigma_2, \delta', I', F_2\big \rangle$ avec 
-
-\[
-\begin{cases}
-\delta'(q,a) = \delta_1(q,a) &\text{ si } q \in Q_1 ~\wedge~\delta_1(q,a) \cap F_1 = \emptyset,\\[1ex]
-\delta'(q,a) = \delta_1(q,a) \cup I_2 &\text{ si } q \in Q_1 ~\wedge~\delta_1(q,a) \cap F_1 \neq \emptyset,\\[1ex]
-\delta'(q,a) = \delta_2(q,a) &\text{ si } q \in Q_2\end{cases}
-\]
-
-Ainsi, chaque fois qu'un état de $A_1$ mène à un état terminal du même automate, on rajoute une transition avec la même lettre vers tous les états initiaux de $A_2$. Les transitions de $A_2$ ne changent pas.
+Plus formellement, soient $A_1 = \big \langle Q_1, \Sigma_1, \delta_1, I_1, F_1\big \rangle$ et $A_1 = \big \langle Q_2, \Sigma_2, \delta_2, I_2, F_2\big \rangle$, alors $L_1.L_2$ est reconnu par $\big \langle Q_1 \cup Q_2, \Sigma_1 \cup \Sigma_2, \delta', I_1, F_2\big \rangle$ avec 
 
 \[
 \begin{cases}
-I' = I_1 &\text{ si } A_1 \text{ n'accepte pas le mot vide},\\[1ex]
-I' = I_1 \cup I_2&\text{ si } A_1 \text{ accepte pas le mot vide}
+\delta'(q,a) = \delta_1(q,a) &\text{ si } q \in Q_1 \\[1ex]
+\delta'(q,\epsilon) = \delta_1(q,a) &\text{ si } q \in Q_1 \backslash F_1,\\[1ex]
+\delta'(q,\epsilon) = \delta_1(q,a) \cup I_2 &\text{ si } q \in F_1,\\[1ex]
+\delta'(q,a) = \delta_2(q,a) &\text{ si } q \in Q_2,\\[1ex]
+\delta'(q,\epsilon) = \delta_2(q,\epsilon) &\text{ si } q \in Q_2
 \end{cases}
 \]
 
-Si $A_1$ accepte le mot vide, on veut pouvoir considérer cette possibilité et commencer la lecture en $A_2$ directement. Sinon, on passe forcément par $A_1$. On peut vérifier facilement si un automate accepte ou non $\epsilon$ : c'est le cas ssi. au moins un de ses états initiaux est terminal. 
+Ainsi, on garde toutes les transitions autrefois présentes, et on ajoute (troisème cas) des $\epsilon$-transitions des états terminaux de $A_1$ vers les initiaux de $A_2$.
 
-Pas besoin de faire attention pour les états terminaux : si $A_2$ accepte le mot vide, au moins un de ses états initiaux est terminal, ce qui veut dire que les transitions qu'on ajoute permettront d'accepter un mot de $L_1$.
+Si $A_1$ accepte le mot vide, on veut pouvoir considérer cette possibilité et commencer la lecture en $A_2$ directement. Or, c'est déjà pris en compte par les nouvelles transitions : $A_1$ accepte le mot vide ssi. il a un état initial et terminal. Or, la définition de $\\delta'$ ajoute une $\epsilon$-transition de cet état vers tous les initiaux de $A_2$. On peut donc, en pratique, faire lire tout mot donné intégralement par $A_2$.
+
+Pas besoin non plus de faire attention pour les états terminaux : si $A_2$ accepte le mot vide, au moins un de ses états initiaux est terminal, ce qui veut dire que les transitions qu'on ajoute permettront d'accepter un mot de $L_1$.
 \end{proof}
 
+\paragraph*{Remarque} On a dit en \ref{introndfa} qu'on ignorerait dans ce document les $\epsilon$-transitions, à l'exception de la sous-section actuelle et la suivante (\ref{clotiter}), d'où la prise en compte des $\epsilon$ dans la définition de $\delta'$.
+
 \begin{example}
-Soient $L_1 = \{w ~|~|w|_a$ pair et $|w|_b$ impair$\}$ et $L_2 = \Sigma^*(aba+bab)\Sigma^*$. On peut reconnaître $L_1.L_2$ en combinant les automates des exemples \ref{exemplePI} et \ref{incomptoo}. Les états $PP$ et $II$ envoie dans un état terminal, avec $b$ et $a$ respectivement. On leur rajoute donc les mêmes transitions pour les états $0$ et $4$, et on rend ces derniers non-initiaux. On obtient au final :
+Soient $L_1 = \{w ~|~|w|_a$ pair et $|w|_b$ impair$\}$ et $L_2 = \Sigma^*(aba+bab)\Sigma^*$. On peut reconnaître $L_1.L_2$ en combinant les automates des exemples \ref{exemplePI} et \ref{incomptoo}. L'état anciennement terminal $PI$ permet maintenant d'accéder gratuitement à $0$ et $4$, qui deviennent non-initiaux. On obtient au final :
 
 
 \begin{figure}[H]
 \hspace{-2cm}
-\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.9cm,
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.7cm,
                     semithick]
   \tikzstyle{every state}=[fill=white,text=black]
   \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
@@ -1159,7 +1166,7 @@ Soient $L_1 = \{w ~|~|w|_a$ pair et $|w|_b$ impair$\}$ et $L_2 = \Sigma^*(aba+ba
 
   \node[initial,state] (PP)                    {$PP$};
   \node[state] (IP)      [above right of=PP]                {$IP$};  \node[state] (II)      [below right of=IP]                {$II$};
-  \node[accepting,state] (PI)      [below right of=PP]                {$PI$};
+  \node[state] (PI)      [below right of=PP]                {$PI$};
   \node[state] (0) [above right=0.8cm and 2cm of II]                   {$0$};
   \node[state] (1)      [right of=0]                {$1$};  
   \node[state] (2)      [right of=1]                {$2$};
@@ -1174,15 +1181,13 @@ Soient $L_1 = \{w ~|~|w|_a$ pair et $|w|_b$ impair$\}$ et $L_2 = \Sigma^*(aba+ba
   \path %(I) edge[loop above]              node {$a,b$} (I)
 (PP) edge      [bend right]        node {$a$} (IP)
 (PP) edge      [bend right]        node {$b$} (PI)
-(PP) edge      [bend left=90]        node {$b$} (0)
-(PP) edge      [bend right=90]        node {$b$} (4)
 (PI) edge      [bend right]        node {$a$} (II)
 (PI) edge      [bend right]        node {$b$} (PP)
 (IP) edge      [bend right]        node {$a$} (PP)
 (IP) edge      [bend right]        node {$b$} (II)
 (II) edge      [bend right]        node {$a$} (PI)
-(II) edge      []        node {$a$} (0)
-(II) edge      []        node {$a$} (4)
+(PI) edge      [bend right=40]        node {$\epsilon$} (0)
+(PI) edge      [bend right]        node {$\epsilon$} (4)
 (II) edge      [bend right]        node {$b$} (IP)
 (0) edge      [loop above]        node {$a,b$} (0)
 (0) edge      []        node {$a$} (1)
@@ -1198,82 +1203,80 @@ Soient $L_1 = \{w ~|~|w|_a$ pair et $|w|_b$ impair$\}$ et $L_2 = \Sigma^*(aba+ba
 \end{tikzpicture}
 \end{figure}
 
-Notez que si on avait pris pour $L_1$ le langage des mots avec un nombre pair de $a$ et de $b$, cad. avec $PP$ terminal, les états $0$ et $4$ seraient restés initiaux pour pouvoir accepter, par exemple, $aba$.
-
 \end{example}
 
 \subsection{Itération}
-
+\label{clotiter}
 
 \begin{theorem}
 Les langages reconnaissables par automate fini sont clos par concaténation, i.e. pour tout langage $L$ reconnaissable par automate fini, il existe un automate fini reconnaissant $L^*$.
 \end{theorem}
 
 \begin{proof}
-TODO.
+
+On veut reconnaître des mots de la forme $u_1.u_2...u_n$ avec $u_i \in L$ pour tout $i$. On ajoute un état spécial, $S$, qui sera le seul initial et terminal, et qui sera le début et la fin de tout tour de manège. La construction de l'automate ressemble ensuite à celle de la concaténation, en ce qu'on rajoute des $\epsilon$-transitions qui, quand on est dans un état (anciennement) terminal, nous permettent de revenir à $S$. Dualement, on ajoute des $\epsilon$-transitions allant de $S$ à tout état (anciennement) initial pour pouvoir commencer chaque tour.
+
+Plus formellement, soient $A = \big \langle Q, \Sigma, \delta, I, F\big \rangle$, alors $L^*$ est reconnu par $\big \langle Q \cup \{S\}, \Sigma, \delta', \{S\}, \{S\} \big \rangle$ avec 
+
+\[
+\begin{cases}
+\delta'(q,a) = \delta(q,a) &\text{ si } q \in Q,\\[1ex]
+\delta'(q,\epsilon) = \delta(q,\epsilon) &\text{ si } q \in Q \backslash F,\\[1ex]
+\delta'(q,\epsilon) = \delta(q,\epsilon) \cup \{S\} &\text{ si } q \in F,\\[1ex]
+\delta'(S,a) = \emptyset, &\\[1ex]
+\delta'(S,\epsilon) = I &
+\end{cases}
+\]
+
 \end{proof}
-%On veut reconnaître des mots de la forme $u_1.u_2...u_n$ avec $u_i \in L$ pour tout $i$. On ajoute un état spécial, $S$, qui sera le seul initial et terminal, et qui sera le début et la fin de tout tour de manège. La construction de l'automate ressemble ensuite à celle de la concaténation, en ce qu'on rajoute des transitions qui, quand on s'apprête à accéder à un état terminal, nous permettent également de revenir à $S$. Dualement, pour toute transition $q \xrightarrow{c} q'$ avec $q$ initial, on ajoute la transition $S \xrightarrow{c} q'$. Ainsi, en lisant la dernière lettre de $u_1$, on peut revenir dans un état initial pour lire $u_2$ et ainsi de suite.
 
-%Plus formellement, soient $A = \big \langle Q, \Sigma, \delta, I, F\big \rangle$, alors $L^*$ est reconnu par $\big \langle Q \cup \{S\}, \Sigma, \delta', \{S\}, \{S\} \big \rangle$ avec 
+\begin{example}
+\label{itex}
+Soit $L = \{w \in \Sigma^*~|~|w|_a$ pair et $|w|_b$ impair$\}$. $L^*$ est reconnu par l'automate suivant : 
 
-%\[
-%\begin{cases}
-%\delta'(q,a) = \delta(q,a) &\text{ si } \delta(q,a) \cap F = \emptyset,\\[1ex]
-%\delta'(q,a) = \delta(q,a) \cup \{S\} &\text{ si } \delta(q,a) \cap F \neq \emptyset,\\[1ex]
-%\delta'(S,a) = \displaystyle\bigcup_{i \in I} \delta(i,a) & 
-%\end{cases}
-%\]
-
-%\end{proof}
-
-%\begin{example}
-%\label{itex}
-%Soit $L = \{w \in \Sigma^*~|~|w|_a$ pair et $|w|_b$ impair$\}$. $L^*$ est reconnu par l'automate suivant : 
-
-%\begin{figure}[H]
-%\centering
-%\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=4cm,
-%                    semithick]
-%  \tikzstyle{every state}=[fill=white,text=black]
-%  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=4cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
 
 
-%  \node[state] (PP)                    {$PP$};
-%  \node[state] (IP)      [above right of=PP]                {$IP$};  \node[state] (II)      [below right of=IP]                {$II$};
-%  \node[state] (PI)      [below right of=PP]                {$PI$};
-%  \node[initial,accepting,state] (S)      [above=2cm of PI]                {$S$};
+  \node[state] (PP)                    {$PP$};
+  \node[state] (IP)      [above right of=PP]                {$IP$};  \node[state] (II)      [below right of=IP]                {$II$};
+  \node[state] (PI)      [below right of=PP]                {$PI$};
+  \node[initial,accepting,state] (S)      [below=1.8cm of PP]                {$S$};
 
-%  \path %(I) edge[loop above]              node {$a,b$} (I)
-%(PP) edge      [bend right]        node {$a$} (IP)
-%(PP) edge      [bend right]        node {$b$} (PI)
-%(PI) edge      [bend right]        node {$a$} (II)
-%(PI) edge      [bend right=10]        node {$b$} (PP)
-%(IP) edge      [bend right]        node {$a$} (PP)
-%(IP) edge      [bend right]        node {$b$} (II)
-%(II) edge      [bend right]        node {$a$} (PI)
-%(II) edge      [bend right]        node {$b$} (IP)
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(PP) edge      [bend right]        node {$a$} (IP)
+(PP) edge      [bend right]        node {$b$} (PI)
+(PI) edge      [bend right]        node {$a$} (II)
+(PI) edge      [bend right]        node {$b$} (PP)
+(IP) edge      [bend right]        node {$a$} (PP)
+(IP) edge      [bend right]        node {$b$} (II)
+(II) edge      [bend right]        node {$a$} (PI)
+(II) edge      [bend right]        node {$b$} (IP)
 
-%(II) edge      []        node {$a$} (S)
-%(PP) edge      [bend right]        node {$b$} (S)
-%(S) edge      []        node {$b$} (PI)
-%(S) edge      []        node {$a$} (IP)
+(PI) edge      []        node {$\epsilon$} (S)
+(S) edge      []        node {$\epsilon$} (PP)
 
-%;
-%\end{tikzpicture}
-%\end{figure}
 
-%\end{example}
+;
+\end{tikzpicture}
+\end{figure}
 
-%\begin{exercice}
-%Est-il nécessaire dans la transformation de rendre non-terminaux les états qui l'étaient dans l'automate original ?
-%\end{exercice}
+\end{example}
 
-%\begin{exercice}
-%Pourquoi était-il indispensable d'introduire un nouvel état dans la transformation ?
-%\end{exercice}
+\begin{exercice}
+Est-il nécessaire dans la transformation de rendre non-terminaux les états qui l'étaient dans l'automate original ?
+\end{exercice}
+
+\begin{exercice}
+Pourquoi était-il indispensable d'introduire un nouvel état dans la transformation ?
+\end{exercice}
 
 \subsection{Intersection}
-
+\label{clotinter}
 \begin{theorem}
 Les langages reconnaissables par automate fini sont clos par intersection, i.e. pour tous langages $L_1$ and $L_2$ reconnaissables par automate fini, il existe un automate fini reconnaissant $L_1 \cap L_2$.
 \end{theorem}
