@@ -702,7 +702,7 @@ De plus, puisque $q_{u_{2n+1}} \in \epsilon^+(q_{2n+2})$, $q_{u_{i+1}}$ est un �
 \paragraph*{Correction} On adapte la formalisation des AFND vue en cours :
  
 \begin{itemize}
-\item $\delta^*(q,\epsilon$\footnote{Attention, il s'agit ici du mot vide, pas d'une $\epsilon$-transition !}$) = \{q\}$
+\item $\delta^*(q,\epsilon$\footnote{Attention, il s'agit ici du mot vide, pas d'une $\epsilon$-transition !}$) = \{q\} \cup \epsilon^+(q)$
 \item $\delta^*(q,a.w) = \displaystyle\bigcup_{q' \in \{q\}~\cup~ \epsilon^+(q)}~\displaystyle\bigcup_{q'' \in \delta(q',a)} \delta^*(q'',w)$
 \end{itemize}
 
@@ -711,7 +711,7 @@ De plus, puisque $q_{u_{2n+1}} \in \epsilon^+(q_{2n+2})$, $q_{u_{i+1}}$ est un �
 \paragraph*{}Pour l'acceptation, on veut partir du seul état initial $i$, lire le mot donné et vérifier qu'on a atteint un état terminal ou qu'on peut en atteindre un gratuitement avec des $\epsilon$-transitions. On dit donc qu'un AFND avec $\epsilon$-transitions accepte un mot $w$ ssi. 
 
 \[
-\exists q_f \in ((\displaystyle\bigcup_{q~\in~\delta^*(i,w)} \{q\} \cup \epsilon^+(q)) \cap F)
+\exists q_f \in (\delta^*(i,w) \cap F)
 \]
 
 
