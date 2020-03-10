@@ -29,35 +29,48 @@ On obtient une contradiction, notre hypothèse sur la finitude des nombres premi
 
 \section{Ensembles}
 
-\subsection{Ensemble des parties}
-\label{powerset}
-Soit un ensemble $X$, on note $P(X)$ (parfois $2^X$) l'ensemble de ses parties (ou \textit{powerset}), cad l'ensemble des ensembles formés à partir d'éléments de $X$. 
+\subsection{Opérations entre ensembles}
+
+On suppose dans cette section deux ensembles $E_1$ et $E_2$ d'éléments de même nature. De plus, on rappelle que $\mathbb{N}$ est l'ensemble des entiers naturels (0, 1, 2, ...) et on pose $P = \{x \in \mathbb{N} ~|~ x$ pair$\}$ et $I = \{x \in \mathbb{N}~|~ x$ impair$\}$.
+
+\begin{definition}{Union}{}L'union de $E_1$ et $E_2$, notée $E_1 \cup E_2$, est l'ensemble des éléments appartenant à $E_1$ ou $E_2$ (ou les deux). Plus formellement, $E_1 \cup E_2 = \{x ~|~ x \in E_1 \vee x \in E_2\}$.
+\end{definition}
 
 \begin{example}
-Soit $X = \{x,y,z\}$, alors - en classant les éléments par leur cardinal -
-
-\begin{tabular}{llll}
- $P(X) = \{$ & $\emptyset$, & & \\
-& $\{x\}$,&$\{y\}$,&$\{z\}$,\\
-&$\{x,y\}$,& $\{x,z\}$,&$\{y,z\}$\\
-& $\{x,y,z\}$ & &$~~~~~~~~\}$.
-\end{tabular}
+$P \cup I = \mathbb{N}$.
 \end{example}
 
-\begin{lemma}
-$\forall X, \emptyset \in P(X) \wedge X \in P(X)$.
-\end{lemma}
+\begin{definition}{Intersection}{}L'intersection de $E_1$ et $E_2$, notée $E_1 \cap E_2$, est l'ensemble des éléments appartenant à $E_1$ et $E_2$. Plus formellement, $E_1 \cap E_2 = \{x ~|~ x \in E_1 \wedge x \in E_2\}$.
+\end{definition}
 
-\begin{lemma}
-\label{cardpowerset}
-$\forall X, |P(X)| = 2^{|X|}$.
-\end{lemma}
+\begin{example}
+$P \cap I = \emptyset$.
+\end{example}
 
-\begin{proof}
-Pour générer l'ensemble des sous-ensembles de $X$, on choisit de prendre ou non chaque élément de $X$. On a donc $\underbrace{2 \times 2 \times ... \times 2}_{\textrm{n fois}}$ choix, d'où les $2^{|X|}$ au total.
-\end{proof}
 
-\subsection{Opérations entre ensembles}
+\begin{definition}{Dofférence}{}La différence (ensembliste) de $E_1$ et $E_2$, notée $E_1 \backslash E_2$, est l'ensemble des éléments appartenant à $E_1$ mais pas à $E_2$. Plus formellement, $E_1 \backslash E_2 = \{x ~|~ x \in E_1 \wedge x \notin E_2\}$.
+\end{definition}
+
+\begin{example}
+$\mathbb{N} \backslash I = P$ et $\mathbb{N} \backslash P = I$.
+\end{example}
+
+\begin{example}
+$I \backslash \mathbb{N} = \emptyset$.
+\end{example}
+
+\begin{example}
+$E_1 \backslash \emptyset = E_1$.
+\end{example}
+
+\begin{definition}{Complémentaire}{}Le complémentaire de $E_1$, noté $\overline{E_1}$, est l'ensemble des élément (de même nature) n'appartenant pas à $E_1$.
+\end{definition}
+
+\begin{example}
+$\overline{P} = I$ et $\overline{I} = P$.
+\end{example}
+
+\paragraph*{Remarque} Soit $E$ l'ensemble des éléments du même type que ceux de $E_1$ (par exemple $\mathbb{N}$ pour $P$ ou $I$), alors $\overline{E_1} = E \backslash E_1$.
 
 \begin{definition}{Produit d'ensembles}{}
 \label{ensprod}
@@ -86,6 +99,36 @@ E_1 \times E_2 = \{(x,y)~|~x \in E_1~\wedge~y \in E_2\}
 \end{definition}
 
 Le produit cartésien, noté $\times$, renvoie l'ensemble des couples d'éléments de deux ensembles donnés. Il s'agit d'un cas particulier du produit d'ensemble, où l'opération est la "mise en couple". Cette opération ne pouvant pas être un endormorphisme, le produit cartésien ne peut être itéré.
+
+\subsection{Ensemble des parties}
+\label{powerset}
+Soit un ensemble $X$, on note $P(X)$ (parfois $2^X$) l'ensemble de ses parties (ou \textit{powerset}), cad l'ensemble des ensembles formés à partir d'éléments de $X$. 
+
+\begin{example}
+Soit $X = \{x,y,z\}$, alors - en classant les éléments par leur cardinal -
+
+\begin{tabular}{llll}
+ $P(X) = \{$ & $\emptyset$, & & \\
+& $\{x\}$,&$\{y\}$,&$\{z\}$,\\
+&$\{x,y\}$,& $\{x,z\}$,&$\{y,z\}$\\
+& $\{x,y,z\}$ & &$~~~~~~~~\}$.
+\end{tabular}
+\end{example}
+
+\begin{lemma}
+$\forall X, \emptyset \in P(X) \wedge X \in P(X)$.
+\end{lemma}
+
+\begin{lemma}
+\label{cardpowerset}
+$\forall X, |P(X)| = 2^{|X|}$.
+\end{lemma}
+
+\begin{proof}
+Pour générer l'ensemble des sous-ensembles de $X$, on choisit de prendre ou non chaque élément de $X$. On a donc $\underbrace{2 \times 2 \times ... \times 2}_{\textrm{n fois}}$ choix, d'où les $2^{|X|}$ au total.
+\end{proof}
+
+
 
 \section{Algorithmique}
 
