@@ -1,0 +1,415 @@
+\documentclass{article}[11pt]
+
+
+%\documentclass[runningheads,a4paper]{llncs}
+%\usepackage{hyperref}
+%\usepackage{ amssymb }
+
+
+%\gasset{frame=false} % switch to true to add frames
+%\parindent=0pt
+
+%\usepackage{bussproofs}
+%\usepackage{varwidth}
+%\usepackage{xspace}
+%\usepackage{verbatim}
+
+\usepackage{float} 
+\usepackage[lmargin=4cm, rmargin=4cm, tmargin=3cm, bmargin=3cm]{geometry}
+\usepackage{algpseudocode}
+
+
+\usepackage{url}
+\usepackage{multirow} 
+\usepackage{mathtools}
+\usepackage{stmaryrd}
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+\DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor} 
+%\usepackage{xspace}
+\usepackage{latexsym,amsmath,amsfonts,amssymb,stmaryrd}
+\let\proof\relax
+\let\endproof\relax 
+\usepackage{amsthm} 
+\usepackage{tikz}
+\usepackage{tikz-qtree}
+\usepackage{tikz-qtree-compat}
+
+\usepackage{listings}
+\usepackage{chngpage}
+\DeclareMathAlphabet{\mathpzc}{OT1}{pzc}{m}{it}
+
+\usepackage{ amssymb }
+\usepackage{soul}
+
+\usepackage{tipa}
+\usepackage{stmaryrd}
+
+\usepackage{verbatim} 
+\usepackage{epsfig} 
+\usepackage{graphics}
+\usepackage{ mathrsfs }
+\usepackage{hyperref}
+\usepackage{multicol}
+
+\usepackage{epigraph}
+
+
+% \usepackage{tipa}
+\usepackage{graphicx}   
+%\usepackage{url}
+\usepackage{wrapfig}  
+\usepackage{bm}   
+\usepackage{epstopdf}  
+\usepackage{ upgreek }
+\usepackage[all,cmtip]{xy}
+
+\usepackage{natbib}
+% \usepackage{float} 
+% \usepackage[lofdepth,lotdepth]{subfig}
+%\usepackage{graphicx}
+\usepackage[T1]{fontenc} 
+\usepackage[utf8]{inputenc}
+\usepackage{etoolbox}
+\usepackage{textcomp}
+
+\usepackage{mdwtab}
+\usepackage{syntax} 
+
+\renewcommand{\syntleft}{}          % do not display '<' associated with variable, for example <A>
+\renewcommand{\syntright}{}         % do not display '>' associated with variable, for example <A>
+
+
+\makeatletter 
+\patchcmd{\maketitle}{\@copyrightspace}{}{}{}
+\makeatother 
+\usepackage{mathpartir}
+%\usepackage{enumitem}
+%\usepackage{supertabular} 
+%\usepackage{soul}
+\usepackage[all]{xy}
+\usepackage{xifthen}
+\usepackage{placeins} 
+\usepackage{amsthm}
+\usepackage{amsmath}
+
+
+\usepackage{pgf}
+\usepackage{tikz}
+\usetikzlibrary{arrows,automata}
+\tikzset{initial text={}}
+\usetikzlibrary{calc,shapes.multipart,chains,arrows}
+%prevents second paragraph indentations 
+%\usepackage{parskip}
+% \usepackage{floatrow}
+\usepackage{tabularx} % in the preamble
+\usepackage{bm}
+\usepackage{caption}
+\usepackage{subcaption} 
+
+%\input{mac}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+
+
+\setlength{\bibsep}{0pt plus 0.5ex}
+
+
+
+
+
+\newenvironment{mathprooftree}
+  {\varwidth{.9\textwidth}\centering\leavevmode}
+  {\DisplayProof\endvarwidth}
+
+
+\newcommand{\qm}{\overline{Q}\overline{m}}
+
+\newcommand{\myparagraph}[1]{\paragraph{#1}\mbox{}\\}
+\newcommand\myeq{\stackrel{\mathclap{\normalfont\mbox{\scriptsize{def}}}}{=}}
+
+\title{DM de Bases formelles du TAL}
+
+\author{Pierre-Léo Bégay}
+\date{À me rendre le ??? 2020}
+\theoremstyle{definition}
+\newtheorem{exmp}{Exemple}
+   
+
+\begin{document}
+ 
+\maketitle
+\pagestyle{empty} %
+\thispagestyle{empty}
+
+
+\section{Automates}
+
+\subsection{Complétion}
+
+\paragraph{Question} Donnez un automate qui reconnaît le complémentaire du langage reconnu par celui-ci : 
+
+
+\begin{figure}[H]
+\centering
+
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.5cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial, state, accepting] (0)                    {$0$};
+  \node[state] (1)      [right of=0]                {$1$};
+  \node[state,accepting] (2)      [below of=0]                {$2$};
+  \node[state] (3)      [right of=2]                {$3$};
+ 
+ 
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+
+(0) edge      []        node {$a$} (1)
+
+(1) edge      []        node {$a$} (3)
+
+(3) edge      []        node {$a$} (0)
+(2) edge      []        node {$a,b$} (3)
+
+(0) edge      []        node {$b$} (2)
+;
+\end{tikzpicture}
+\end{figure}
+
+\subsection{Déterminisation}
+
+\paragraph{Question 1} Déterminisez l'automate suivante :
+
+
+\begin{figure}[H]
+\centering
+
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.5cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial, state] (0)                    {$0$};
+  \node[state] (1)      [above right of=0]                {$1$};
+  \node[state] (2)      [right of=1]                {$2$};
+  \node[state] (3)      [right of=2]                {$3$};
+  \node[state,accepting] (4)      [right of=3]                {$4$};
+  \node[state] (5)      [below right of=0]                {$5$};
+  \node[state] (6)      [right of=5]                {$6$};
+  \node[state] (7)      [right of=6]                {$7$};
+ \node[state,accepting] (8)      [right of=7]   
+ {$8$};
+ \node[state] (9)      [above left of=7]   
+ {$9$};
+ \node[state,accepting] (10)      [above right of=7]   
+ {$10$};
+  
+ 
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(0) edge      [loop above]        node {$a,b$} (0)
+(2) edge      [loop above]        node {$a,b$} (2)
+(4) edge      [loop above]        node {$a,b$} (4)
+(8) edge      [loop below]        node {$a,b$} (8)
+(9) edge      [loop left]        node {$a,b$} (9)
+
+(0) edge      []        node {$a$} (1)
+
+(9) edge      []        node {$b$} (7)
+
+(7) edge      []        node {$b$} (10)
+
+(1) edge      []        node {$a$} (2)
+(2) edge      []        node {$a$} (3)
+
+(3) edge      []        node {$a$} (4)
+(0) edge      []        node {$a$} (5)
+
+(5) edge      []        node {$b$} (6)
+(6) edge      []        node {$a$} (7)
+
+(7) edge      []        node {$a$} (8);
+\end{tikzpicture}
+\end{figure}
+
+\paragraph{Question 2} Donnez une expression rationnelle décrivant le langage reconnu par l'automate.
+
+\subsection{Minimisation}
+
+\paragraph{Question 1} Minimisez l'automate suivant :
+
+
+\begin{figure}[H]
+\centering
+
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.5cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial, state,accepting] (0)                    {$0$};
+  \node[state] (1)      [right of=0]                {$1$};
+  \node[state,accepting] (2)      [right of=1]                {$2$};
+  \node[state] (3)      [right of=2]                {$3$};
+  \node[state,accepting] (4)      [below of=3]                {$4$};
+  \node[state] (5)      [left of=4]                {$5$};
+  \node[state,accepting] (6)      [left of=5]                {$6$};
+  \node[state] (7)      [left of=6]                {$7$};
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(0) edge      [bend left=20]        node {$a$} (3)
+(0) edge      [bend right,out=240,in=-120,looseness=1.5]        node {$b$} (4)
+
+(1) edge      []        node {$a$} (2)
+(1) edge      []        node {} (7)
+
+(2) edge      []        node {$a$} (3)
+(2) edge      []        node {} (6)
+
+(3) edge      []        node {$a$} (4)
+(3) edge      []        node {} (5)
+
+(4) edge      [bend left=20]        node {$a$} (7)
+(4) edge      [bend right,out=240,in=-120,looseness=1.5]        node {$b$} (0)
+
+(5) edge      []        node {$a$} (6)
+(5) edge      []        node {$b$} (3)
+
+(6) edge      []        node {$a$} (7)
+(6) edge      []        node {$b$} (2)
+
+(7) edge      []        node {$a$} (0)
+(7) edge      []        node {$b$} (1);
+\end{tikzpicture}
+\end{figure}
+
+\paragraph{Question 2} Quel est le langage reconnu par l'automate ?
+
+\paragraph{Bonus} Essayez d'expliquer comment l'automate non-minimal reconnaissait le langage, et en quoi il n'était pas optimal
+
+\subsection{Automate produit}
+
+\paragraph{Question} Donnez un automate qui reconnaît l'intersection des langages reconnus par les deux automates suivant :
+
+
+\begin{figure}[H]
+\centering
+
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.5cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial, state,accepting] (0)                    {$0$};
+  \node[state] (1)      [right of=0]                {$1$};
+  \node[state,accepting] (2)      [below of=0]                {$2$};
+  \node[state] (3)      [right of=2]                {$3$};
+  \node[initial,state] (0bis)      [right of=1]                {$0$};
+  \node[state,accepting] (1bis)      [right of=0bis]                {$1$};
+  \node[state] (2bis)      [right of=1bis]                {$2$};
+  
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(0) edge      []        node {$a$} (1)
+(1) edge      []        node {$a,b$} (2)
+(2) edge      []        node {$b$} (3)
+(2) edge      [bend left]        node {$a$} (0)
+(3) edge      [loop right]        node {$a,b$} (3)
+(0) edge      [bend left]        node {$b$} (2)
+
+(0bis) edge      [loop above]        node {$a$} (0bis)
+(2bis) edge      [bend left]        node {$a,b$} (1bis)
+(1bis) edge      [loop above]        node {$b$} (1bis)
+(0bis) edge      []        node {$b$} (1bis)
+(1bis) edge      [bend left]        node {$a$} (2bis)
+
+;
+\end{tikzpicture}
+\end{figure}
+
+\section{Langages intrinsèquement ambigus}
+
+Dans cet exercice, on s'intéressera \textbf{uniquement} aux \textbf{grammaires de type 2} (ou grammaires algébriques). On rappelle que ces grammaires n'acceptent que les règles de la forme $A \rightarrow \gamma$, avec $\gamma \in (\Sigma \cup V)^*$. \newline \newline
+\noindent
+Vos réponses devront être accompagnées d'une justification légère (de l'ordre d'une ou deux phrases) expliquant comment la grammaire donnée génère le langage de la question.
+
+\paragraph*{Indice} Il n'est pas interdit de penser au cours sur les propriétés de clôture des langages réguliers.
+
+\subsection*{Question 0}
+
+Donnez une grammaire qui reconnaît le langage $L_0 = \{a^nb^n~|~n \in \mathbb{N}\}$
+
+\subsection*{Question 1}
+
+Donnez une grammaire qui reconnaît le langage $L_1 = \{a^nba^n~|~n \in \mathbb{N}\}$
+
+\subsection*{Question 2}
+
+Donnez une grammaire qui reconnaît le langage $L_2 = \{a^nba^m~|~n,m \in \mathbb{N}$ et $ n \geq m\}$
+
+\subsection*{Question 3}
+
+Donnez une grammaire qui reconnaît le langage 
+
+\paragraph*{}$L_3 = \{a^nba^mba^pba^q~|~n,m,p,q \in \mathbb{N}, n \geq m$ et $p \geq q\}$
+
+\subsection*{Question 4}
+
+Donnez une grammaire qui reconnaît le langage 
+
+\paragraph*{}$L_4 = \{a^nba^mba^pba^q~|~n,m,p,q \in \mathbb{N}, n \geq q$ et $m \geq p\}$
+
+\subsection*{Question 5}
+
+Donnez une grammaire qui reconnaît le langage 
+
+\paragraph*{}$L_5 = \{a^nba^mba^pba^q~|~n,m,p,q \in \mathbb{N}$ et $((n \geq m$ et $p \geq q)$ ou $(n \geq q$ et $m \geq p))\}$
+
+
+\subsection*{Question 6}
+
+\paragraph*{}Donnez, dans la grammaire de la question 5, deux dérivations différentes d'un même mot de $L_5$ (pas de justification demandée)
+
+\section{Grammaire mystère}
+
+\noindent
+Soit la grammaire de type 0\footnote{Le langage décrit est lui-même de type 1, ce qui veut dire qu'on pourrait le faire avec une grammaire contextuelle, mais c'est plus \textit{simple} en s'accordant le luxe d'une type 0} suivante : $\big \langle \{a,b,\#\}, \{S,S',A,B,\$\},S,\{$
+
+\begin{enumerate}
+
+\item $S \rightarrow \$_GS'\$_D$
+\item $S' \rightarrow aAS'$
+\item $S' \rightarrow bBS'$
+\item $S' \rightarrow \epsilon$
+\item $Aa \rightarrow aA$
+\item $Ab \rightarrow bA$
+\item $Ba \rightarrow aB$
+\item $Bb \rightarrow bB$
+\item $\$_Ga \rightarrow a\$_G$
+\item $\$_Gb \rightarrow b\$_G$
+\item $A\$_D \rightarrow \$_Da$
+\item $B\$_D \rightarrow \$_Db$
+\item $\$_G\$_D \rightarrow \#\}\ \big \rangle$
+
+\end{enumerate}
+
+\noindent
+Expliquez, en des termes très simples et \textit{naturels}, le langage décrit par cette grammaire. Justifiez votre réponse en expliquant succinctement le fonctionnement de la grammaire (au moins les grandes étapes).
+
+\paragraph*{Indice} Plutôt que d'essayer de deviner le langage engendré en fixant longuement les règles, dérivez\footnote{Notez que pour les grammaire de type 0 (et 1), la traduction des dérivations en arbre n'est plus possible. Vous devrez donc faire des dérivations `plates`, comme on faisait au début du chapitre sur les grammaires} quelques mots au hasard et voyez s'ils n'ont pas l'air de partager une propriété intéressante. C'est beaucoup plus facile de vérifier qu'une grammaire a une propriété donnée que de l'inférer. 
+
+
+\bibliographystyle{abbrv}
+\bibliography{main}  % main.bib is disused
+%\end{multicols}
+
+
+
+\end{document} 
+  
+
+
+ 
