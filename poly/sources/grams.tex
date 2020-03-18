@@ -153,4 +153,62 @@ Le langage engendré par cette grammaire est donc celui des mots contenant autan
 
  Où $\rightarrow_{9,10,11}^5$ indique 5 utilisations de règles parmi 9, 10 et 11.
  
+ \section{Formalisation}
+ 
+ Maintenant qu'on a un peu joué avec les grammaires formelles, on peut regarder comment elles se formalisent. Techniquement donc, une grammaire formelle est un quadruplet $\big \langle X\Sigma, V, S, R \big \rangle$, où
+ 
+ \begin{itemize}
+ \item $\Sigma$ est l'ensemble des \textbf{symboles terminaux}
+ \item $V$ est l'ensemble des \textbf{symboles non-terminaux}
+ \item $S \in V$ est l'\textbf{axiome}
+ \item $R$ est l'ensemble des \textbf{règles de production}, ou règles de réécriture. Ces dernières forment un sous-ensemble de $(\Sigma \cup V)^*V(\Sigma \cup V)^* \times (\Sigma \cup V)^*$, cad. qu'elles doivent toujours avoir au moins un non-terminal à gauche. 
+ \end{itemize}
+ 
+ 
+ 
+\begin{example}
+La grammaire de l'exemple \ref{LRgram} s'écrit 
+
+\[
+\big \langle \{a,b\},\{S,L,R\},S, \begin{cases}
+S \rightarrow LaaR \\
+L \rightarrow Lb \\
+L \rightarrow ab \\
+R \rightarrow bR \\
+R \rightarrow ba
+\end{cases}
+ \big \rangle
+\]
+
+
+\begin{definition}{Réécriture / dérivation immédiate}{}
+Soient $p$, $s$ et $g$ des mots sur l'alphabet $(\Sigma \cup V)$, et $f \in (\Sigma \cup V)^*V(\Sigma \cup V)^*$. Si la règle $r$ est de la forme $f \rightarrow g$, alors le mot $pfs$ se \textbf{réécrit} (ou dérive) \textbf{immédiatement} en $pgs$ via la règle $r$, ce qu'on note 
+
+\[
+pfs \rightarrow_r pgs
+\]
+
+Plus généralement, étant donnée une grammaire $G$, on dit qu'elle réécrit (ou dérive) immédiatement un mot $u$ en $v$ ssi. il existe une règle $r$ dans la grammaire telle que $u$ se réécrit immédiatement en $v$ via la règle $r$. On écrit ceci 
+
+\[
+pfs \rightarrow_G pgs
+\]
+\end{definition}
+
+\paragraph{Remarque} $u \rightarrow_r v$ est parfois noté $u \xrightarrow{r} v$. De plus, quand il n'y a pas d'ambiguïté sur la grammaire étudiée, on note $u \rightarrow v$ plutôt que $u \rightarrow_G v$.
+
+
+\end{example}
+
+
+\begin{definition}{Réécriture / dérivation}{}
+Soient une grammaire $G$ et deux mots $u$ et $v$. On dit que $u$ se \textbf{réécrit} (ou dérive) en $v$ avec $G$ ssi. il existe une série (potentiellement nulle) de réécritures immédiates menant de $u$ à $v$ dans $G$. On le note 
+
+\[
+u \rightarrow_G^* v
+\]
+
+ou $u \rightarrow^* v$ s'il n'y a pas d'ambiguïté sur la grammaire étudiée.
+
+\end{definition}
  
