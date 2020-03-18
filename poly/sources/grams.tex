@@ -48,3 +48,109 @@ S \rightarrow_1 \epsilon
 On se rend compte assez vite que la grammaire \textbf{engendre} le langage $(ab)^*$.
 
 \end{example}
+
+
+\begin{example}
+\label{LRgram}
+Un symbole non-terminal peut générer d'autres symboles non-terminaux, et même plusieurs en même temps. De plus, un non-terminal peut générer un autre mot que juste $\epsilon$. Ces deux points sont illustrés par la grammaire suivante :
+
+\[
+\begin{cases}
+S \rightarrow LaaR \\
+L \rightarrow Lb \\
+L \rightarrow ab \\
+R \rightarrow bR \\
+R \rightarrow ba
+\end{cases}
+\]
+
+Quelques exemples de dérivations dans cette grammaire :
+
+\[
+ S \rightarrow_1 LaaR \rightarrow_2 LbaaR \rightarrow_2 LbbaaR \rightarrow_4 LbbaabR \rightarrow_3 abbbaabR \rightarrow_5 abbbaabba
+\]
+
+\[
+ S \rightarrow_1 LaaR \rightarrow_3 abaaR \rightarrow_5 abaaba
+ \]
+ 
+ On note $\rightarrow_i^j$ $j$ utilisations de la règle numéro $i$, comme dans la dérivation suivante :
+ 
+ \[
+ S \rightarrow_1 LaaR \rightarrow_2^5 LbbbbbaaR \rightarrow_3 abbbbbbaaR \rightarrow_4^3 abbbbbbaabbbR \rightarrow_5 abbbbbbaabbbba
+ \]
+
+\end{example}
+
+\begin{exercice}
+Quel est le langage engendré par la grammaire de l'exemple \ref{LRgram} ?
+\end{exercice}
+
+\begin{exercice}
+\label{grammab}
+Quel est le langage reconnu par la grammaire suivante ?
+
+\[
+\begin{cases}
+S \rightarrow A \\
+S \rightarrow B \\
+A \rightarrow aA \\
+A \rightarrow \epsilon \\
+B \rightarrow bB \\
+B \rightarrow \epsilon
+\end{cases}
+\]
+
+\end{exercice}
+
+\begin{exercice}
+\label{grammsigma}
+Quel est le langage reconnu par la grammaire suivante ?
+
+\[
+\begin{cases}
+S \rightarrow aS \\
+S \rightarrow bS \\
+S \rightarrow \epsilon 
+\end{cases}
+\]
+
+\end{exercice}
+
+\begin{exercice}
+Donner l'ensemble des mots qui admettent deux dérivations (ie. peuvent être construits de plusieurs façons différentes) dans la grammaire de l'exercice \ref{grammab}. Même question pour celle de l'exercice \ref{grammsigma}.
+\end{exercice}
+
+\begin{example}
+On a jusqu'ici seulement vu des exemples de grammaires avec un seul non-terminal à gauche des flèches de réécriture. Il est cependant possible de préciser le contexte dans lequel les réécritures doivent se faire, comme dans la grammaire suivante :
+
+\[
+\begin{cases}
+S \rightarrow SABC \\
+S \rightarrow \epsilon \\
+AB \rightarrow BA \\
+BA \rightarrow AB \\
+AC \rightarrow CA \\
+CA \rightarrow AC \\
+BC \rightarrow CB \\
+CB \rightarrow BC \\
+A \rightarrow a \\
+B \rightarrow b \\
+C \rightarrow c
+\end{cases}
+\]
+
+Toute dérivation dans cette grammaire fonctionne de la façon suivante : on commence par utiliser la première règle $n$ fois pour produire $S(ABC)^n$. Ensuite, on utilise la deuxième règle pour faire disparaître S et se retrouver avec $(ABC)^n$. Les règles 3 à 8 permettent ensuite de mélanger les symboles non-terminaux comme on l'entend. Une fois qu'ils ont été disposés de la façon voulue, on les transforme en $a$, $b$ et $c$ avec les règles 9, 10 et 11.
+
+Le langage engendré par cette grammaire est donc celui des mots contenant autant de $a$ que de $b$ et de $c$.
+\end{example}
+
+\paragraph{Remarque} Dans l'exemple ci-dessus, on découpe toute dérivation en 4 étapes : utilisation de la première règle, puis de la seconde, puis des 3 à 8, et enfin des 9 à 11. Cette présentation nous semble améliorer la compréhension de l'exemple et du langage engendré, mais techniquement, rien n'empêche de mélanger les étapes, comme dans la dérivation suivante :
+
+ \[
+ S \rightarrow_1 SABC \rightarrow_9 SaBC \rightarrow_7 SaCB \rightarrow_{11} SaCb \rightarrow_1 SABCaCb \rightarrow_2 ABCaCB \rightarrow_{9,10,11}^5 abcacb 
+ \]
+
+ Où $\rightarrow_{9,10,11}^5$ indique 5 utilisations de règles parmi 9, 10 et 11.
+ 
+ 
