@@ -122,6 +122,7 @@ Donner l'ensemble des mots qui admettent deux dérivations (ie. peuvent être co
 \end{exercice}
 
 \begin{example}
+\label{ggramabcn}
 On a jusqu'ici seulement vu des exemples de grammaires avec un seul non-terminal à gauche des flèches de réécriture. Il est cependant possible de préciser le contexte dans lequel les réécritures doivent se faire, comme dans la grammaire suivante :
 
 \[
@@ -212,3 +213,40 @@ ou $u \rightarrow^* v$ s'il n'y a pas d'ambiguïté sur la grammaire étudiée.
 
 \end{definition}
  
+\begin{example}
+Dans l'exemple \ref{ggramabcn}, on a 
+
+\[
+S \rightarrow^* SABCaCb \rightarrow^* abcacb
+\]
+
+et donc 
+
+\[
+S \rightarrow^* abcacb
+\]
+\end{example}
+ 
+%\begin{definition}{Proto-mot}{}
+%Un \textbf{proto-mot} est un mot contenant 
+%\end{definition}
+% proto-mot, dérivations équivalentes, gauche
+% defs utiles dans la suite ?
+
+\begin{definition}{Langage engendré}{}
+Le langage engendré par le mot $f$ dans une grammaire $G$, noté $L_G(f)$, est l'ensemble des mots de $\Sigma^*$ (formés uniquement de symboles terminaux) en lesquelles on peut réécrire l'axiome de $f$ en suivant les règles de $G$. Plus formellement,
+
+\[
+L_G(f) = \{u \in \Sigma^* ~|~f \rightarrow_G^* u\}
+\]
+
+Le langage engendré par une grammaire est le langage engendré par l'axiome dans cette grammaire. Soit une grammaire $G$ d'axiome $S$, son langage engendré, noté $L_G$, est $L_G(S)$.
+\end{definition}
+
+\begin{example}
+Soit $G$ la grammaire de l'exemple \ref{ggramabcn}. 
+
+\[
+L_G = \{w \in \Sigma^* ~|~|w|_a = |w|_b = |w|_c \}
+\]
+\end{example}
