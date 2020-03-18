@@ -1,4 +1,50 @@
 \chapter{Grammaires formelles et hiérarchie de Chomsky}
 \label{grammaires}
 
-TODO
+
+\section{Principe général}
+
+Une \textbf{grammaire formelle} est une série de \textbf{règles} permettant de générer des mots. Ces règles utilisent des \textbf{symboles} dits \textbf{terminaux} (les lettres "normales", par convention en minuscules), et d'autres dits \textbf{non-terminaux} (normalement dénotés par des lettres majuscules). Un de ces symboles non-terminaux, appelé \textbf{axiome}, indique le début de toute génération de mot. On présente d'abord le fonctionnement des grammaires et les concepts de base à l'aide de quelques exemples. 
+
+\begin{example}
+On présente la grammaire dénotée par ces deux règles :
+
+\[
+\begin{cases}
+S \rightarrow \epsilon \\
+S \rightarrow abS 
+\end{cases}
+\]
+
+Cette grammaire contient un seul symbole non-terminal, S. Il s'agit donc automatiquement de l'axiome. Le symbole S peut se transformer en $\epsilon$ (première règle) ou en $abS$ (deuxième règle). Cette grammaire génère l'ensemble des mots composés uniquement de symboles terminaux ($a$ et $b$) qu'on peut obtenir en partant de l'axiome S et en appliquant autant de fois qu'on veut les règles données. Dans ce qui suit, on écrira $\rightarrow_1$ pour une application de la première règle et $\rightarrow_2$ pour la seconde.
+
+On peut par exemple obtenir le mot $ab$ de la façon suivante :
+
+\[
+S \rightarrow_2 abS \rightarrow_1 ab
+\]
+
+Dans cette suite de transformation, appelée \textbf{dérivation}, on remplace d'abord l'axiome par $abS$ à l'aide de la deuxième règle. Puisque $abS$ contient le facteur $S$, on peut utiliser \textit{localement} la deuxième règle pour faire disparaître ce S. Dans ce cas, ce qu'il y avait autour du S, le \textbf{contexte}, reste inchangé.
+
+On peut également obtenir le mot $abab$ :
+
+\[
+S \rightarrow_2 \textcolor{blue}{ab}S \rightarrow_2 \textcolor{blue}{ab}\textcolor{red}{ab}S \rightarrow_1 \textcolor{blue}{ab}\textcolor{red}{ab}
+\]
+
+ou ababab :
+
+
+\[
+S \rightarrow_2 \textcolor{blue}{ab}S \rightarrow_2 \textcolor{blue}{ab}\textcolor{red}{ab}S \rightarrow_2 \textcolor{blue}{ab}\textcolor{red}{ab}\textcolor{green}{ab}S \rightarrow_1  \textcolor{blue}{ab}\textcolor{red}{ab}\textcolor{green}{ab}
+\]
+
+Il n'est pas obligatoire d'utiliser toutes les règles d'une grammaire. On peut donc générer le mot vide :
+
+\[
+S \rightarrow_1 \epsilon
+\]
+
+On se rend compte assez vite que la grammaire \textbf{engendre} le langage $(ab)^*$.
+
+\end{example}
