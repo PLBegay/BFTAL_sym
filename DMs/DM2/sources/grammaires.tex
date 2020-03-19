@@ -203,18 +203,15 @@
   \node[state] (7)      [right of=6]                {$7$};
  \node[state,accepting] (8)      [right of=7]   
  {$8$};
- \node[state] (9)      [above left of=7]   
+ \node[state,initial] (9)      [above left of=7]   
  {$9$};
  \node[state,accepting] (10)      [above right of=7]   
  {$10$};
   
  
   \path %(I) edge[loop above]              node {$a,b$} (I)
-(0) edge      [loop above]        node {$a,b$} (0)
-(2) edge      [loop above]        node {$a,b$} (2)
-(4) edge      [loop above]        node {$a,b$} (4)
+  (2) edge      [loop above]        node {$a,b$} (2)
 (8) edge      [loop below]        node {$a,b$} (8)
-(9) edge      [loop left]        node {$a,b$} (9)
 
 (0) edge      []        node {$a$} (1)
 
@@ -228,13 +225,12 @@
 (3) edge      []        node {$a$} (4)
 (0) edge      []        node {$a$} (5)
 
-(5) edge      []        node {$b$} (6)
+(5) edge      []        node {$a,b$} (6)
 (6) edge      []        node {$a$} (7)
 
 (7) edge      []        node {$a$} (8);
 \end{tikzpicture}
 \end{figure}
-
 \paragraph{Question 2} Donnez une expression rationnelle décrivant le langage reconnu par l'automate.
 
 \subsection{Minimisation}
