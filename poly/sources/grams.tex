@@ -250,3 +250,189 @@ Soit $G$ la grammaire de l'exemple \ref{ggramabcn}.
 L_G = \{w \in \Sigma^* ~|~|w|_a = |w|_b = |w|_c \}
 \]
 \end{example}
+
+
+\begin{exercice}
+Donner une grammaire qui engendre le langage $\{a^nb^n ~|~ n \in \mathbb{N}\}$
+\end{exercice}
+
+\begin{exercice}
+Quel est le langage engendré par la grammaire qui suit ?
+
+\[
+\begin{cases}
+S \rightarrow XY \\
+X \rightarrow aXbZ \\
+Zb \rightarrow bZ \\
+ZY \rightarrow Yc \\
+bY \rightarrow b
+\end{cases}
+\]
+\end{exercice}
+
+\section{Hierarchie de Chomsky}
+
+Chomsky propose en 1956 une classification des grammaires en fonction des formes de leurs règles. Les grammaires sont donc divisées en 4 catégories, appelées grammaires de type 0, 1, 2 et 3.
+
+\subsection{Grammaires de type 3, ou régulières}
+
+Les grammaires de type 3, appelées \textbf{grammaires régulières}, se divisent elles-même en deux sous-classes : les \textbf{grammaires linéaires à gauche} et \textbf{grammaires linéaires à droite}.
+
+\subsubsection{Grammaires linéaires à gauche et à droite}
+
+Dans les deux cas, on ne permet que d'écrire un symbole terminal à la fois, en allant toujours dans le même sens.
+
+\begin{definition}{Grammaire linéaire à gauche}{}
+Une grammaire linéaire à gauche est une grammaire dont toutes les règles sont de la forme 
+\begin{itemize}
+\item[] $A \rightarrow Ba$
+\item[] ou
+\item[] $A \rightarrow a$
+\item[] ou
+\item[] $A \rightarrow \epsilon$
+\end{itemize}
+
+où $A$ et $B$ sont des symboles non-terminaux, et $a$ un terminal.
+\end{definition}
+
+\begin{example}
+\label{gramling}
+La grammaire 
+\[
+\begin{cases}
+S \rightarrow Sa \\
+S \rightarrow Ta \\
+S \rightarrow a \\
+T \rightarrow Tb \\
+T \rightarrow b
+\end{cases}
+\]
+est une grammaire linéaire à gauche. 
+\end{example}
+
+\begin{exercice}
+Quel est le langage engendré par la grammaire de l'exemple \ref{gramling} ?
+\end{exercice}
+
+
+\begin{definition}{Grammaire linéaire à droite}{}
+Une grammaire linéaire à droite est une grammaire dont toutes les règles sont de la forme 
+\begin{itemize}
+\item[] $A \rightarrow aB$
+\item[] ou
+\item[] $A \rightarrow a$
+\item[] ou
+\item[] $A \rightarrow \epsilon$
+\end{itemize}
+
+où $A$ et $B$ sont des symboles non-terminaux, et $a$ un terminal.
+\end{definition}
+
+\begin{example}
+\label{gramlind}
+La grammaire 
+\[
+\begin{cases}
+S \rightarrow aS \\
+S \rightarrow bS \\
+S \rightarrow \epsilon 
+\end{cases}
+\]
+est une grammaire linéaire à droite. 
+\end{example}
+
+
+\begin{exercice}
+Quel est le langage engendré par la grammaire de l'exemple \ref{gramlind} ?
+\end{exercice}
+
+\paragraph{Remarque} Les grammaires de type 3, ou régulières, est l'ensemble des grammaires linéaires à gauche et des grammaires linéaires à droite, mais sans mélange. Par exemple, la grammaire 
+\[
+\begin{cases}
+S \rightarrow aS \\
+S \rightarrow Sb \\
+S \rightarrow \epsilon 
+\end{cases}
+\]
+\textbf{n}'est \textbf{pas} une grammaire de type 3. 
+
+\begin{lemma}
+Les grammaires linéaires à gauche et les grammaires linéaire à droite ont la même expressivité. Dit autrement, tout langage engendré par une grammaire linéaire à gauche est est également engendré par une grammaire linéaire à droite, et inversement.
+\end{lemma}
+
+\begin{proof}
+On n'entrera pas ici dans les détails, qui dépassent le cadre de ce cours. Etant donnée une grammaire linéaire à gauche (resp. droite), on peut écrire une grammaire linéaire à droite (resp. gauche) qui la simule en partant des règles $A \rightarrow a$ et $A \rightarrow \epsilon$. Les règles \textit{normales} sont inversées et nouvelles règles \textit{terminales} correspondent à l'axiome de la première grammaire. 
+\end{proof}
+
+\begin{exercice}(**) Donner, en suivant l'intuition de la preuve ci-dessus, une grammaire linéaire à droite qui engendre le même langage que la grammaire de l'exemple \ref{gramling}.
+\end{exercice}
+
+\subsubsection{Une extension du théorème de Kleene}
+\label{kleeneplusplus}
+On a vu dans le chapitre \ref{hierarchie} que les langages pouvant être décrits par des expressions rationnelles et ceux définissables par automate étaient les mêmes. Ce résultat peut s'étendre aux grammaires de type 3.
+
+\begin{theorem}
+Les langages reconnus par automate fini sont exactement ceux engendrés par des grammaires de type 3.
+\end{theorem}
+
+\begin{proof}
+Soit $G$ une grammaire de type 3. Puisque les grammaires linéaires à gauche et à droite engendrent les mêmes langages, on peut supposer que $G$ est une grammaire linéaire à droite. On crée un automate dont les états sont les symboles non-terminaux de $G$, ainsi qu'un état supplémentaire et terminal $T$ (pour terminus). L'état initial est son axiome. Toute règle $A \rightarrow aB$ devient une transition de $A$ vers $B$ en lisant $a$. Les règles $A \rightarrow a$ deviennent des transitions de $A$ vers $T$ en $a$. Enfin, on rend terminal tout état $A$ tel qu'il existe une règle $A \rightarrow \epsilon$.
+
+Soit $A$ un automate fini. On déterminise $A$ en $A_{det}$. On crée une grammaire dont les symboles non-terminaux sont les états de $A_{det}$. L'axiome est l'état initial de $A_{det}$. Toute transition $A \xrightarrow{a} B$ se traduit par une règle $A \rightarrow aB $. Pour tout état terminal $A$, on ajoute une règle $A \rightarrow \epsilon$.
+\end{proof}
+
+\begin{example}
+TODO
+\end{example}
+
+\begin{example}
+TODO
+\end{example}
+
+\begin{exercice}
+TODO
+\end{exercice}
+
+\begin{exercice}
+TODO
+\end{exercice}
+
+
+
+\subsection{Grammaires de type 2, ou non contextuelles}
+
+Les grammaires de type 2, appelées \textbf{grammaires non contextuelles} (\textit{context-free}), ou parfois grammaires algébriques, n'ont aucune contrainte quant à la partie droite des règles. Elles imposent cependant que la partie gauche ne contienne pas plus d'un caractère, empêchant donc de prendre en compte le contexte dans les dérivations.
+
+\begin{definition}{Grammaire non contextuelle}{}
+Une grammaire non contextuelle est une grammaire dont toutes les règles sont de la forme 
+\begin{itemize}
+\item[] $A \rightarrow \gamma$
+\end{itemize}
+où $A$ est un symbole non-terminal, et $\gamma$ est n'importe quel mot constitué de symboles terminaux et non-terminaux.
+\end{definition}
+
+\begin{example}
+\label{gramanbn}
+La grammaire 
+
+\[
+\begin{cases}
+S \rightarrow aSb \\
+S \rightarrow \epsilon
+\end{cases}
+\]
+
+est une grammaire de type 2, qui reconnaît le langage $\{a^nb^n ~|~n \in \mathbb{N}\}$
+\end{example}
+
+\paragraph{Remarque} Toute grammaire de type 3 est également une grammaire de type 2, puisque toute règle d'une grammaire de type 3 a bien un seul symbole à gauche de toute règle.
+
+\begin{lemma}
+Les langages engendrés par des grammaires de type 3 forment un sous-ensemble strict des langages engendrés par des grammaires de type 2. Autrement dit, si un langage est engendré par une grammaire de type 3, alors il l'est également par une grammaire de type 2, mais il existe au moins un (et même plein) langage engendré par une grammaire de type 2 qui ne peut pas être engendré par une grammaire de type 3.  
+\end{lemma}
+
+\begin{proof}
+L'inclusion non-stricte est triviale avec la remarque précédente. En effet, soit $L$ un langage engendré par la grammaire de type 3 $G$, alors $G$ est également une gramaire de type 2 qui, de fait, engendre toujours $L$.
+
+Pour l'aspect strict de cette inclusion, la grammaire de type 2 de l'exemple \ref{gramanbn} reconnaît le langage $\{a^nb^n ~|~ n \in \mathbb{N}\}$. Or, on a vu en \ref{limiterecauto} que ce langage n'était pas reconnaissable par automate. Puisque les grammaires de type 3 ont la même expressivité que ces derniers (cf. \ref{kleeneplusplus}), il n'en existe pas qui engendre ce langage.
+\end{proof}
