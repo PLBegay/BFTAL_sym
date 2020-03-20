@@ -278,15 +278,16 @@ Donner une grammaire qui engendre le langage $\{a^nb^n ~|~ n \in \mathbb{N}\}$
 \end{exercice}
 
 \begin{exercice}
+\label{grammanbncn}
 Quel est le langage engendré par la grammaire qui suit ?
 
 \[
 \begin{cases}
 S \rightarrow XY \\
-X \rightarrow aXbZ \\
+X \rightarrow aXbZ~|~\epsilon\\
 Zb \rightarrow bZ \\
 ZY \rightarrow Yc \\
-bY \rightarrow b
+Y \rightarrow \epsilon
 \end{cases}
 \]
 \end{exercice}
@@ -504,4 +505,69 @@ Les langages engendrés par des grammaires de type 3 forment un sous-ensemble st
 L'inclusion non-stricte est triviale avec la remarque précédente. En effet, soit $L$ un langage engendré par la grammaire de type 3 $G$, alors $G$ est également une gramaire de type 2 qui, de fait, engendre toujours $L$.
 
 Pour l'aspect strict de cette inclusion, la grammaire de type 2 de l'exemple \ref{gramanbn} reconnaît le langage $\{a^nb^n ~|~ n \in \mathbb{N}\}$. Or, on a vu en \ref{limiterecauto} que ce langage n'était pas reconnaissable par automate. Puisque les grammaires de type 3 ont la même expressivité que ces derniers (cf. \ref{kleeneplusplus}), il n'en existe pas qui engendre ce langage.
+\end{proof}
+
+
+
+
+\subsection{Grammaires de type 1, ou contextuelles}
+
+Les grammaires de type 1, appelées \textbf{grammaires contextuelles}, n'ont aucune contrainte quant à la partie droite des règles. On peut désormais mettre n'importe quel mot (contenant au moins un symbole non-terminal) à gauche d'une flèche. La seule contrainte est qu'on ne permet pas d'avoir le mot vide à droite d'une flèche, sauf cas particulier pour capturer le mot vide.
+
+\begin{definition}{Grammaire contextuelle}{}
+Une grammaire contextuelle est une grammaire dont toutes les règles sont de la forme 
+\begin{itemize}
+\item[] $\alpha \rightarrow \beta$, où $\alpha$ et $\beta$ sont des mots constitué de symboles terminaux et non-terminaux, tels que $\alpha$ contient au moins un symbole non-terminal et $\beta \neq \epsilon$
+\item[] ou
+\item[] $S \rightarrow \epsilon$, où $S$ est l'axiome de la grammaire. Si cette règle est utilisée, $S$ n'a pas le droit d'apparaître à droite d'une règle.
+\end{itemize}
+
+\end{definition}
+
+Cette exception un peu étrange permet aux grammaires contextuelles d'engendrer le mot vide, ce qui ne serait pas possible uniquement avec le premier type de règle. Supposons par exemple qu'on ait une grammaire contextuelle $G$ d'axiome $S$ engendrant un langage $L$ ne contenant pas le mot vide, on peut facilement construire la grammaire $G'$ qui engendre $L \cup \{\epsilon\}$. 
+
+Il suffit d'ajouter un nouveau non-terminal, $S'$, qui sera le nouvel axiome, ainsi que les deux règles qui suivent : 
+
+
+\[
+\begin{cases}
+S' \rightarrow \epsilon \\
+S' \rightarrow S
+\end{cases}
+\]
+
+Ainsi, on permet d'engendrer $\epsilon$ dès le début, ou de faire une génération "normale" de $G$ en repartant de $S$. Avec cette transformation, on est sûr que $S'$ n'apparaît jamais à droite d'une règle.
+
+\begin{example}
+\label{grammanbncnbis}
+La grammaire de l'exemple \ref{grammanbncn} \textbf{n}'est \textbf{pas} une grammaire de type 1, à cause des règles $X \rightarrow \epsilon$ et $Y \rightarrow \epsilon$. On peut cependant légèrement la modifier pour obtenir une grammaire de type 1 qui engendre le même langage, c'est-à-dire $\{a^nb^nc^n ~|~ n \in \mathbb{N}\}$
+
+
+\[
+\begin{cases}
+S \rightarrow XY~|~\epsilon \\
+X \rightarrow aXbZ~|~abZ\\
+Zb \rightarrow bZ \\
+ZY \rightarrow Yc \\
+bY \rightarrow b
+\end{cases}
+\]
+
+\end{example}
+
+\begin{exercice}
+Montrer que la grammaire de l'exemple \ref{grammanbncnbis} engendre bien le langage $\{a^nb^nc^n ~|~ n \in \mathbb{N}\}$.
+\end{exercice}
+
+\paragraph{Remarque} Une grammaire de type 2 \textbf{n}'est \textbf{pas forcément} une grammaire de type 1, à cause des règles de la forme $A \rightarrow \epsilon$. Il existe cependant un algorithme qui prend une grammaire de type 2 et en renvoie une autre, également de type 2, engendrant le même langage sans règle de la forme $A \rightarrow \epsilon$, sauf éventuellement pour l'axiome. Cet algorithme sera décrit en ???. %TODO
+
+
+\begin{lemma}
+Les langages engendrés par des grammaires de type 2 forment un sous-ensemble strict des langages engendrés par des grammaires de type 1. Autrement dit, si un langage est engendré par une grammaire de type 2, alors il l'est également par une grammaire de type 1, mais il existe au moins un (et même plein) langage engendré par une grammaire de type 1 qui ne peut pas être engendré par une grammaire de type 2.  
+\end{lemma}
+
+\begin{proof}
+L'inclusion non-stricte est encore une fois simple avec la remarque précédente. En effet, soit $L$ un langage engendré par la grammaire de type 2 $G$, alors on peut construire $G'$ une gramaire de type 2 qui est également de type 1 et engendre toujours $L$.
+
+Pour l'aspect strict de cette inclusion, la grammaire de type 1 de l'exemple \ref{grammanbncnbis} reconnaît le langage $\{a^nb^nc^n ~|~ n \in \mathbb{N}\}$. On n'en donnera malheureusement pas la preuve ici, mais ce langage n'est pas engendrable par une grammaire de type 2\footnote{Vous pouvez cependant essayer de vous en convaincre en essayant d'écrire une telle grammaire !}.
 \end{proof}
