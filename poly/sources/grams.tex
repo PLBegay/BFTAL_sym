@@ -117,7 +117,7 @@ Quel est le langage engendré par la grammaire de l'exemple \ref{LRgram} ?
 
 \begin{exercice}
 \label{grammab}
-Quel est le langage reconnu par la grammaire suivante ?
+Quel est le langage engendré par la grammaire suivante ?
 
 \[
 \begin{cases}
@@ -131,7 +131,7 @@ B \rightarrow bB~|~\epsilon
 
 \begin{exercice}
 \label{grammsigma}
-Quel est le langage reconnu par la grammaire suivante ?
+Quel est le langage engendré par la grammaire suivante ?
 
 \[
 \begin{cases}
@@ -438,7 +438,7 @@ Le langage qu'elle engendre est reconnu par l'automate suivant :
 \end{example}
 
 \begin{example}
-L'automate de l'exemple \ref{autopasaba} est reconnu par la grammaire qui suit, où $0$ est remplacé par $A$, $1$ par $B$ etc, et $A$ est l'axiome.
+L'automate de l'exemple \ref{autopasaba} est simulé par la grammaire qui suit, où $0$ est remplacé par $A$, $1$ par $B$ etc, et $A$ est l'axiome.
 
 \[
 \begin{cases}
@@ -492,7 +492,7 @@ S \rightarrow \epsilon
 \end{cases}
 \]
 
-est une grammaire de type 2, qui reconnaît le langage $\{a^nb^n ~|~n \in \mathbb{N}\}$
+est une grammaire de type 2, qui engendre le langage $\{a^nb^n ~|~n \in \mathbb{N}\}$
 \end{example}
 
 \paragraph{Remarque} Toute grammaire de type 3 est également une grammaire de type 2, puisque toute règle d'une grammaire de type 3 a bien un seul symbole à gauche de toute règle.
@@ -504,7 +504,7 @@ Les langages engendrés par des grammaires de type 3 forment un sous-ensemble st
 \begin{proof}
 L'inclusion non-stricte est triviale avec la remarque précédente. En effet, soit $L$ un langage engendré par la grammaire de type 3 $G$, alors $G$ est également une gramaire de type 2 qui, de fait, engendre toujours $L$.
 
-Pour l'aspect strict de cette inclusion, la grammaire de type 2 de l'exemple \ref{gramanbn} reconnaît le langage $\{a^nb^n ~|~ n \in \mathbb{N}\}$. Or, on a vu en \ref{limiterecauto} que ce langage n'était pas reconnaissable par automate. Puisque les grammaires de type 3 ont la même expressivité que ces derniers (cf. \ref{kleeneplusplus}), il n'en existe pas qui engendre ce langage.
+Pour l'aspect strict de cette inclusion, la grammaire de type 2 de l'exemple \ref{gramanbn} engendre le langage $\{a^nb^n ~|~ n \in \mathbb{N}\}$. Or, on a vu en \ref{limiterecauto} que ce langage n'était pas reconnaissable par automate. Puisque les grammaires de type 3 ont la même expressivité que ces derniers (cf. \ref{kleeneplusplus}), il n'en existe pas qui engendre ce langage.
 \end{proof}
 
 
@@ -569,5 +569,5 @@ Les langages engendrés par des grammaires de type 2 forment un sous-ensemble st
 \begin{proof}
 L'inclusion non-stricte est encore une fois simple avec la remarque précédente. En effet, soit $L$ un langage engendré par la grammaire de type 2 $G$, alors on peut construire $G'$ une gramaire de type 2 qui est également de type 1 et engendre toujours $L$.
 
-Pour l'aspect strict de cette inclusion, la grammaire de type 1 de l'exemple \ref{grammanbncnbis} reconnaît le langage $\{a^nb^nc^n ~|~ n \in \mathbb{N}\}$. On n'en donnera malheureusement pas la preuve ici, mais ce langage n'est pas engendrable par une grammaire de type 2\footnote{Vous pouvez cependant essayer de vous en convaincre en essayant d'écrire une telle grammaire !}.
+Pour l'aspect strict de cette inclusion, la grammaire de type 1 de l'exemple \ref{grammanbncnbis} engendre le langage $\{a^nb^nc^n ~|~ n \in \mathbb{N}\}$. On n'en donnera malheureusement pas la preuve ici, mais ce langage n'est pas engendrable par une grammaire de type 2\footnote{Vous pouvez cependant essayer de vous en convaincre en essayant d'écrire une telle grammaire !}.
 \end{proof}
