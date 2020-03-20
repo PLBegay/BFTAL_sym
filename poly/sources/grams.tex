@@ -82,6 +82,35 @@ Quelques exemples de dérivations dans cette grammaire :
 
 \end{example}
 
+\paragraph{Remarque} Quand on a plusieurs règles de la forme
+
+\[
+\begin{cases}
+u \rightarrow v_1 \\
+... \\
+u \rightarrow v_n
+\end{cases}
+\]
+
+on pourra gagner de la place en écrivant 
+
+\[
+\begin{cases}
+u \rightarrow v_1~|~...~|~v_n
+\end{cases}
+\]
+
+Par exemple, la grammaire de l'exemple \ref{LRgram} peut également s'écrire 
+
+\[
+\begin{cases}
+S \rightarrow LaaR \\
+L \rightarrow Lb~|~ab \\
+R \rightarrow bR~|~ba 
+\end{cases}
+\]
+
+
 \begin{exercice}
 Quel est le langage engendré par la grammaire de l'exemple \ref{LRgram} ?
 \end{exercice}
@@ -92,12 +121,9 @@ Quel est le langage reconnu par la grammaire suivante ?
 
 \[
 \begin{cases}
-S \rightarrow A \\
-S \rightarrow B \\
-A \rightarrow aA \\
-A \rightarrow \epsilon \\
-B \rightarrow bB \\
-B \rightarrow \epsilon
+S \rightarrow A~|~B \\
+A \rightarrow aA~|~\epsilon \\
+B \rightarrow bB~|~\epsilon
 \end{cases}
 \]
 
@@ -109,9 +135,7 @@ Quel est le langage reconnu par la grammaire suivante ?
 
 \[
 \begin{cases}
-S \rightarrow aS \\
-S \rightarrow bS \\
-S \rightarrow \epsilon 
+S \rightarrow aS~|~bS~|~\epsilon 
 \end{cases}
 \]
 
@@ -127,8 +151,7 @@ On a jusqu'ici seulement vu des exemples de grammaires avec un seul non-terminal
 
 \[
 \begin{cases}
-S \rightarrow SABC \\
-S \rightarrow \epsilon \\
+S \rightarrow SABC~|~\epsilon \\
 AB \rightarrow BA \\
 BA \rightarrow AB \\
 AC \rightarrow CA \\
@@ -173,10 +196,8 @@ La grammaire de l'exemple \ref{LRgram} s'écrit
 \[
 \big \langle \{a,b\},\{S,L,R\},S, \begin{cases}
 S \rightarrow LaaR \\
-L \rightarrow Lb \\
-L \rightarrow ab \\
-R \rightarrow bR \\
-R \rightarrow ba
+L \rightarrow Lb~|~ab \\
+R \rightarrow bR~|~ba
 \end{cases}
  \big \rangle
 \]
@@ -300,11 +321,8 @@ où $A$ et $B$ sont des symboles non-terminaux, et $a$ un terminal.
 La grammaire 
 \[
 \begin{cases}
-S \rightarrow Sa \\
-S \rightarrow Ta \\
-S \rightarrow a \\
-T \rightarrow Tb \\
-T \rightarrow b
+S \rightarrow Sa~|~Ta~|~a \\
+T \rightarrow Tb~|~b
 \end{cases}
 \]
 est une grammaire linéaire à gauche. 
@@ -333,9 +351,7 @@ où $A$ et $B$ sont des symboles non-terminaux, et $a$ un terminal.
 La grammaire 
 \[
 \begin{cases}
-S \rightarrow aS \\
-S \rightarrow bS \\
-S \rightarrow \epsilon 
+S \rightarrow aS~|~bS~|~\epsilon
 \end{cases}
 \]
 est une grammaire linéaire à droite. 
@@ -349,9 +365,7 @@ Quel est le langage engendré par la grammaire de l'exemple \ref{gramlind} ?
 \paragraph{Remarque} Les grammaires de type 3, ou régulières, est l'ensemble des grammaires linéaires à gauche et des grammaires linéaires à droite, mais sans mélange. Par exemple, la grammaire 
 \[
 \begin{cases}
-S \rightarrow aS \\
-S \rightarrow Sb \\
-S \rightarrow \epsilon 
+S \rightarrow aS~|~Sb~|~\epsilon
 \end{cases}
 \]
 \textbf{n}'est \textbf{pas} une grammaire de type 3. 
@@ -376,25 +390,80 @@ Les langages reconnus par automate fini sont exactement ceux engendrés par des 
 \end{theorem}
 
 \begin{proof}
+Comme dans le théorème de Kleene original, on propose comme preuve une tradition des grammaires vers les automates, et inversement. Contrairement aux expressions rationnelles, les grammaires de type 3 ont un fonctionnement très similaire aux automates finis, les traductions sont donc très simples.
+
 Soit $G$ une grammaire de type 3. Puisque les grammaires linéaires à gauche et à droite engendrent les mêmes langages, on peut supposer que $G$ est une grammaire linéaire à droite. On crée un automate dont les états sont les symboles non-terminaux de $G$, ainsi qu'un état supplémentaire et terminal $T$ (pour terminus). L'état initial est son axiome. Toute règle $A \rightarrow aB$ devient une transition de $A$ vers $B$ en lisant $a$. Les règles $A \rightarrow a$ deviennent des transitions de $A$ vers $T$ en $a$. Enfin, on rend terminal tout état $A$ tel qu'il existe une règle $A \rightarrow \epsilon$.
 
 Soit $A$ un automate fini. On déterminise $A$ en $A_{det}$. On crée une grammaire dont les symboles non-terminaux sont les états de $A_{det}$. L'axiome est l'état initial de $A_{det}$. Toute transition $A \xrightarrow{a} B$ se traduit par une règle $A \rightarrow aB $. Pour tout état terminal $A$, on ajoute une règle $A \rightarrow \epsilon$.
 \end{proof}
 
 \begin{example}
-TODO
+Soit la grammaire suivante :
+\[
+\begin{cases}
+S \rightarrow aS~|~aA~|~bA~|~a \\
+A \rightarrow aB~|~b~|~\epsilon \\
+B \rightarrow b~|~aS~|~bS 
+\end{cases}
+\]
+
+Le langage qu'elle engendre est reconnu par l'automate suivant :
+
+
+\begin{figure}[!ht]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.9cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state] (S)                    {$S$};
+  \node[state] (A)      [right of=S]                {$A$};  
+  \node[state,accepting] (B)      [right of=A]                {$B$};   
+  \node[state,accepting] (T)      [above of=A]                {$T$};    
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(S) edge      [loop above]        node {$a$} (S)
+(S) edge      []        node {$a,b$} (A)
+(S) edge      []        node {$a$} (T)
+(A) edge      []        node {$b$} (T)
+(A) edge      []        node {$a$} (B)
+(B) edge      []        node {$b$} (T)
+(B) edge      [bend left]        node {$a,b$} (S);
+\end{tikzpicture}
+\end{figure}
+
 \end{example}
 
 \begin{example}
-TODO
+L'automate de l'exemple \ref{autopasaba} est reconnu par la grammaire qui suit, où $0$ est remplacé par $A$, $1$ par $B$ etc, et $A$ est l'axiome.
+
+\[
+\begin{cases}
+A \rightarrow bA~|~aB \\
+B \rightarrow aB~|~bC \\
+C \rightarrow aD~|~bA \\
+D \rightarrow aD~|~bD
+\end{cases}
+\]
+
 \end{example}
 
 \begin{exercice}
-TODO
+Traduire en automate la grammaire 
+\[
+\begin{cases}
+S \rightarrow aS~|~bB~|~a~|~\epsilon \\
+A \rightarrow aS~|~\epsilon \\
+B \rightarrow a
+\end{cases}
+\]
+
 \end{exercice}
 
 \begin{exercice}
-TODO
+Traduir en grammaire l'automate de l'exemple \ref{detex1}.
 \end{exercice}
 
 
