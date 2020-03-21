@@ -193,6 +193,7 @@ Le langage engendré par cette grammaire est donc celui des mots contenant autan
  
  
 \begin{example}
+\label{grammLR}
 La grammaire de l'exemple \ref{LRgram} s'écrit 
 
 \[
@@ -603,3 +604,38 @@ On aligne ces deux listes, cad. qu'on a maintenant une liste de paires (un mot e
 
 Il n'est par contre pas engendré par une grammaire de type $1$. En effet, si une telle grammaire $G$ existait, elle serait à une position $j$ de la liste des grammaires. Dans ce cas, le $j^{eme}$ mot appartient à $L$ ssi. il n'appartient pas à $L_G$. La grammaire $G$ ne peut donc en fait pas engendrer $L$.
 \end{proof}
+
+\section{Utilisation de grammaires algébriques}
+
+On finit ce chapitre en présentant quelques spécificités des grammaires algébriques, ou de type 2.
+
+\subsection{Arbres de dérivation}
+
+Puisque les grammaires algébriques ne peuvent pas avoir plus d'un symbole à gauche de leurs règles, leurs dérivations se représentent efficacement sous forme d'arbre, où chaque noeud interne est un symbole non-terminal, dont les descendants sont les symboles produits par application d'une règle. Le mot engendré est alors la concaténation, de la gauche vers la droite (parcours préfixe) des symboles aux feuilles.
+
+\begin{example}
+\label{gramparen}
+Soit la grammaire suivante, où "(" et ")" sont des symboles terminaux :
+\[
+\begin{cases}
+S \rightarrow (S)S ~|~ \epsilon
+\end{cases}
+\]
+
+Le mot \textcolor{blue}{(}\textcolor{red}{()}\textcolor{blue}{)}\textcolor{orange}{()} peut par exemple être dérivé de la façon suivante :
+
+\begin{figure}[H]
+\center
+\Tree[.S {\textcolor{blue}{(}} [.S {\textcolor{red}{(}} [.S {$\epsilon$} ] {\textcolor{red}{)}} [.S {$\epsilon$}  ]  ] {\textcolor{blue}{)}} [.S {\textcolor{orange}{(}} [.S {$\epsilon$}  ] {\textcolor{orange}{)}} [.S {$\epsilon$}  ]  ]  ]
+\end{figure}
+
+\end{example}
+
+\begin{exercice}
+Quel est le langage engendré par la grammaire de l'exemple \ref{gramparen} ?
+\end{exercice}
+
+\begin{exercice}
+Donner un arbre de dérivation du mot abbbaaba dans la grammaire de l'exemple \ref{grammLR}.
+\end{exercice}
+
