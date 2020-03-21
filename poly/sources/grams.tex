@@ -520,7 +520,7 @@ Pour l'aspect strict de cette inclusion, la grammaire de type 2 de l'exemple \re
 
 \subsection{Grammaires de type 1, ou contextuelles}
 
-Les grammaires de type 1, appelées \textbf{grammaires contextuelles} permettent de mettre n'importe quel mot (contenant au moins un symbole non-terminal) à gauche d'une flèche. La seule contrainte est désormais qu'on ne permet pas d'avoir le mot vide à droite d'une flèche, sauf cas particulier pour capturer le mot vide.
+Les grammaires de type 1, appelées \textbf{grammaires contextuelles} (\textit{context-sensitive}) permettent de mettre n'importe quel mot (contenant au moins un symbole non-terminal) à gauche d'une flèche. La seule contrainte est désormais qu'on ne permet pas d'avoir le mot vide à droite d'une flèche, sauf cas particulier pour capturer le mot vide.
 
 \begin{definition}{Grammaire contextuelle}{}
 Une grammaire contextuelle est une grammaire dont toutes les règles sont de la forme 
@@ -578,4 +578,28 @@ Les langages engendrés par des grammaires de type 2 forment un sous-ensemble st
 L'inclusion non-stricte est encore une fois simple avec la remarque précédente. En effet, soit $L$ un langage engendré par la grammaire de type 2 $G$, alors on peut construire $G'$ une gramaire de type 2 qui est également de type 1 et engendre toujours $L$.
 
 Pour l'aspect strict de cette inclusion, la grammaire de type 1 de l'exemple \ref{grammanbncnbis} engendre le langage $\{a^nb^nc^n ~|~ n \in \mathbb{N}\}$. On n'en donnera malheureusement pas la preuve ici, mais ce langage n'est pas engendrable par une grammaire de type 2\footnote{Vous pouvez cependant essayer de vous en convaincre en essayant d'écrire une telle grammaire !}.
+\end{proof}
+
+
+
+
+
+
+\subsection{Grammaires de type 0, ou générales}
+
+Les grammaires de type 0, appelées \textbf{grammaires générales}, sont tout simplement l'ensemble des grammaires formelles. Elles n'ont donc aucune contrainte, sinon toujours celle d'avoir au moins un symbole non-terminal à gauche de toute règle.
+Il va sans dire que toute grammaire présenté jusqu'ici ou dans la suite de ce document constitue une grammaire de type $0$. 
+
+\begin{lemma}
+Les langages engendrés par des grammaires de type 1 forment un sous-ensemble strict des langages engendrés par des grammaires de type 0. Autrement dit, si un langage est engendré par une grammaire de type 1, alors il l'est également par une grammaire de type 0, mais il existe au moins un (et même plein) langage engendré par une grammaire de type 0 qui ne peut pas être engendré par une grammaire de type 1.  
+\end{lemma}
+
+\begin{proof}
+L'inclusion non-stricte est triviale, puisque toute grammaire de type 1 est également une grammaire de type 0.
+
+Pour l'aspect strict de cette inclusion, c'est un peu plus compliqué, puisqu'il n'existe pas - à notre connaissance - d'exemple très concret et naturel de langage strictement engendrable par une grammaire de type 0. On renverra par contre à \href{https://cs.stackexchange.com/a/56634}{cet exemple abstrait et très amusant}\footnote{https://cs.stackexchange.com/a/56634}. Informellement, l'idée est de faire une liste (infinie) des mots sur un alphabet, ainsi qu'une liste (également infinie) des grammaires de type 1 sur le même alphabet (c'est un peu technique, mais on peut écrire un algorithme qui parcourt cet ensemble sans rien oublier). 
+
+On aligne ces deux listes, cad. qu'on a maintenant une liste de paires (un mot et une grammaires, associés arbitrairement). On définit maintenant $L$ le langage des mots qui n'appartiennent pas au langage engendré par la grammaire qui leur est associée. Sans entrer dans les détails, ce langage est bien engendré par une grammaire de type 0 consistant en gros en un "simulateur de grammaire de type 1".
+
+Il n'est par contre pas engendré par une grammaire de type $1$. En effet, si une telle grammaire $G$ existait, elle serait à une position $j$ de la liste des grammaires. Dans ce cas, le $j^{eme}$ mot appartient à $L$ ssi. il n'appartient pas à $L_G$. La grammaire $G$ ne peut donc en fait pas engendrer $L$.
 \end{proof}
