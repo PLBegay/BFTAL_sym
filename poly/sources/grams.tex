@@ -451,9 +451,9 @@ L'automate de l'exemple \ref{autopasaba} est simulé par la grammaire qui suit, 
 
 \[
 \begin{cases}
-A \rightarrow bA~|~aB \\
-B \rightarrow aB~|~bC \\
-C \rightarrow aD~|~bA \\
+A \rightarrow bA~|~aB~|~ \epsilon \\
+B \rightarrow aB~|~bC~|~ \epsilon \\
+C \rightarrow aD~|~bA~|~ \epsilon \\
 D \rightarrow aD~|~bD
 \end{cases}
 \]
@@ -639,3 +639,108 @@ Quel est le langage engendré par la grammaire de l'exemple \ref{gramparen} ?
 Donner un arbre de dérivation du mot abbbaaba dans la grammaire de l'exemple \ref{grammLR}.
 \end{exercice}
 
+Cette représentation ne prend pas en compte l'ordre dans lequel les règles sont appliquées. Mais vu que les règles des grammaires algébriques ne peuvent pas prendre en compte le contexte, l'ordre importe peu, on reviendra toujours au même, par exemple 
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.5cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[] (0)                    {$(S)S$};
+  \node[] (1)      [below left of=0]                {$()S$};  
+  \node[] (2)      [below right of=0]                {$(S)$};
+  \node[] (3)      [below=3cm of 0]                {$()$};  
+ 
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(0) edge      []        node{} (1)
+(0) edge      []        node{} (2)
+(1) edge      []        node{} (3)
+(2) edge      []        node{} (3)
+;
+
+\end{tikzpicture}
+\end{figure}
+
+En plus d'être très lisible, les arbres de dérivations donnent une décompostion structurelle du mot dérivé. La structure d'un mot (ou d'une phrase) est évidemment cruciale pour l'interprétation. Soit par exemple la grammaire suivante, où "$+$", "$\times$", "(" et ")" sont des symboles terminaux et $n$ représente n'importe quel nombre.
+
+\[
+\begin{cases}
+S \rightarrow S + S ~|~ S \times S ~|~ (S) ~|~ n
+\end{cases}
+\]
+
+Sans définir de priorité sur les opérateurs, le mot $n + n \times n$ est ambigü. Mais, si on en regarde la dérivation (cf. la figure \ref{deuxderivs}), on comprend s'il s'agit de $n + (n \times n)$ (arbre gauche) ou $(n + n) \times n$ (arbre droit).
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \Tree[.S [.S n ] {$+$} [.S [.S n ] {$\times$} [.S n ] ] ]
+    \end{minipage}\hfill
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \Tree[.S [.S [.S n ] {$+$} [.S n ] ] {$\times$} [.S n ] ]
+    \end{minipage}
+	\caption{Deux dérivations de $n + n \times n$}
+	\label{deuxderivs}
+\end{figure}
+
+Pour des exemples plus linguistiques, on renvoie évidemment le lecteur ou la lecture à ses cours de syntaxe.
+
+\begin{definition}{Grammaire algébrique ambiguë}{}
+Une grammaire algébrique est dite \textbf{ambiguë} ssi. son langage engendré contient au moins un mot admettant deux arbres de dérivation différents. 
+\end{definition}
+
+\begin{definition}{Pouvoir génératif}{}
+Deux grammaires algébriques ont le même \textbf{pouvoir génératif faible} ssi elles engendrent les mêmes mots, mais pas forcément avec le même langage. Elles ont le même \textbf{pouvoir génératif fort} ssi. elles engendrent des arbres équivalents.
+\end{definition}
+
+\begin{example}
+La grammaire 
+
+
+\[
+\begin{cases}
+S \rightarrow S + T ~|~ S \times T ~|~ T \\
+T \rightarrow (S) ~|~ n
+\end{cases}
+\]
+
+n'est pas ambiguë : le mot $n + n \times n$ a une seule dérivation, où l'addition est effectuée avant la multiplication\footnote{Cette grammaire n'est donc pas une bonne représentation de l'arithmétique standard, puisqu'elle n'en respecte pas les priorités. Une bonne grammaire algébrique faisant ça existe, mais est plus compliquée. En pratique, si vous écrivez avec un outil comme yacc un parser sous la forme d'une grammaire algébrique, vous pourrez écrire une telle grammaire de façon naïve en précisant les priorités entre opérateurs, et une bonne grammaire sera générée automatiquement.}. Si on veut que la multiplication soit effectuée avant l'addition, on est obligé de faire apparaître des parenthèses :
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \Tree[.S [.S [.T n ] + [.T n ] ] {$\times$} [.T n ] ]
+        \caption{Dérivation de $n + n \times n$}
+    \end{minipage}\hfill
+    \begin{minipage}{0.45\textwidth}
+        \centering
+         \Tree[.S [.S [.T n ] ] + [.T ( [.S [.S [.T n ] ] {$\times$} [.T n ] ] ) ] ]
+		 \caption{Dérivation de $n + (n \times n)$}
+    \end{minipage}
+\end{figure}
+
+Les deux grammaires d'opérations arithmétiques présentées ont le même pouvoir génératif faible, mais pas fort.
+
+\end{example}
+
+\begin{definition}{Langage intrinsèquement ambigü}{}
+Un langage algébrique (ie. engendré par une grammaire algébrique) est \textbf{intrinsèquement ambiguë} ssi. toutes les grammaires algébriques le reconnaissant sont ambigüs.
+\end{definition}
+
+\begin{example}
+Le langage des opérations arithmétiques décrit plus haut est engendré par au moins une grammaire ambiguë, mais aussi une non-ambiguë. Ce langage n'est donc pas intrinsèquement ambiguë. 
+\end{example}
+
+\begin{example}
+Le langage $\{a^nba^mba^pba^q ~|~ n,m,p,q \in \mathbb{N} \text{ et } ((n \geq m \text{ et } p \geq q) \text{ ou } (n \geq q \text{ et } m \geq p))\}$. Voir le DM2 pour la justification.
+\end{example}
+
+\subsection{Nettoyage des grammaires algébriques}
