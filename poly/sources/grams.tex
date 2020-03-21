@@ -16,7 +16,7 @@ S \rightarrow abS
 \end{cases}
 \]
 
-Cette grammaire contient un seul symbole non-terminal, S. Il s'agit donc automatiquement de l'axiome. Le symbole S peut se transformer en $\epsilon$ (première règle) ou en $abS$ (deuxième règle). Cette grammaire génère l'ensemble des mots composés uniquement de symboles terminaux ($a$ et $b$) qu'on peut obtenir en partant de l'axiome S et en appliquant autant de fois qu'on veut les règles données. Dans ce qui suit, on écrira $\rightarrow_1$ pour une application de la première règle et $\rightarrow_2$ pour la seconde.
+Cette grammaire contient un seul symbole non-terminal, S. Il s'agit donc automatiquement de l'axiome. Le symbole S peut se transformer en $\epsilon$ (première règle) ou en $abS$ (deuxième règle). Une grammaire génère l'ensemble des mots composés uniquement de symboles terminaux (ici $a$ et $b$) qu'on peut obtenir en partant de l'axiome et en appliquant autant de fois qu'on veut les règles données. Dans ce qui suit, on écrira $\rightarrow_1$ pour une application de la première règle et $\rightarrow_2$ pour la seconde.
 
 On peut par exemple obtenir le mot $ab$ de la façon suivante :
 
@@ -109,6 +109,8 @@ L \rightarrow Lb~|~ab \\
 R \rightarrow bR~|~ba 
 \end{cases}
 \]
+
+Dans ce cas, $L \rightarrow Lb$ est la deuxième règle de la grammaire, tandis que $L \rightarrow ab$ en est la troisième.
 
 
 \begin{exercice}
@@ -204,21 +206,27 @@ R \rightarrow bR~|~ba
 
 
 \begin{definition}{Réécriture / dérivation immédiate}{}
-Soient $p$, $s$ et $g$ des mots sur l'alphabet $(\Sigma \cup V)$, et $f \in (\Sigma \cup V)^*V(\Sigma \cup V)^*$. Si la règle $r$ est de la forme $f \rightarrow g$, alors le mot $pfs$ se \textbf{réécrit} (ou dérive) \textbf{immédiatement} en $pgs$ via la règle $r$, ce qu'on note 
+Soient $p$, $s$ et $g$ des mots sur l'alphabet $(\Sigma \cup V)$ (ils sont donc potentiellement vides), et $f \in (\Sigma \cup V)^*V(\Sigma \cup V)^*$. Si la règle $r$ est de la forme $f \rightarrow g$, alors le mot $pfs$ se \textbf{réécrit} (ou dérive) \textbf{immédiatement} en $pgs$ via la règle $r$, ce qu'on note 
 
 \[
 pfs \rightarrow_r pgs
 \]
+
+Dit autrement, si le mot $f$ apparaît dans le contexte $p \_ s$, alors on peut transformer $f$ en $g$ en gardant le contexte.
 
 Plus généralement, étant donnée une grammaire $G$, on dit qu'elle réécrit (ou dérive) immédiatement un mot $u$ en $v$ ssi. il existe une règle $r$ dans la grammaire telle que $u$ se réécrit immédiatement en $v$ via la règle $r$. On écrit ceci 
 
 \[
 pfs \rightarrow_G pgs
 \]
+
+Quand il n'y a pas d'ambiguïté sur la grammaire étudiée, on pourra se permettre de ne pas noter le $G$ et écrire 
+
+\[
+pfs \rightarrow pgs
+\]
+
 \end{definition}
-
-\paragraph{Remarque} $u \rightarrow_r v$ est parfois noté $u \xrightarrow{r} v$. De plus, quand il n'y a pas d'ambiguïté sur la grammaire étudiée, on note $u \rightarrow v$ plutôt que $u \rightarrow_G v$.
-
 
 \end{example}
 
@@ -279,7 +287,7 @@ Donner une grammaire qui engendre le langage $\{a^nb^n ~|~ n \in \mathbb{N}\}$
 
 \begin{exercice}
 \label{grammanbncn}
-Quel est le langage engendré par la grammaire qui suit ?
+Montrer que la grammaire suivante engendre le langage $\{a^nb^nc^n ~|~ n \in \mathbb{N}\}$
 
 \[
 \begin{cases}
@@ -383,10 +391,10 @@ On n'entrera pas ici dans les détails, qui dépassent le cadre de ce cours. Eta
 \end{exercice}
 
 \subsubsection{Une extension du théorème de Kleene}
-\label{kleeneplusplus}
 On a vu dans le chapitre \ref{hierarchie} que les langages pouvant être décrits par des expressions rationnelles et ceux définissables par automate étaient les mêmes. Ce résultat peut s'étendre aux grammaires de type 3.
 
 \begin{theorem}
+\label{kleeneplusplus}
 Les langages reconnus par automate fini sont exactement ceux engendrés par des grammaires de type 3.
 \end{theorem}
 
@@ -420,8 +428,8 @@ Le langage qu'elle engendre est reconnu par l'automate suivant :
 
 
   \node[initial,state] (S)                    {$S$};
-  \node[state] (A)      [right of=S]                {$A$};  
-  \node[state,accepting] (B)      [right of=A]                {$B$};   
+  \node[state,accepting] (A)      [right of=S]                {$A$};  
+  \node[state] (B)      [right of=A]                {$B$};   
   \node[state,accepting] (T)      [above of=A]                {$T$};    
 
   \path %(I) edge[loop above]              node {$a,b$} (I)
@@ -464,7 +472,7 @@ B \rightarrow a
 \end{exercice}
 
 \begin{exercice}
-Traduir en grammaire l'automate de l'exemple \ref{detex1}.
+Traduire en grammaire l'automate de l'exemple \ref{detex1}.
 \end{exercice}
 
 
@@ -504,7 +512,7 @@ Les langages engendrés par des grammaires de type 3 forment un sous-ensemble st
 \begin{proof}
 L'inclusion non-stricte est triviale avec la remarque précédente. En effet, soit $L$ un langage engendré par la grammaire de type 3 $G$, alors $G$ est également une gramaire de type 2 qui, de fait, engendre toujours $L$.
 
-Pour l'aspect strict de cette inclusion, la grammaire de type 2 de l'exemple \ref{gramanbn} engendre le langage $\{a^nb^n ~|~ n \in \mathbb{N}\}$. Or, on a vu en \ref{limiterecauto} que ce langage n'était pas reconnaissable par automate. Puisque les grammaires de type 3 ont la même expressivité que ces derniers (cf. \ref{kleeneplusplus}), il n'en existe pas qui engendre ce langage.
+Pour l'aspect strict de cette inclusion, la grammaire de type 2 de l'exemple \ref{gramanbn} engendre le langage $\{a^nb^n ~|~ n \in \mathbb{N}\}$. Or, on a vu en \ref{limiterecauto} que ce langage n'était pas reconnaissable par automate. Puisque les grammaires de type 3 ont la même expressivité que ces derniers (théorème \ref{kleeneplusplus}), il n'en existe pas qui engendre ce langage.
 \end{proof}
 
 
@@ -512,7 +520,7 @@ Pour l'aspect strict de cette inclusion, la grammaire de type 2 de l'exemple \re
 
 \subsection{Grammaires de type 1, ou contextuelles}
 
-Les grammaires de type 1, appelées \textbf{grammaires contextuelles}, n'ont aucune contrainte quant à la partie droite des règles. On peut désormais mettre n'importe quel mot (contenant au moins un symbole non-terminal) à gauche d'une flèche. La seule contrainte est qu'on ne permet pas d'avoir le mot vide à droite d'une flèche, sauf cas particulier pour capturer le mot vide.
+Les grammaires de type 1, appelées \textbf{grammaires contextuelles} permettent de mettre n'importe quel mot (contenant au moins un symbole non-terminal) à gauche d'une flèche. La seule contrainte est désormais qu'on ne permet pas d'avoir le mot vide à droite d'une flèche, sauf cas particulier pour capturer le mot vide.
 
 \begin{definition}{Grammaire contextuelle}{}
 Une grammaire contextuelle est une grammaire dont toutes les règles sont de la forme 
@@ -540,7 +548,7 @@ Ainsi, on permet d'engendrer $\epsilon$ dès le début, ou de faire une généra
 
 \begin{example}
 \label{grammanbncnbis}
-La grammaire de l'exemple \ref{grammanbncn} \textbf{n}'est \textbf{pas} une grammaire de type 1, à cause des règles $X \rightarrow \epsilon$ et $Y \rightarrow \epsilon$. On peut cependant légèrement la modifier pour obtenir une grammaire de type 1 qui engendre le même langage, c'est-à-dire $\{a^nb^nc^n ~|~ n \in \mathbb{N}\}$
+La grammaire de l'exercice \ref{grammanbncn} \textbf{n}'est \textbf{pas} une grammaire de type 1, à cause des règles $X \rightarrow \epsilon$ et $Y \rightarrow \epsilon$. On peut cependant légèrement la modifier pour obtenir une grammaire de type 1 qui engendre le même langage, c'est-à-dire $\{a^nb^nc^n ~|~ n \in \mathbb{N}\}$
 
 
 \[
@@ -556,7 +564,7 @@ bY \rightarrow b
 \end{example}
 
 \begin{exercice}
-Montrer que la grammaire de l'exemple \ref{grammanbncnbis} engendre bien le langage $\{a^nb^nc^n ~|~ n \in \mathbb{N}\}$.
+Montrer que la grammaire de l'exemple \ref{grammanbncnbis} engendre bien le langage \newline $\{a^nb^nc^n ~|~ n \in \mathbb{N}\}$.
 \end{exercice}
 
 \paragraph{Remarque} Une grammaire de type 2 \textbf{n}'est \textbf{pas forcément} une grammaire de type 1, à cause des règles de la forme $A \rightarrow \epsilon$. Il existe cependant un algorithme qui prend une grammaire de type 2 et en renvoie une autre, également de type 2, engendrant le même langage sans règle de la forme $A \rightarrow \epsilon$, sauf éventuellement pour l'axiome. Cet algorithme sera décrit en ???. %TODO
