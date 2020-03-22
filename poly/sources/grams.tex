@@ -569,8 +569,7 @@ bY \rightarrow b
 Montrer que la grammaire de l'exemple \ref{grammanbncnbis} engendre bien le langage \newline $\{a^nb^nc^n ~|~ n \in \mathbb{N}\}$.
 \end{exercice}
 
-\paragraph{Remarque} Une grammaire de type 2 \textbf{n}'est \textbf{pas forcément} une grammaire de type 1, à cause des règles de la forme $A \rightarrow \epsilon$. Il existe cependant un algorithme qui prend une grammaire de type 2 et en renvoie une autre, également de type 2, engendrant le même langage sans règle de la forme $A \rightarrow \epsilon$, sauf éventuellement pour l'axiome. Cet algorithme sera décrit en ???. %TODO
-
+\paragraph{Remarque} Une grammaire de type 2 \textbf{n}'est \textbf{pas forcément} une grammaire de type 1, à cause des règles de la forme $A \rightarrow \epsilon$. Il existe cependant un algorithme qui prend une grammaire de type 2 et en renvoie une autre, également de type 2, engendrant le même langage $\epsilon$-production, sauf éventuellement pour l'axiome. Cet algorithme sera décrit en \ref{gramepsilon} (cf. l'exemple \ref{gramelimeps1}). 
 
 \begin{lemma}
 Les langages engendrés par des grammaires de type 2 forment un sous-ensemble strict des langages engendrés par des grammaires de type 1. Autrement dit, si un langage est engendré par une grammaire de type 2, alors il l'est également par une grammaire de type 1, mais il existe au moins un (et même plein) langage engendré par une grammaire de type 1 qui ne peut pas être engendré par une grammaire de type 2.  
@@ -793,6 +792,7 @@ Un symbole $A$ est sans production ssi. il n'existe pas de dérivation $A \right
 \end{definition}
 
 \begin{example}
+\label{gramsymbsinutiles1}
 Dans la grammaire 
 
 \[
@@ -812,7 +812,7 @@ possède deux symboles inutiles. En effet, $A$ est sans production (après en av
 \end{example}
 
 \subsubsection{Elimination d'$\epsilon$-productions}
-
+\label{gramepsilon}
 On doit d'abord calculer l'ensemble $K$ des symboles non-terminaux $A$ tels que $A \rightarrow^* \epsilon$, cad. les symboles qui peuvent se réécrire en $\epsilon$.
 
 Déjà, pour toute règle de la forme $A \rightarrow \epsilon$, on met évidemment $A$ dans $K$. On procède ensuite par point fixe, en inspectant les différentes règles. A chaque règle $B \rightarrow \alpha$, si $\alpha$ est composé uniquement de symboles de $K$, alors $\alpha$ peut se réécrire en $\epsilon$, on ajoute donc $B$ à $K$. On refait une passe sur l'ensemble des règles tant qu'on a des ajouts à $K$.
@@ -972,3 +972,70 @@ C \rightarrow c
 Eliminer les cycles de la grammaire de l'exemple \ref{gramsscycle1}.
 \end{exercice}
 
+\subsubsection{Elimination de symboles inutiles}
+
+Chercher  les symboles inaccessibles revient à calculer ceux qui sont accessibles, ce qui est plus simple et naturel. Pour ça, on part de toutes les règles ayant l'axiome dans leur partie gauche l'axiome, et tout symbole apparaîssant à droite d'au moins une règle est, de fait, accessible. On itére ensuite en partant à chaque fois des nouveaux symboles ajoutés, jusqu'à atteindre ... un point fixe !
+
+\begin{example}
+On reprend la grammaire de l'exemple \ref{gramsymbsinutiles1}.
+S peut se réécrire immédiatement en $A$ ou $B$, ces deux symboles sont donc accessibles depuis l'axiome. $B$ peut uniquement se réécrire en $\epsilon$, et ne permet donc pas d'accéder à de nouveaux symboles, au contraire de $A$. La règle $A \rightarrow CE$ nous fait en effet ajouter $C$ et $E$ à l'ensemble des symboles accessibles.
+
+$C$ se réécrit uniquement en $a$ et $E$ en $abbA$. Puisque $A$ faisait déjà partie de l'ensemble des états accessibles, on n'a rien à ajouter et le point fixe est atteint. Les états accessibles étant $\{S,A,B,Cs,E\}$, les inaccessibles en sont le complémentaire, soit $\{D,F\}$.
+
+La grammaire se simplifie donc en 
+
+\[
+\begin{cases}
+S \rightarrow A~|~B \\
+A \rightarrow CE \\
+B \rightarrow \epsilon \\
+C \rightarrow a \\
+\text{\st{$D \rightarrow Fa~|~\epsilon$}} \\
+E \rightarrow abbA \\
+\text{\st{$F \rightarrow bD$}}
+\end{cases}
+\]
+
+\end{example}
+
+L'élimination des symboles sans production fonctionne de façon analogue, mais en partant de la fin. On va donc chercher à déterminer l'ensemble des symboles avec production, en commençant par repérer les symboles qui se réécrivent en un "vrai mot" (composé uniquement de terminaux). Ensuite, on itère.
+
+
+\begin{example}
+On reprend à nouveau la grammaire (pas simplifiée, par souci pédagogique) de l'exemple \ref{gramsymbsinutiles1}.
+$B$, $C$ et $D$ peuvent se réécrire immédiatement en des "vrais mots" ($\epsilon$ pour $B$ et $D$, $a$ pour $C$). Puisque qu'on sait maintenant que ces $3$ non-terminaux peuvent sont productifs, on cherche maintenant des symboles qui peuvent se réécrire en un mot composé de terminaux, $B$, $C$ et/ou $D$.
+
+On peut donc ajouter à l'ensemble des symboles productifs $S$ (qui se réécrit immédiatement en $B$) et $F$ (qui se réécrit immédiatement en $bD$). Ces nouveaux ajouts ne rendent cependant ni A ni E productifs, on a donc atteint le point fixe.
+
+Puisque les symboles productifs sont $\{S,B,C,D,F\}$, ceux sans production sont $\{A,E\}$. On peut donc simplifier la grammaire en 
+
+
+
+\[
+\begin{cases}
+S \rightarrow \text{\st{$A~|~$}}~B \\
+\text{\st{$A \rightarrow CE$}} \\
+B \rightarrow \epsilon \\
+C \rightarrow a \\
+D \rightarrow Fa~|~\epsilon \\
+\text{\st{$E \rightarrow abbA$}} \\
+F \rightarrow bD
+\end{cases}
+\]
+
+\end{example}
+
+\begin{exercice}
+Eliminer les symboles inutiles de la grammaire suivante :
+
+\[
+\begin{cases}
+S \rightarrow BAB~|~DB \\
+A \rightarrow B~|~a \\
+B \rightarrow bB~|~Ba~|~DAD \\
+C \rightarrow c~|~AB~|~AA \\
+D \rightarrow Da~|~B~|~aSb
+\end{cases}
+\]
+
+\end{exercice}
