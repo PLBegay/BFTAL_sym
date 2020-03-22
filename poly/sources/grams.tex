@@ -752,7 +752,7 @@ On présente ici quelques algorithmes pour nettoyer des grammaires algébriques.
 Une grammaire algébrique est dite \textbf{propre} ssi. elle est \textbf{$\epsilon$-libre}, \textbf{sans cycle} et \textbf{dépourvue de symboles inutiles}.
 \end{definition}
 
-\begin{definition}{Grammaire $\epsilon$ libre}{}
+\begin{definition}{Grammaire $\epsilon$-libre}{}
 Une grammaire est \textbf{$\epsilon$-libre} ssi. elle ne possède pas de règle de la forme $\alpha \rightarrow \epsilon$, sauf éventuellement $S \rightarrow \epsilon$, auquel cas l'axiome $S$ ne doit jamais apparaître à droite d'une règle.
 \end{definition}
 
@@ -765,12 +765,10 @@ La grammaire
 
 \[
 \begin{cases}
-S \rightarrow AB \\
-S \rightarrow C \\
+S \rightarrow AB~|~C\\
 A \rightarrow C \\
 B \rightarrow \epsilon \\
-C \rightarrow S \\
-C \rightarrow a
+C \rightarrow S~|~a 
 \end{cases}
 \]
 
@@ -871,7 +869,7 @@ Notre grammaire est donc maintenant
 \begin{cases}
 S \rightarrow CD~|~AB~|~E\textcolor{blue}{~|~D~|~A~|~B} \\
 A \rightarrow a~|~BC\textcolor{blue}{~|~B~|~C} \\
-B \rightarrow abba \text{\st{$~|~\epsilon$}}\\
+B \rightarrow abba~\text{\st{$~|~\epsilon$}}\\
 C \rightarrow BB\textcolor{blue}{~|~B} \\
 D \rightarrow Sa\textcolor{blue}{~|~ a} \\
 E \rightarrow AaBEB~|~BSb~|~\textcolor{blue}{aBEB~|~AaEB~|~AaBE~|~aEB~|~aBE~|~AaE~|~aE~|~Sb~|~Bb~|~b}
@@ -915,3 +913,56 @@ D \rightarrow abba~|~BB~|~BCBS
 \end{cases}
 \]
 \end{exercice}
+
+
+\subsubsection{Elimination de cycles}
+
+Si la grammaire est $\epsilon$-libre, le seul moyen d'avoir des cyles est via des règles de la forme $A \rightarrow B$, ou \textbf{productions singulières}. Puisqu'on a un algorithme pour éliminer les $\epsilon$-productions, on peut supposer que la grammaire étudiée est $\epsilon$-libre. L'élimination de cyles peut donc être ramenée à l'élimination des productions singulières.
+
+La première étape de l'algorithme consiste à trouver l'ensemble des paires de non-terminaux $(A,B)$ telles que $A \rightarrow^* B$, cad l'ensemble des symboles qui peuvent se réécrire en un autre non-terminal. On procède encore une fois par point fixe sur les règles suivantes : 
+
+\begin{itemize}
+\item Si $A \rightarrow B$, alors $A \rightarrow^+ B$
+\item Si $A \rightarrow^+ B$ et $B \rightarrow C$, alors $A \rightarrow^+ C$
+\end{itemize}
+
+\begin{example}
+\label{gramelimcycles}
+Soit la grammaire 
+
+\[
+\begin{cases}
+S \rightarrow B~|~CA \\
+A \rightarrow C~|~a \\
+B \rightarrow S~|~C~|~ab \\
+C \rightarrow c 
+\end{cases}
+\]
+
+On obtient ces relations :
+
+\begin{itemize}
+\item $S \rightarrow^+ B$ (règle 1)
+\item $S \rightarrow^+ C$ (règle 1 puis règle 2)
+\item $A \rightarrow^+ C$ (règle 1)
+\item $B \rightarrow^+ S$ (règle 1)
+\item $B \rightarrow^+ C$ (règle 1)
+*\end{itemize}
+
+\end{example}
+
+Une fois qu'on a identifié ces paires $(A,B)$, il suffit d'\textit{inliner}, cad. de copier/coller les productions non-singulières de $B$ dans celles de $A$. Ce faisant, on permet de faire immédiatement des réécritures qui se faisaient sinon en plusieurs étapes. 
+
+\begin{example}
+En continuant l'exemple \ref{gramelimcycles}, on obtient 
+
+\[
+\begin{cases}
+S \rightarrow \text{\st{$B~|~$}}~CA \textcolor{blue}{~|~ab~|~c} \\
+A \rightarrow \text{\st{$C~|~$}}~a \textcolor{blue}{~|~c}\\
+B \rightarrow \text{\st{$S~|~C~|~$}}~ab \textcolor{blue}{~|~c} \\
+C \rightarrow c
+\end{cases}
+\]
+
+\end{example}
