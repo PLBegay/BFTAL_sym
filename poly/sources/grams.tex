@@ -241,6 +241,7 @@ u \rightarrow_G^* v
 
 ou $u \rightarrow^* v$ s'il n'y a pas d'ambiguïté sur la grammaire étudiée.
 
+Pour une série d'au moins une dérivation, on écrira $u \rightarrow_G^+ v$ ou $u \rightarrow^+ v$
 \end{definition}
  
 \begin{example}
@@ -743,4 +744,174 @@ Le langage des opérations arithmétiques décrit plus haut est engendré par au
 Le langage $\{a^nba^mba^pba^q ~|~ n,m,p,q \in \mathbb{N} \text{ et } ((n \geq m \text{ et } p \geq q) \text{ ou } (n \geq q \text{ et } m \geq p))\}$. Voir le DM2 pour la justification.
 \end{example}
 
-\subsection{Nettoyage des grammaires algébriques}
+\subsection{Transformation de grammaires algébriques}
+
+On présente ici quelques algorithmes pour nettoyer des grammaires algébriques.
+
+\begin{definition}{Grammaire algébrique propre}{}
+Une grammaire algébrique est dite \textbf{propre} ssi. elle est \textbf{$\epsilon$-libre}, \textbf{sans cycle} et \textbf{dépourvue de symboles inutiles}.
+\end{definition}
+
+\begin{definition}{Grammaire $\epsilon$ libre}{}
+Une grammaire est \textbf{$\epsilon$-libre} ssi. elle ne possède pas de règle de la forme $\alpha \rightarrow \epsilon$, sauf éventuellement $S \rightarrow \epsilon$, auquel cas l'axiome $S$ ne doit jamais apparaître à droite d'une règle.
+\end{definition}
+
+\begin{definition}{Grammaire sans cycle}{}
+Une grammaire est \textbf{$\epsilon$-libre} ssi. elle ne permet pas de dérivation de la forme $A \rightarrow^+ A$, où $A$ est un symbole non-terminal. 
+\end{definition}
+
+\begin{example}
+La grammaire 
+
+\[
+\begin{cases}
+S \rightarrow AB \\
+S \rightarrow C \\
+A \rightarrow C \\
+B \rightarrow \epsilon \\
+C \rightarrow S \\
+C \rightarrow a
+\end{cases}
+\]
+
+possède des cycles en $S$ et $A$ :
+
+\[
+S \rightarrow AB \rightarrow A \rightarrow C \rightarrow S
+\]
+
+\[
+A \rightarrow C \rightarrow S \rightarrow AB \rightarrow A
+\]
+\end{example}
+
+\begin{definition}{Symbole inutile}{}
+Un symbole inutile est un symbole non-terminal qui est soit \textbf{inaccessible}, soit \textbf{sans-production}. 
+
+Un symbole $A$ est inaccessible ssi. il n'existe pas de dérivation $S \rightarrow^* \alpha A \beta$, cad. qu'on ne peut pas produire de $A$ en partant de l'axiome. 
+
+Un symbole $A$ est sans production ssi. il n'existe pas de dérivation $A \rightarrow^* w$ où $w \in \Sigma^*$, cad. qu'on ne peut pas dériver un "vrai mot" à partir de $A$.
+\end{definition}
+
+\begin{example}
+Dans la grammaire 
+
+\[
+\begin{cases}
+S \rightarrow A~|~B \\
+A \rightarrow CE \\
+B \rightarrow \epsilon \\
+C \rightarrow a \\
+D \rightarrow Fa~|~\epsilon \\
+E \rightarrow abbA \\
+F \rightarrow bD
+\end{cases}
+\]
+
+possède deux symboles inutiles. En effet, $A$ est sans production (après en avoir produit un, on doit "résoudre" un $D$, qui lui-même produit un $A$ et ainsi de suite), et $D$ et $F$ sont inaccessibles.
+
+\end{example}
+
+\subsubsection{Elimination d'$\epsilon$-productions}
+
+On doit d'abord calculer l'ensemble $K$ des symboles non-terminaux $A$ tels que $A \rightarrow^* \epsilon$, cad. les symboles qui peuvent se réécrire en $\epsilon$.
+
+Déjà, pour toute règle de la forme $A \rightarrow \epsilon$, on met évidemment $A$ dans $K$. On procède ensuite par point fixe, en inspectant les différentes règles. A chaque règle $B \rightarrow \alpha$, si $\alpha$ est composé uniquement de symboles de $K$, alors $\alpha$ peut se réécrire en $\epsilon$, on ajoute donc $B$ à $K$. On refait une passe sur l'ensemble des règles tant qu'on a des ajouts à $K$.
+
+\begin{example}
+\label{gramelimeps1}
+Soit la grammaire 
+
+\[
+\begin{cases}
+S \rightarrow CD~|~AB~|~E \\
+A \rightarrow a~|~BC \\
+B \rightarrow abba~|~\epsilon \\
+C \rightarrow BB \\
+D \rightarrow Sa \\
+E \rightarrow AaBEB~|~BSb
+\end{cases}
+\]
+
+Le symbole $B$ peut se réécrire directement en $\epsilon$, on l'ajoute donc à $K$. On fait maintenant une première passe sur les différentes règles et on remarque que $C$ peut se réécrire en $BB$. Puisque $B \in K$, $B$ peut se réécrire en $\epsilon$, ce qui implique que $BB$ peut se réécrire en $\epsilon \epsilon = \epsilon$. On ajoute donc $C$ à $K$.
+
+Puisqu'on a eu un ajout à $K$, on refait une passe sur les règles. $A$ peut se réécrire en $BC$, donc en $\epsilon$. On ajoute $A$ à $K$.
+
+Nouvelle passe, on ajoute $S$ à $K$ grâce à la règle $S \rightarrow AB$. 
+
+Enfin, notre dernière passe ne révèle pas de nouveau symbole à ajouter à $K$. On a donc atteint notre point fixe $K = \{S,A,B,C\}$.
+\end{example}
+
+Puisqu'on veut effacer les règles de la forme $A \rightarrow \epsilon$ tout en engendrant le même langage, on doit modifier les règles pour rattraper les mots éventuellement perdus. L'astuce va être de dupliquer toute règle  en "remplaçant potentiellement" chaque symbole de $K$ qu'elle contient par $\epsilon$.
+
+\begin{example}
+On reprend la grammaire et l'ensemble $K$ de l'exemple \ref{gramelimeps1}. 
+
+On commence par la règle $S \rightarrow CD$. Puisque $C$ appartient à $K$, il peut se réécrire en $\epsilon$, on intègre donc cette possibilité en ajoutant une règle $S \rightarrow D$. De même, la règle $S \rightarrow AB$ va être dupliquée en $S \rightarrow A$ et $S \rightarrow B$. Les symboles $A$ et $B$ peuvent se réécrire en $\epsilon$ lors d'une même dérivation, mais puisque le but de l'algorithme est d'éliminer les règles de la forme $A \rightarrow \epsilon$, on ne va évidemment pas ajouter de règle $S \rightarrow \epsilon$.
+
+Pour les mêmes raisons, on va ajouter les règles $A \rightarrow B$, $A \rightarrow C$, $C \rightarrow B$, $D \rightarrow a$. 
+
+La règle $E \rightarrow AaBEC$ contenant 3 occurrences de symboles de $K$ sur sa droite, on va devoir avoir $2^3 = 8$ copies de la règle, pour prendre en compte toutes les combinaisons de "deviendra $\epsilon$, deviendra pas $\epsilon$". On a donc les règles 
+
+\begin{itemize}
+\item[] $E \rightarrow AaBEB$ (déjà présent)
+\item[] $E \rightarrow \textcolor{white}{A}aBEB$
+\item[] $E \rightarrow Aa\textcolor{white}{B}EB$
+\item[] $E \rightarrow AaBE\textcolor{white}{B}$
+\item[] $E \rightarrow \textcolor{white}{A}a\textcolor{white}{B}EB$
+\item[] $E \rightarrow \textcolor{white}{A}aBE\textcolor{white}{B}$
+\item[] $E \rightarrow Aa\textcolor{white}{B}E\textcolor{white}{B}$
+\item[] $E \rightarrow \textcolor{white}{A}a\textcolor{white}{B}E\textcolor{white}{B}$
+\end{itemize}
+
+De même, on ajoute les règles $E \rightarrow Bb~|~Sb~|~b$.
+
+Notre grammaire est donc maintenant 
+\[
+\begin{cases}
+S \rightarrow CD~|~AB~|~E\textcolor{blue}{~|~D~|~A~|~B} \\
+A \rightarrow a~|~BC\textcolor{blue}{~|~B~|~C} \\
+B \rightarrow abba \text{\st{$~|~\epsilon$}}\\
+C \rightarrow BB\textcolor{blue}{~|~B} \\
+D \rightarrow Sa\textcolor{blue}{~|~ a} \\
+E \rightarrow AaBEB~|~BSb~|~\textcolor{blue}{aBEB~|~AaEB~|~AaBE~|~aEB~|~aBE~|~AaE~|~aE~|~Sb~|~Bb~|~b}
+\end{cases}
+\]
+
+\end{example}
+
+Il reste cependant une étape. En effet, La grammaire originelle engendrait notamment le mot vide, ce qui n'est plus le cas de la nouvelle. La troisième et dernière étape est est, si l'axiome $S$ de la grammaire étudiée appartient à $K$, d'engendrer $\epsilon$ comme cas particulier. Pour ça, on ajoute un nouveau symbole $S'$ qui remplace $S$ comme axiome, ainsi que les règles $S' \rightarrow S~|~\epsilon$.
+
+\begin{example}
+
+Au final, la version sans $\epsilon$-production de la grammaire de l'exemple \ref{gramelimeps1} est donc 
+
+\[
+\begin{cases}
+S' \rightarrow S~|~\epsilon \\
+S \rightarrow CD~|~AB~|~E\textcolor{black}{~|~D~|~A~|~B} \\
+A \rightarrow a~|~BC\textcolor{black}{~|~B~|~C} \\
+B \rightarrow abba \\
+C \rightarrow BB\textcolor{black}{~|~B} \\
+D \rightarrow Sa\textcolor{black}{~|~ a} \\
+E \rightarrow AaBEB~|~BSb~|~\textcolor{black}{aBEB~|~AaEB~|~AaBE~|~aEB~|~aBE~|~AaE~|~aE~|~Sb~|~Bb~|~b}
+\end{cases}
+\]
+
+où S' est l'axiome.
+
+\end{example}
+
+\begin{exercice}
+Eliminer les $\epsilon$-production de la grammaire suivante :
+
+\[
+\begin{cases}
+S \rightarrow ABC~|~BD \\
+A \rightarrow BC~|~ab~|~ \\
+B \rightarrow CDC~|~\epsilon \\
+C \rightarrow BAB~|~ABA \\
+D \rightarrow abba~|~BB~|~BCBS
+\end{cases}
+\]
+\end{exercice}
