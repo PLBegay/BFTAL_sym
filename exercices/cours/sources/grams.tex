@@ -1,0 +1,336 @@
+\chapter{Grammaires formelles et hiérarchie de Chomsky}
+\label{grammaires}
+
+
+\section{Principe général}
+
+
+
+\begin{exercice}
+Quel est le langage engendré par la grammaire qui suit ? 
+
+\[
+\begin{cases}
+S \rightarrow LaaR \\
+L \rightarrow Lb \\
+L \rightarrow ab \\
+R \rightarrow bR \\
+R \rightarrow ba
+\end{cases}
+\]
+
+\end{exercice}
+
+\begin{correction*}
+Le symbole $L$ peut générer autant de $b$ qu'il veut sur sa droite, avant se s'arrêter en produisant un $ab$. Le symbole $L$ engendre donc le langage $abb^* = ab^+$. De même, $R$ engendre $b^+a$. Puisque l'axiome peut uniquement produire $LaaR$, le langage engendré par la grammaire est $ab^+aab^+a$.
+\end{correction*}
+
+\begin{exercice}
+\label{grammab}
+Quel est le langage engendré par la grammaire suivante ?
+
+\[
+\begin{cases}
+S \rightarrow A~|~B \\
+A \rightarrow aA~|~\epsilon \\
+B \rightarrow bB~|~\epsilon
+\end{cases}
+\]
+
+\end{exercice}
+
+\begin{correction*}
+Le symbole $A$ produit autant de $a$ qu'il veut avant de disparaître. Le langage engendré par $A$ est donc $a^*$, de même que $B$ engendre $b^*$. Puisqu'on a le choix entre réécrire l'axiome $S$ en $A$ ou $B$, on engendre $a^*+b^*$.
+\end{correction*}
+
+\begin{exercice}
+\label{grammsigma}
+Quel est le langage engendré par la grammaire suivante ?
+
+\[
+\begin{cases}
+S \rightarrow aS~|~bS~|~\epsilon 
+\end{cases}
+\]
+
+\end{exercice}
+
+\begin{correction*}
+Cette fois, on peut engendrer un mélange de $a$ et de $b$, autant qu'on veut, dans l'ordre que l'on veut (règles 1 et 2), puis arrêter (règle 3). Le langage engendré est donc celui de tous les mots, cad. $(a+b)^*$.
+\end{correction*}
+
+\begin{exercice}
+Donner l'ensemble des mots qui admettent deux dérivations (ie. peuvent être construits de plusieurs façons différentes) dans la grammaire de l'exercice \ref{grammab}. Même question pour celle de l'exercice \ref{grammsigma}.
+\end{exercice}
+
+\begin{correction*}
+Dans la première grammaire, on peut engendrer $\epsilon$ de deux façons différentes :
+
+\begin{itemize}
+\item $S \rightarrow A \rightarrow \epsilon$
+\item $S \rightarrow B \rightarrow \epsilon$
+\end{itemize}
+
+Aucun n'autre mot ne dispose de plusieurs dérivations. Toute dérivation est de la forme 
+
+\begin{itemize}
+\item $S \rightarrow A \rightarrow^n a^nA \rightarrow a^n$
+\item[] ou
+\item $S \rightarrow B \rightarrow^n b^nB \rightarrow b^n$
+\end{itemize}
+
+Deux dérivations différentes qui commencent toutes les deux par $S \rightarrow A$ doivent utiliser un nombre différent de fois la règle produisant un $a$, ce qui implique de générer des mots de longueurs différentes et donc des mots qui le sont également. Idem pour deux dérivations qui commencent par $S \rightarrow B$.
+
+Deux dérivations différentes qui commencent par $S \rightarrow A$ et $S \rightarrow B$ ne peuvent pas générer le même mot à part $\epsilon$, car la présence de $a$ exclut celle de $b$, et inversement. 
+
+Dans la deuxième grammaire, il n'existe qu'une dérivation par mot. En effet, soit $w = c_1c_2...c_n$, la seule possibilité est de générer $c_n$, puis $c_{n-1}$, ... et enfin $c_1$, cad. de produire linéairement le mot de la droite vers la gauche.
+\end{correction*}
+
+ 
+ \section{Formalisation}
+ 
+
+\begin{exercice}
+Donner une grammaire qui engendre le langage $\{a^nb^n ~|~ n \in \mathbb{N}\}$
+\end{exercice}
+
+\begin{correction*}
+
+Ce langage est engendré par 
+\[
+\begin{cases}
+S \rightarrow aSb ~|~ \epsilon 
+\end{cases}
+\]
+
+Exemple d'application :
+
+\[
+S \rightarrow \textcolor{blue}{a}S\textcolor{blue}{b} \rightarrow \textcolor{blue}{a}\textcolor{red}{a}S\textcolor{red}{b}\textcolor{blue}{b} \rightarrow \textcolor{blue}{a}\textcolor{red}{a}\textcolor{orange}{a}S\textcolor{orange}{b}\textcolor{red}{b}\textcolor{blue}{b} \rightarrow \textcolor{blue}{a}\textcolor{red}{a}\textcolor{orange}{a}\textcolor{orange}{b}\textcolor{red}{b}\textcolor{blue}{b} 
+\]
+
+\end{correction*}
+
+\begin{exercice}
+\label{grammanbncn}
+Montrer que la grammaire suivante engendre le langage $\{a^nb^nc^n ~|~ n \in \mathbb{N}\}$
+
+\[
+\begin{cases}
+S \rightarrow XY \\
+X \rightarrow aXbZ~|~\epsilon\\
+Zb \rightarrow bZ \\
+ZY \rightarrow Yc \\
+Y \rightarrow \epsilon
+\end{cases}
+\]
+\end{exercice}
+
+\begin{correction*}
+La grammaire commence obligatoirement par réécrire $S$ en $XY$. Le $X$ peut ensuite créer des copies de lui-même, une par une, en ajoutant $a$ à gauche et $bZ$ à droite, jusqu'à disparaître. L'application des deux premières règles a donc toujours la forme suivante :
+
+\[
+S \rightarrow_1 XY \rightarrow_2^n a^nX(bZ)^nY \rightarrow_3 a^n(bZ)^nY
+\]
+
+La règle 4 permet ensuite de faire rouler les $b$ vers les $a$ et les $Z$ vers le $Y$ : 
+
+\[
+a^n(bZ)^nY \rightarrow_4^* a^nb^nZ^nY
+\]
+
+Enfin, le $Y$ roule sur les $Z$, les transformant au passage en $c$, et peut disparaître une fois qu'il a fini son travail :
+
+
+\[
+a^n(bZ)^nY \rightarrow_5^* a^nb^nYc^n \rightarrow_6 a^nb^nc^n
+\]
+
+Notez qu'on peut faire disparaître le $Y$ avant qu'il ait fini de transformer les $Z$ en $c$. Mais dans ce cas, on ne pourrap as obtenir un mot composé uniquement de symboles terminaux, il s'agit donc d'une impasse sans conséquence.
+\end{correction*}
+
+\section{Hierarchie de Chomsky}
+
+
+\subsection{Grammaires de type 3, ou régulières}
+
+\subsubsection{Grammaires linéaires à gauche et à droite}
+
+
+\begin{exercice}
+Quel est le langage engendré par la grammaire suivante ?
+
+\[
+\begin{cases}
+S \rightarrow Sa~|~Ta~|~a \\
+T \rightarrow Tb~|~b
+\end{cases}
+\]
+
+\end{exercice}
+
+\begin{correction*}
+
+L'axiome $S$ permet d'abord de générer autant de $a$ que désiré sur sa droite. On a ensuite le choix de s'arrêter avec un dernier $a$, produisant donc un mot de $a^+$, ou de partir en $T$ avec également un dernier $a$, et d'y générer un nombre non-nul de $b$. Le langage engendré par la grammaire est donc $a^+ + b^+a^+$, qui peut se factoriser en $b^*a^+$.
+
+\end{correction*}
+
+
+\begin{exercice}(**) Donner, en suivant l'intuition de la preuve ci-dessus, une grammaire linéaire à droite qui engendre le même langage que la grammaire 
+
+\[
+\begin{cases}
+S \rightarrow Sa~|~Ta~|~a \\
+T \rightarrow Tb~|~b
+\end{cases}
+\]
+
+\end{exercice}
+
+\begin{correction*}
+Une dérivation dans la grammaire termine forcément par $S \rightarrow a$ ou $T \rightarrow b$. On a donc, pour la version droite de la grammaire, de commencer par écrire un $a$ suivi d'un $S$, ou un $b$ suivi d'un $T$. Soit $A$ l'axiome de la nouvelle grammaire, on a déjà les deux règles qui suivent :
+
+\[
+\begin{cases}
+A \rightarrow aS~|~bT
+\end{cases}
+\]
+
+La question qui suit est "comment peut-on créer un $S$ dans la grammaire originale ?". Une première possibilité est via la règle $\textcolor{red}{S} \rightarrow \textcolor{blue}{S}a$, qu'on inverse en 
+
+\[
+\begin{cases}
+\textcolor{blue}{S} \rightarrow a\textcolor{red}{S}
+\end{cases}
+\]
+
+De plus, $S$ étant l'axiome, il peut apparaître \textit{ex nihilo}. Il devient donc la fin des dérivations dans la nouvelle grammaire : 
+
+\[
+\begin{cases}
+S \rightarrow \epsilon
+\end{cases}
+\]
+
+La deuxième question est "comment peut-on créer un $T$ dans la grammaire originale ?" Les deux réponses sont $S \rightarrow Ta$ et $T \rightarrow Tb$, qu'on inverse en 
+
+
+\[
+\begin{cases}
+T \rightarrow aS~|~bT
+\end{cases}
+\]
+
+Au final, notre grammaire linéaire à droite est 
+
+\[
+\begin{cases}
+A \rightarrow aS~|~bT \\
+S \rightarrow aS~|~\epsilon \\
+T \rightarrow aS~|~bT
+\end{cases}
+\]
+
+où $A$ est l'axiome. On peut vérifier assez facilement que cette grammaire reconnaît également $b^*a^+$.
+
+\end{correction*}
+
+
+\subsubsection{Une extension du théorème de Kleene}
+On a vu dans le chapitre \ref{hierarchie} que les langages pouvant être décrits par des expressions rationnelles et ceux définissables par automate étaient les mêmes. Ce résultat peut s'étendre aux grammaires de type 3.
+
+\begin{exercice}
+Traduire en automate la grammaire 
+\[
+\begin{cases}
+S \rightarrow aS~|~bB~|~a~|~\epsilon \\
+A \rightarrow aS~|~\epsilon \\
+B \rightarrow a
+\end{cases}
+\]
+
+\end{exercice}
+
+\begin{correction*}
+En appliquant l'algorithme donné en cours, on obtient 
+
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.9cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state,accepting] (S)                    {$S$};
+  \node[state,accepting] (A)      [right of=S]                {$A$};  
+  \node[state] (B)      [right of=A]                {$B$};
+  \node[accepting,state] (T)      [above of=A]                {$T$};
+  
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(S) edge      [loop above]        node {$a$} (S)
+(S) edge      [bend right]        node {$b$} (B)
+(S) edge      []        node {$a$} (T)
+(A) edge      [loop above]        node {$a$} (A)
+(B) edge      []        node {$a$} (T)
+;
+\end{tikzpicture}
+\end{figure}
+
+\end{correction*}
+
+\begin{exercice}
+Traduire en grammaire l'automate 
+
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.9cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+
+  \node[initial,state] (0)                    {$A$};
+  \node[state] (1)      [right of=0]                {$B$};  
+  \node[state] (2)      [right of=1]                {$C$};
+  \node[accepting,state] (3)      [right of=2]                {$D$};
+  \node[accepting,state] (4)      [right of=3]                {$E$};
+  \node[accepting,state] (5)      [below of=4]                {$F$};
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+(0) edge      [loop above]        node {$b$} (0)
+(0) edge      []        node {$a$} (1)
+(1) edge      [loop above]        node {$a$} (1)
+(1) edge      []        node {$b$} (2)
+(2) edge      [bend left]        node {$b$} (0)
+(2) edge      []        node {$a$} (3)
+(3) edge      [loop above]        node {$a$} (3)
+(3) edge      []        node {$b$} (4)
+(4) edge      [bend left]        node {$a$} (3)
+(4) edge      []        node {$b$} (5)
+(5) edge      [loop right]        node {$b$} (3)
+(5) edge      []        node {$a$} (3);
+\end{tikzpicture}
+\end{figure}
+
+En appliquant l'algorithme donné en cours, on obtient 
+
+\[
+\begin{cases}
+A \rightarrow bA~|~aB \\
+B \rightarrow aB~|~bC \\
+C \rightarrow aD~|~bA \\
+D \rightarrow aD~|~bE~|~\epsilon \\
+E \rightarrow aD~|~bF~|~\epsilon \\
+F \rightarrow aD~|~bF~|~\epsilon
+\end{cases}
+\]
+
+où $A$ est l'axiome.
+
+Notez qu'on pourrait aussi ajouter par exemple une règle $C \rightarrow a$, mais ça serait redondant avec $C \rightarrow aD$ et $D \rightarrow \epsilon$. On pourrait également enlever toutes les $\epsilon$-productions et les remplacer par $C \rightarrow a$, $D \rightarrow a$ etc, mais la grammaire nous semble ainsi moins lisible.
+
+\end{exercice}
+
