@@ -396,7 +396,7 @@ Les langages reconnus par automate fini sont exactement ceux engendrés par des 
 \end{theorem}
 
 \begin{proof}
-Comme dans le théorème de Kleene original, on propose comme preuve une tradition des grammaires vers les automates, et inversement. Contrairement aux expressions rationnelles, les grammaires de type 3 ont un fonctionnement très similaire aux automates finis, les traductions sont donc très simples.
+Comme dans le théorème de Kleene original, on propose comme preuve une traduction des grammaires vers les automates, et inversement. Contrairement aux expressions rationnelles, les grammaires de type 3 ont un fonctionnement très similaire aux automates finis, les traductions sont donc très simples.
 
 Soit $G$ une grammaire de type 3. Puisque les grammaires linéaires à gauche et à droite engendrent les mêmes langages, on peut supposer que $G$ est une grammaire linéaire à droite. On crée un automate dont les états sont les symboles non-terminaux de $G$, ainsi qu'un état supplémentaire et terminal $T$ (pour terminus). L'état initial est son axiome. Toute règle $A \rightarrow aB$ devient une transition de $A$ vers $B$ en lisant $a$. Les règles $A \rightarrow a$ deviennent des transitions de $A$ vers $T$ en $a$. Enfin, on rend terminal tout état $A$ tel qu'il existe une règle $A \rightarrow \epsilon$.
 
