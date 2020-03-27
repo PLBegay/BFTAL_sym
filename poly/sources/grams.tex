@@ -517,12 +517,12 @@ Pour l'aspect strict de cette inclusion, la grammaire de type 2 de l'exemple \re
 
 \subsection{Grammaires de type 1, ou contextuelles}
 
-Les grammaires de type 1, appelées \textbf{grammaires contextuelles} (\textit{context-sensitive}) permettent de mettre n'importe quel mot (contenant au moins un symbole non-terminal) à gauche d'une flèche. La seule contrainte est désormais qu'on ne permet pas d'avoir le mot vide à droite d'une flèche, sauf cas particulier pour capturer le mot vide.
+Les grammaires de type 1, appelées \textbf{grammaires contextuelles} (\textit{context-sensitive}) permettent d'encadrer le non-terminal à gauche de toute règle par un \textit{contexte}, qui doit apparaître tel quel )à droite. De plus, le non-terminal ne peut pas être réécrit en $\epsilon$, sauf cas particulier pour capturer le mot vide.
 
 \begin{definition}{Grammaire contextuelle}{}
 Une grammaire contextuelle est une grammaire dont toutes les règles sont de la forme 
 \begin{itemize}
-\item[] $\alpha \rightarrow \beta$, où $\alpha$ et $\beta$ sont des mots constitué de symboles terminaux et non-terminaux, tels que $\alpha$ contient au moins un symbole non-terminal et $\beta \neq \epsilon$
+\item[] $\alpha X \beta \rightarrow \alpha \gamma \beta$, où $\alpha$, $\beta$ et $\gamma$ sont des mots constitués de symboles terminaux et non-terminaux, $X$ est un symbole non-terminal et $\gamma$ est non-vide. 
 \item[] ou
 \item[] $S \rightarrow \epsilon$, où $S$ est l'axiome de la grammaire. Si cette règle est utilisée, $S$ n'a pas le droit d'apparaître à droite d'une règle.
 \end{itemize}
@@ -550,16 +550,41 @@ La grammaire de l'exercice \ref{grammanbncn} \textbf{n}'est \textbf{pas} une gra
 
 \[
 \begin{cases}
-S \rightarrow XY~|~\epsilon \\
-X \rightarrow aXbZ~|~abZ\\
-Zb \rightarrow bZ \\
-ZY \rightarrow Yc \\
-bY \rightarrow b
+S' \rightarrow S~|~\epsilon\\
+S \rightarrow aSBC~|~aBC \\
+CB \rightarrow HB\\
+HB \rightarrow HC \\
+HC \rightarrow BC \\
+aB \rightarrow ab \\
+bB \rightarrow bb \\
+bC \rightarrow bc \\
+cC \rightarrow cc 
 \end{cases}
 \]
 
+Notez en particulier l'utilisation des règles 
+
+\[
+\begin{cases}
+CB \rightarrow HB\\
+HB \rightarrow HC \\
+HC \rightarrow BC 
+\end{cases}
+\]
+
+Pour "simuler"
+
+\[
+\begin{cases}
+CB \rightarrow BC
+\end{cases}
+\]
+
+qui n'est pas autorisée  dans une grammaire contextuelle. En effet, soit on considère que $C$ est le contexte et $B$ le non-terminal réécrit, auquel cas le $C$ à droite est du mauvais côté, soit on inverse les rôles, et dans ce cas le $B$ obtenu est également du mauvais côté.
+
 \end{example}
 
+%TODO: transformer en exemple ?
 \begin{exercice}
 Montrer que la grammaire de l'exemple \ref{grammanbncnbis} engendre bien le langage \newline $\{a^nb^nc^n ~|~ n \in \mathbb{N}\}$.
 \end{exercice}
@@ -577,7 +602,7 @@ Pour l'aspect strict de cette inclusion, la grammaire de type 1 de l'exemple \re
 \end{proof}
 
 
-
+\paragraph{Remarque} Les grammaires contextuelles sont également capables d'engendrer \newline $\{a^nb^nc^nd^n ~|~ n \in \mathbb{N}\}$, et ainsi de suite, à l'aide de grammaires de plus en plus complexes.
 
 
 
