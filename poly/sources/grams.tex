@@ -507,7 +507,7 @@ Les langages engendrés par des grammaires de type 3 forment un sous-ensemble st
 \end{lemma}
 
 \begin{proof}
-L'inclusion non-stricte est triviale avec la remarque précédente. En effet, soit $L$ un langage engendré par la grammaire de type 3 $G$, alors $G$ est également une gramaire de type 2 qui, de fait, engendre toujours $L$.
+L'inclusion non-stricte est triviale avec la remarque précédente. En effet, soit $L$ un langage engendré par la grammaire de type 3 $G$, alors $G$ est également une grammaire de type 2 qui, de fait, engendre toujours $L$.
 
 Pour l'aspect strict de cette inclusion, la grammaire de type 2 de l'exemple \ref{gramanbn} engendre le langage $\{a^nb^n ~|~ n \in \mathbb{N}\}$. Or, on a vu en \ref{limiterecauto} que ce langage n'était pas reconnaissable par automate. Puisque les grammaires de type 3 ont la même expressivité que ces derniers (théorème \ref{kleeneplusplus}), il n'en existe pas qui engendre ce langage.
 \end{proof}
@@ -589,14 +589,14 @@ qui n'est pas autorisée  dans une grammaire contextuelle. En effet, soit on con
 Montrer que la grammaire de l'exemple \ref{grammanbncnbis} engendre bien le langage \newline $\{a^nb^nc^n ~|~ n \in \mathbb{N}\}$.
 \end{exercice}
 
-\paragraph{Remarque} Une grammaire de type 2 \textbf{n}'est \textbf{pas forcément} une grammaire de type 1, à cause des règles de la forme $A \rightarrow \epsilon$. Il existe cependant un algorithme qui prend une grammaire de type 2 et en renvoie une autre, également de type 2, engendrant le même langage $\epsilon$-production, sauf éventuellement pour l'axiome. Cet algorithme sera décrit en \ref{gramepsilon} (cf. l'exemple \ref{gramelimeps1}). 
+\paragraph{Remarque} Une grammaire de type 2 \textbf{n}'est \textbf{pas forcément} une grammaire de type 1, à cause des règles de la forme $A \rightarrow \epsilon$. Il existe cependant un algorithme qui prend une grammaire de type 2 et en renvoie une autre, également de type 2, engendrant le même langage $\epsilon$-production, sauf éventuellement pour engendrer le mot vide. Cet algorithme sera décrit en \ref{gramepsilon} (cf. l'exemple \ref{gramelimeps1}). 
 
 \begin{lemma}
 Les langages engendrés par des grammaires de type 2 forment un sous-ensemble strict des langages engendrés par des grammaires de type 1. Autrement dit, si un langage est engendré par une grammaire de type 2, alors il l'est également par une grammaire de type 1, mais il existe au moins un (et même plein) langage engendré par une grammaire de type 1 qui ne peut pas être engendré par une grammaire de type 2.  
 \end{lemma}
 
 \begin{proof}
-L'inclusion non-stricte est encore une fois simple avec la remarque précédente. En effet, soit $L$ un langage engendré par la grammaire de type 2 $G$, alors on peut construire $G'$ une gramaire de type 2 qui est également de type 1 et engendre toujours $L$.
+L'inclusion non-stricte est encore une fois simple avec la remarque précédente. En effet, soit $L$ un langage engendré par la grammaire $G$ de type 2, alors on peut construire $G'$ une grammaire de type 2 qui est également de type 1 et engendre toujours $L$.
 
 Pour l'aspect strict de cette inclusion, la grammaire de type 1 de l'exemple \ref{grammanbncnbis} engendre le langage $\{a^nb^nc^n ~|~ n \in \mathbb{N}\}$. On n'en donnera malheureusement pas la preuve ici, mais ce langage n'est pas engendrable par une grammaire de type 2\footnote{Vous pouvez cependant essayer de vous en convaincre en essayant d'écrire une telle grammaire !}.
 \end{proof}
