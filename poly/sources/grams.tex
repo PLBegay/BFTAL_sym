@@ -517,7 +517,7 @@ Pour l'aspect strict de cette inclusion, la grammaire de type 2 de l'exemple \re
 
 \subsection{Grammaires de type 1, ou contextuelles}
 
-Les grammaires de type 1, appelées \textbf{grammaires contextuelles} (\textit{context-sensitive}) permettent d'encadrer le non-terminal à gauche de toute règle par un \textit{contexte}, qui doit apparaître tel quel )à droite. De plus, le non-terminal ne peut pas être réécrit en $\epsilon$, sauf cas particulier pour capturer le mot vide.
+Les grammaires de type 1, appelées \textbf{grammaires contextuelles} (\textit{context-sensitive}) permettent d'encadrer le non-terminal à gauche de toute règle par un \textit{contexte}, qui doit apparaître tel quel à droite. De plus, le non-terminal ne peut pas être réécrit en $\epsilon$, sauf cas particulier pour capturer le mot vide.
 
 \begin{definition}{Grammaire contextuelle}{}
 Une grammaire contextuelle est une grammaire dont toutes les règles sont de la forme 
@@ -589,7 +589,7 @@ qui n'est pas autorisée  dans une grammaire contextuelle. En effet, soit on con
 Montrer que la grammaire de l'exemple \ref{grammanbncnbis} engendre bien le langage \newline $\{a^nb^nc^n ~|~ n \in \mathbb{N}\}$.
 \end{exercice}
 
-\paragraph{Remarque} Une grammaire de type 2 \textbf{n}'est \textbf{pas forcément} une grammaire de type 1, à cause des règles de la forme $A \rightarrow \epsilon$. Il existe cependant un algorithme qui prend une grammaire de type 2 et en renvoie une autre, également de type 2, engendrant le même langage $\epsilon$-production, sauf éventuellement pour engendrer le mot vide. Cet algorithme sera décrit en \ref{gramepsilon} (cf. l'exemple \ref{gramelimeps1}). 
+\paragraph{Remarque} Une grammaire de type 2 \textbf{n}'est \textbf{pas forcément} une grammaire de type 1, à cause des règles de la forme $A \rightarrow \epsilon$. Il existe cependant un algorithme qui prend une grammaire de type 2 et en renvoie une autre, également de type 2, engendrant le même langage sans $\epsilon$-production, sauf éventuellement pour engendrer le mot vide. Cet algorithme sera décrit en \ref{gramepsilon}.
 
 \begin{lemma}
 Les langages engendrés par des grammaires de type 2 forment un sous-ensemble strict des langages engendrés par des grammaires de type 1. Autrement dit, si un langage est engendré par une grammaire de type 2, alors il l'est également par une grammaire de type 1, mais il existe au moins un (et même plein) langage engendré par une grammaire de type 1 qui ne peut pas être engendré par une grammaire de type 2.  
@@ -659,7 +659,7 @@ Quel est le langage engendré par la grammaire de l'exemple \ref{gramparen} ?
 Donner un arbre de dérivation du mot abbbaaba dans la grammaire de l'exemple \ref{grammLR}.
 \end{exercice}
 
-Cette représentation ne prend pas en compte l'ordre dans lequel les règles sont appliquées. Mais vu que les règles des grammaires algébriques ne peuvent pas prendre en compte le contexte, l'ordre importe peu, on reviendra toujours au même, par exemple 
+Cette représentation n'indique pas l'ordre dans lequel les règles sont appliquées. Mais vu que les règles des grammaires algébriques ne peuvent pas prendre en compte le contexte, cet ordre importe peu, puisqu'on reviendra toujours au même, par exemple 
 
 \begin{figure}[H]
 \centering
@@ -709,14 +709,14 @@ Sans définir de priorité sur les opérateurs, le mot $n + n \times n$ est ambi
 	\label{deuxderivs}
 \end{figure}
 
-Pour des exemples plus linguistiques, on renvoie évidemment le lecteur ou la lecture à ses cours de syntaxe.
+Pour des exemples plus linguistiques, on renvoie évidemment le lecteur ou la lectrice à ses cours de syntaxe.
 
 \begin{definition}{Grammaire algébrique ambiguë}{}
 Une grammaire algébrique est dite \textbf{ambiguë} ssi. son langage engendré contient au moins un mot admettant deux arbres de dérivation différents. 
 \end{definition}
 
 \begin{definition}{Pouvoir génératif}{}
-Deux grammaires algébriques ont le même \textbf{pouvoir génératif faible} ssi elles engendrent les mêmes mots, mais pas forcément avec le même langage. Elles ont le même \textbf{pouvoir génératif fort} ssi. elles engendrent des arbres équivalents.
+Deux grammaires algébriques ont le même \textbf{pouvoir génératif faible} ssi elles engendrent les mêmes mots, mais pas forcément avec la même structure. Elles ont le même \textbf{pouvoir génératif fort} ssi. elles engendrent des arbres équivalents.
 \end{definition}
 
 \begin{example}
@@ -751,16 +751,22 @@ Les deux grammaires d'opérations arithmétiques présentées ont le même pouvo
 
 \end{example}
 
-\begin{definition}{Langage intrinsèquement ambigü}{}
-Un langage algébrique (ie. engendré par une grammaire algébrique) est \textbf{intrinsèquement ambiguë} ssi. toutes les grammaires algébriques le reconnaissant sont ambigüs.
+\begin{definition}{Langage intrinsèquement ambigu}{}
+Un langage algébrique (ie. engendré par une grammaire algébrique) est \textbf{intrinsèquement ambigu} ssi. toutes les grammaires algébriques le reconnaissant sont ambiguës.
 \end{definition}
 
 \begin{example}
-Le langage des opérations arithmétiques décrit plus haut est engendré par au moins une grammaire ambiguë, mais aussi une non-ambiguë. Ce langage n'est donc pas intrinsèquement ambiguë. 
+Le langage des opérations arithmétiques décrit plus haut est engendré par au moins une grammaire ambiguë, mais aussi une non-ambiguë. Ce langage n'est donc pas intrinsèquement ambigu. 
 \end{example}
 
 \begin{example}
-Le langage $\{a^nba^mba^pba^q ~|~ n,m,p,q \in \mathbb{N} \text{ et } ((n \geq m \text{ et } p \geq q) \text{ ou } (n \geq q \text{ et } m \geq p))\}$. Voir le DM2 pour la justification.
+Le langage 
+
+\[
+\{a^nba^mba^pba^q ~|~ n,m,p,q \in \mathbb{N} \text{ et } ((n \geq m \text{ et } p \geq q) \text{ ou } (n \geq q \text{ et } m \geq p))\}
+\]
+
+est intrinsèquement ambigu. Voir le DM2 pour la justification.
 \end{example}
 
 \subsection{Transformation de grammaires algébriques}
@@ -772,11 +778,11 @@ Une grammaire algébrique est dite \textbf{propre} ssi. elle est \textbf{$\epsil
 \end{definition}
 
 \begin{definition}{Grammaire $\epsilon$-libre}{}
-Une grammaire est \textbf{$\epsilon$-libre} ssi. elle ne possède pas de règle de la forme $\alpha \rightarrow \epsilon$, sauf éventuellement $S \rightarrow \epsilon$, auquel cas l'axiome $S$ ne doit jamais apparaître à droite d'une règle.
+Une grammaire est \textbf{$\epsilon$-libre} ssi. elle ne possède pas d'$\epsilon$-production, cad. de règle de la forme $\alpha \rightarrow \epsilon$, sauf éventuellement $S \rightarrow \epsilon$, auquel cas l'axiome $S$ ne doit jamais apparaître à droite d'une règle.
 \end{definition}
 
 \begin{definition}{Grammaire sans cycle}{}
-Une grammaire est \textbf{$\epsilon$-libre} ssi. elle ne permet pas de dérivation de la forme $A \rightarrow^+ A$, où $A$ est un symbole non-terminal. 
+Une grammaire est \textbf{sans cycle} ssi. elle ne permet pas de dérivation de la forme $A \rightarrow^+ A$, où $A$ est un symbole non-terminal. 
 \end{definition}
 
 \begin{example}
@@ -813,7 +819,7 @@ Un symbole $A$ est sans production ssi. il n'existe pas de dérivation $A \right
 
 \begin{example}
 \label{gramsymbsinutiles1}
-Dans la grammaire 
+La grammaire 
 
 \[
 \begin{cases}
@@ -827,7 +833,7 @@ F \rightarrow bD
 \end{cases}
 \]
 
-possède deux symboles inutiles. En effet, $A$ est sans production (après en avoir produit un, on doit "résoudre" un $D$, qui lui-même produit un $A$ et ainsi de suite), et $D$ et $F$ sont inaccessibles.
+possède deux symboles inutiles. En effet, $A$ est sans production (après en avoir produit un, on doit "résoudre" un $E$, qui lui-même produit un $A$ et ainsi de suite), et $D$ et $F$ sont inaccessibles.
 
 \end{example}
 
@@ -866,7 +872,7 @@ Puisqu'on veut effacer les règles de la forme $A \rightarrow \epsilon$ tout en 
 \begin{example}
 On reprend la grammaire et l'ensemble $K$ de l'exemple \ref{gramelimeps1}. 
 
-On commence par la règle $S \rightarrow CD$. Puisque $C$ appartient à $K$, il peut se réécrire en $\epsilon$, on intègre donc cette possibilité en ajoutant une règle $S \rightarrow D$. De même, la règle $S \rightarrow AB$ va être dupliquée en $S \rightarrow A$ et $S \rightarrow B$. Les symboles $A$ et $B$ peuvent se réécrire en $\epsilon$ lors d'une même dérivation, mais puisque le but de l'algorithme est d'éliminer les règles de la forme $A \rightarrow \epsilon$, on ne va évidemment pas ajouter de règle $S \rightarrow \epsilon$.
+On commence par la règle $S \rightarrow CD$. Puisque $C$ appartient à $K$, il peut se réécrire en $\epsilon$, on intègre donc cette possibilité en ajoutant une règle $S \rightarrow D$. De même, la règle $S \rightarrow AB$ va être dupliquée en $S \rightarrow A$ et $S \rightarrow B$. Les symboles $A$ et $B$ peuvent se réécrire en $\epsilon$ lors d'une même dérivation, mais puisque le but de l'algorithme est d'éliminer les $\epsilon$-productions, on ne va évidemment pas ajouter de règle $S \rightarrow \epsilon$.
 
 Pour les mêmes raisons, on va ajouter les règles $A \rightarrow B$, $A \rightarrow C$, $C \rightarrow B$, $D \rightarrow a$. 
 
@@ -968,7 +974,7 @@ On obtient ces relations :
 \item $A \rightarrow^+ C$ (règle 1)
 \item $B \rightarrow^+ S$ (règle 1)
 \item $B \rightarrow^+ C$ (règle 1)
-*\end{itemize}
+\end{itemize}
 
 \end{example}
 
