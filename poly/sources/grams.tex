@@ -933,7 +933,7 @@ Eliminer les $\epsilon$-production de la grammaire suivante :
 \[
 \begin{cases}
 S \rightarrow ABC~|~BD \\
-A \rightarrow BC~|~ab~|~ \\
+A \rightarrow BC~|~ab \\
 B \rightarrow CDC~|~\epsilon \\
 C \rightarrow BAB~|~ABA \\
 D \rightarrow abba~|~BB~|~BCBS
@@ -987,7 +987,7 @@ En continuant l'exemple \ref{gramelimcycles}, on obtient
 \begin{cases}
 S \rightarrow \text{\st{$B~|~$}}~CA \textcolor{blue}{~|~ab~|~c} \\
 A \rightarrow \text{\st{$C~|~$}}~a \textcolor{blue}{~|~c}\\
-B \rightarrow \text{\st{$S~|~C~|~$}}~ab \textcolor{blue}{~|~c} \\
+B \rightarrow \text{\st{$S~|~C~|~$}}~ab \textcolor{blue}{~|~CA~|~c} \\
 C \rightarrow c
 \end{cases}
 \]
