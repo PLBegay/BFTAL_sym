@@ -19,7 +19,7 @@ Ces deux modèles ne forment pas l'alpha et l'omega de la calculabilité, qui co
 
 \paragraph{Thèse de Church (ou thèse de Church-Turing)} Church et Turing ont montré, dans les années 30, que les machines de Turing et le $\lambda$-calcul sont équivalents, dans le sens où toute fonction exprimable dans un modèle le sera dans l'autre. On dit que les modèles ont la même \textbf{expressivité}. Attention cependant, certaines fonctions très simples en $\lambda$-calcul seront un enfer à coder en machine de Turing, et inversement\footnote{Penser à la différence entre compétence et performance.}. Mais il reste remarquable que deux modèles fonctionnant de façons si orthogonales aient, au fond, la même puissance. 
 
-Ce résultat est moins surprenant avec le recul, puisqu'on sait maintenant que tous la plupart des modèles de calcul non-triviaux sont équivalents, et forment la classe des modèles \textbf{Turing-complets}. Il est en effet possible de simuler, ou coder, les machines de Turing ou le $\lambda$-calcul dans les fonctions $\mu$-récursives ou les automates cellulaires, et inversement. Ce résultat s'étend à une armée de modèles, auxquels ils faut ajouter aujourd'hui des milliers de langages de programmation : Python, C, OCaml, Java, et même Makefile, Bash ou $\LaTeX$ sont bel et bien aussi expressifs les uns que les autres.
+Ce résultat est moins surprenant avec le recul, puisqu'on sait maintenant que tous la plupart des modèles de calcul non-triviaux sont équivalents, et forment la classe des modèles \textbf{Turing-complets}. Il est en effet possible de simuler, ou coder, les machines de Turing ou le $\lambda$-calcul dans les fonctions $\mu$-récursives ou les automates cellulaires, et inversement. Ce résultat s'étend à une armée de modèles, auxquels ils faut ajouter aujourd'hui des milliers de langages de programmation : Python, C, OCaml, Java, et même Makefile, Bash ou \LaTeX sont bel et bien aussi expressifs les uns que les autres.
 
 La thèse de Church peut même s'étendre à l'épistémologie ou à la philosophie, puisqu'elle peut sembler suggérer l'existence d'une notion "naturelle" et indépassable de calcul. On conseillera la lecture de \cite{dowek} pour une introduction à ces problématiques.
 
@@ -28,11 +28,11 @@ Le $\lambda$-calcul est utilisé en NLP, mais sera étudié dans un autre cours.
 
 \section{Décidabilité}
 
-Au $XVII^{ème}$ siècle, Leibniz rêve d'une procédure permettant de déterminer automatiquement, \textit{via} un calcul, si une formule mathématique est vraie ou non. Leibniz se rendit compte que les bases formelles n'étaient alors pas disponibles, notamment la formalisation du calcul. Le problème réapparaît dans un cadre plus favorable, en 1928, lorsque Hilbert repose la question dans le cadre de son fameux programme de refondation des mathématiques. Le problème de la décision prend alors le doux nom d'\textbf{Entscheidungsproblem}. 
+Au $XVII^{eme}$ siècle, Leibniz rêve d'une procédure permettant de déterminer automatiquement, \textit{via} un calcul, si une formule mathématique est vraie ou non. Leibniz se rendit compte que les bases formelles n'étaient alors pas disponibles, notamment la formalisation du calcul. Le problème réapparaît dans un cadre plus favorable, en 1928, lorsque Hilbert repose la question dans le cadre de son fameux programme de refondation des mathématiques. Le problème de la décision prend alors le doux nom d'\textbf{Entscheidungsproblem}. 
 
 La réponse ne se fera pas (trop) attendre, et c'est un double non. Church et Turing publient en 1936, mais indépendament, des preuves qu'une telle procèdure, ou plutôt un tel programme, est impossible à écrire en machine de Turing et $\lambda$-calcul, et donc pour tout modèle de calcul équivalent. Le problème de la décision est \textbf{indécidable}, et il est loin d'être le seul.
 
-\begin{theorem}{\textbf(Indécidabilité du problème de l'arrêt)}} Savoir si un programme termine est un problème indécidable.
+\begin{theorem}{\textbf(Indécidabilité du problème de l'arrêt)} Savoir si un programme termine est un problème indécidable.
 \end{theorem}
 
 \begin{proof}
@@ -49,7 +49,7 @@ Maintenant, appliquons $B$ à lui même. On utilisant la définition de B, on ob
 Au-delà de ces deux problèmes particulièrement connus, il existe une véritable armée de problèmes indécidables, comme le montre spécifié par le théorème de Rice :
 
 
-\begin{theorem}{\textbf(Théorème de Rice)}} On appelle propriété sémantique non-triviale une propriété sur le comportement d'un programme telle qu'il existe au moins un exemple la respectant et un ne la respectant pas. Toute propriété sémantique non-triviale est indécidable.
+\begin{theorem}{\textbf(Théorème de Rice)} On appelle propriété sémantique non-triviale une propriété sur le comportement d'un programme telle qu'il existe au moins un exemple la respectant et un ne la respectant pas. Toute propriété sémantique non-triviale est indécidable.
 \end{theorem}
 
 \begin{proof}
