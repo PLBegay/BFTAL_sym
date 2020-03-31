@@ -315,6 +315,9 @@ Traduire en grammaire l'automate
 \end{tikzpicture}
 \end{figure}
 
+\end{exercice}
+
+\begin{correction*}
 En appliquant l'algorithme donné en cours, on obtient 
 
 \[
@@ -332,5 +335,255 @@ où $A$ est l'axiome.
 
 Notez qu'on pourrait aussi ajouter par exemple une règle $C \rightarrow a$, mais ça serait redondant avec $C \rightarrow aD$ et $D \rightarrow \epsilon$. On pourrait également enlever toutes les $\epsilon$-productions et les remplacer par $C \rightarrow a$, $D \rightarrow a$ etc, mais la grammaire nous semble ainsi moins lisible.
 
+\end{correction*}
+
+
+\subsection{Grammaires de type 2, ou non contextuelles}
+
+
+\subsection{Grammaires de type 1, ou contextuelles}
+
+
+\begin{exercice}
+Montrer que la grammaire suivante engendre bien le langage \newline $\{a^nb^nc^n ~|~ n \in \mathbb{N}\}$.
+
+\[
+\begin{cases}
+S' \rightarrow S~|~\epsilon\\
+S \rightarrow aSBC~|~aBC \\
+CB \rightarrow HB\\
+HB \rightarrow HC \\
+HC \rightarrow BC \\
+aB \rightarrow ab \\
+bB \rightarrow bb \\
+bC \rightarrow bc \\
+cC \rightarrow cc 
+\end{cases}
+\]
+
 \end{exercice}
+
+
+\begin{correction*}
+
+L'axiome $S'$ se réécrit en $S$ ou $\epsilon$, ce dernier étant donc inclus comme un cas particulier. $S$ peut écrire des $a$ à sa gauche et des $BC$ à sa droite via la règle 3, jusqu'à s'arrêter en produisant une dernière portée avec la règle 4. Toute dérivation passant par $S$ commence donc par une série de réécritures de la forme 
+
+\[
+S' \rightarrow_1 S \rightarrow_3^n a^nS(BC)^n \rightarrow_4 a^{n+1}(BC)^{n+1}
+\]
+
+Les règles 
+
+\[
+\begin{cases}
+CB \rightarrow HB\\
+HB \rightarrow HC \\
+HC \rightarrow BC
+\end{cases}
+\]
+
+permettent de simuler, dans le cadre des grammaires contextuelles, la règle $CB \rightarrow BC$. On peut donc faire passer les $B$ à gauche des $C$ (et inversement) :
+
+\[
+a^{n+1}(BC)^{n+1} \rightarrow_{5, 6, 7}^* a^{n+1}B^{n+1}C^{n+1}
+\]
+
+Les quatre dernières règles permettent enfin de transformer les $B$ en $b$ et les $C$ en $c$, en allant de la gauche vers la droite :
+
+\[
+a^{n+1}B^{n+1}C^{n+1} \rightarrow_8 a^{n+1}bB^{n}C^{n+1} \rightarrow_9^n a^{n+1}b^{n+1}C^{n+1} \rightarrow_{10} a^{n+1}b^{n+1}cC^{n} \rightarrow_{11}^n a^{n+1}b^{n+1}c^{n+1}
+\]
+
+
+\end{correction*}
+
+
+\subsection{Grammaires de type 0, ou générales}
+
+\section{Utilisation de grammaires algébriques}
+
+\subsection{Arbres de dérivation}
+
+\begin{exercice}
+Quel est le langage engendré par la grammaire suivante ? 
+
+\[
+\begin{cases}
+S \rightarrow (S)S ~|~ \epsilon
+\end{cases}
+\]
+\end{exercice}
+
+\begin{correction*}
+Cette grammaire engendre l'ensemble des "bons parenthésages", comme $((())())(()())$.
+\end{correction*}
+
+\begin{exercice}
+Donner un arbre de dérivation du mot abbbaaba dans la grammaire 
+
+\[
+\begin{cases}
+S \rightarrow LaaR \\
+L \rightarrow Lb \\
+L \rightarrow ab \\
+R \rightarrow bR \\
+R \rightarrow ba
+\end{cases}
+\]
+
+\end{exercice}
+
+\begin{correction*}
+On a l'arbre suivant :
+
+\begin{figure}[H]
+\center
+\Tree[.S [.L [.L [.L a b ] b ] b ] a a [.R b a ] ]
+\end{figure}
+
+\end{correction*}
+
+\subsection{Transformation de grammaires algébriques}
+
+\subsubsection{Elimination d'$\epsilon$-productions}
+
+
+\begin{exercice}
+Eliminer les $\epsilon$-production de la grammaire suivante :
+
+\[
+\begin{cases}
+S \rightarrow ABC~|~BD \\
+A \rightarrow BC~|~ab \\
+B \rightarrow CDC~|~\epsilon \\
+C \rightarrow BAB~|~ABA \\
+D \rightarrow abba~|~BB~|~BCBS
+\end{cases}
+\]
+\end{exercice}
+
+\begin{correction*}
+
+$B$ se réécrit immédiatement en $\epsilon$, on met donc $B$ dans $K$.
+
+$D$ se réécrit en $BB$, donc en $\epsilon$, on ajoute donc $D$ à $K$. De même, $S$ se réécrit en $BD$, qui est ajouté à $K$. On ne peut par contre ajouter ni $A$ ni $C$. On a donc $K = \{S,B,D\}$
+
+En réécrivant les règle avec $K$, on obtient
+
+\[
+\begin{cases}
+S \rightarrow ABC~|~BD\textcolor{blue}{~|~AC~|~B~|~D} \\
+A \rightarrow BC~|~ab\textcolor{blue}{~|~C} \\
+B \rightarrow CDC\text{\st{$~|~\epsilon$}}\textcolor{blue}{~|~CC} \\
+C \rightarrow BAB~|~ABA\textcolor{blue}{~|~AB~|~BA~|~AA} \\
+D \rightarrow abba~|~BB~|~BCBS\textcolor{blue}{~|~B~|~CBS~|~BCS~|~BCB~|~CS~|~CB~|~BC~|~C}
+\end{cases}
+\]
+
+De plus, puisque $S \in K$, il faut ajouter la production d'$\epsilon$ comme cas spécifique :
+\[
+\begin{cases}
+S' \rightarrow S~|~\epsilon \\
+S \rightarrow ABC~|~BD\textcolor{blue}{~|~AC~|~B~|~D} \\
+A \rightarrow BC~|~ab\textcolor{blue}{~|~C} \\
+B \rightarrow CDC\text{\st{$~|~\epsilon$}}\textcolor{blue}{~|~CC} \\
+C \rightarrow BAB~|~ABA\textcolor{blue}{~|~AB~|~BA~|~AA} \\
+D \rightarrow abba~|~BB~|~BCBS\textcolor{blue}{~|~B~|~CBS~|~BCS~|~BCB~|~CS~|~CB~|~BC~|~C}
+\end{cases}
+\]
+
+où $S'$ est l'axiome.
+
+\end{correction*}
+
+\subsubsection{Elimination de cycles}
+
+
+\begin{exercice}
+Eliminer les cycles de la grammaire 
+
+\[
+\begin{cases}
+S \rightarrow AB~|~C\\
+A \rightarrow C \\
+B \rightarrow \epsilon \\
+C \rightarrow S~|~a 
+\end{cases}
+\]
+\end{exercice}
+
+\begin{correction*}
+
+Pour ça, il faut d'abord éliminer les $\epsilon$-productions de la grammaire. Puisque $K = \{B\}$, on obtient
+
+\[
+\begin{cases}
+S \rightarrow AB~|~C~|~A\\
+A \rightarrow C \\
+C \rightarrow S~|~a 
+\end{cases}
+\]
+
+On calcule que $S$, $A$ et $C$ peuvent tous se réécrire en $S$, $A$ et $C$. On transforme donc la grammaire en 
+
+\[
+\begin{cases}
+S \rightarrow AB\text{\st{$~|~C~|~A$}}\textcolor{blue}{~|~a}\\
+A \rightarrow \text{\st{$C$}}\textcolor{blue}{~|~AB~|~a}\\
+C \rightarrow \text{\st{$S~|~$}}a\textcolor{blue}{~|~AB} 
+\end{cases}
+\]
+
+On remarquera que cette grammaire est en fait un peu nulle.
+
+\end{correction*}
+
+\subsubsection{Elimination de symboles inutiles}
+
+\begin{exercice}
+Eliminer les symboles inutiles de la grammaire suivante :
+
+\[
+\begin{cases}
+S \rightarrow BAB~|~DB \\
+A \rightarrow B~|~a \\
+B \rightarrow bB~|~Ba~|~DAD \\
+C \rightarrow c~|~AB~|~AA \\
+D \rightarrow Da~|~B~|~aSb
+\end{cases}
+\]
+
+\end{exercice}
+
+\begin{correction*}
+
+On commence par exemple avec les symboles (in)accessibles. $S$ étant l'axiome, il est évidemment accessible. De plus, il peut immédiatement créer des $A$, $B$ et $D$, qui sont donc également accessibles. $A$ ne produit que $B$, $B$ ne produit que $B$ et $D$, et $D$ que des $S$, $B$ et $D$, on n'a donc rien à ajouter. Puisque $\{S,A,B,D\}$ est l'ensemble des symboles accessibles, l'ensemble des inaccessibles est $\{C\}$.
+
+Notez qu'on aurait pu classer $C$ comme inaccessible plus rapidement en se rendant compte qu'il n'apparaît jamais à droite, mais on n'aurait pas été sûr qu'il composait l'intégralité des symboles inaccessibles.
+
+Notre grammaire est donc maintenant :
+
+\[
+\begin{cases}
+S \rightarrow BAB~|~DB \\
+A \rightarrow B~|~a \\
+B \rightarrow bB~|~Ba~|~DAD \\
+D \rightarrow Da~|~B~|~aSb
+\end{cases}
+\]
+
+On cherche ensuite les symboles avec production. Le seul non-terminal à pouvoir produire immédiatement un "vrai mot" est $A$, qui se réécrit en $a$. Cet ajout ne nous permet cependant pas de trouver un autre symbole productif, puisque aucune règle ne produit un mot composé uniquement de terminaux et/ou de $A$.
+
+Puisque le seul symbole avec production est $\{A\}$, les symboles sans production sont $\{S,B,D\}$. Notre grammaire peut donc se simplifier en 
+
+
+\[
+\begin{cases}
+A \rightarrow B~|~a 
+\end{cases}
+\]
+
+Notre qu'en réappliquant l'élimination de symboles inaccessibles, on enlèverait le $A$, montrant que la grammaire originale engendrait en fait le langage vide.
+
+\end{correction*}
 
