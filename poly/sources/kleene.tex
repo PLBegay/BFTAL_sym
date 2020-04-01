@@ -75,7 +75,7 @@ On peut donc traduire en automates les cas de base des expressions rationnelles.
 \paragraph*{Remarque} Les constructions vues pour les propriétés de clôture ne sont pas optimales. L'\href{https://fr.wikipedia.org/wiki/Algorithme_de_Thompson}{algorithme de Thomson} utilise les mêmes idées mais s'assure qu'il n'y ait pas plus d'un état initial et un état terminal (différents) tout au long de la construction de l'automate, ce qui permet de borner plus finement sa taille, et de faciliter la concaténation (on fusionne l'état terminal gauche et l'état initial droit).
 
 \subsection{Traduction linéaire}
-
+\label{glushkov}
 On propose un autre algorithme, qui sépare la construction des états de celles des transitions : l'\textbf{algorithme de Glushkov}.
 
 \begin{example}
@@ -330,7 +330,390 @@ Toute paire $\big \langle q_1, q_2 \big \rangle$ appartenant à $P(e)$ génère 
 Utiliser l'algorithme de Glushkov pour traduire en automate l'expression \newline $e = (bb)^*(b(a+b)^*)^*$
 \end{exercice}
 
-\paragraph*{Remarque} On a présenté ces différents algorithmes comme des preuves de la "traductabilité" des expressions rationnelles en automates finis. Si on était vraiment rigoureux, les algorithmes ne suffiraient pas, il faudrait aussi prouver 1) qu'ils terminent sur toute entrée 2) qu'ils produisent bien un automate fini acceptant le langage décrit par l'expression donnée. Ces preuves sont autrement plus complexes que l'écriture des algorithmes\footnote{On entend souvent dire que la preuve d'un programme ou algorithme est au moins un ordre de grandeur plus complexe que l'écriture de ce dernier} et vont au-delà du programme du cours, mais il est toujours bon de garder son esprit critique face à ces choses. Cette remarque s'applique bien évidemment également à l'algorithme présenté dans les pages qui suivent pour la traduction inverse.
+\subsection{Méthode des résiduels}
+
+Janusz A. Brzozowski introduit en 1964 la notion de dérivée partielle d'expression rationnelle, parfois appelée \textbf{dérivée de Brzozowski}, qu'il utilise dans un algorithme traduisant une regex en automate fini, déterministe et complet. En 1996, Valentin Antimirov propose une variation de la dérivation et de l'algorithme, qui produit un automate potentiellement non-déterministe mais minimal. On donnera ici une version quelque peu édulcorée de cette méthode générale via un exemple, pour en faire passer l'idée, puis on en fournira les bases techniques.
+
+
+\begin{example}
+
+On veut obtenir un automate reconnaissant le langage dénoté par l'expression $c(ab)^*ac + aac(ab)^*$. Pour ça, on va utiliser des états dont les noms sont, souf forme d'expression rationnelle, le langage qu'il nous reste à lire une fois qu'on les a atteints. Ce "langage qu'il nous reste à lire" est ce qu'on appelle un \textbf{résiduel}.
+
+Au tout début de la lecture d'un mot, l'expression qu'il nous reste à reconnaître est bien évidemment $c(ab)^*ac + aac(ab)^*$ (qu'on écrira $e$). On a donc notre état initial :
+
+
+\begin{figure}[H]
+\centering
+
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.5cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+  \node[initial,state] (0) []                    {$e$};
+  \node[] (a) [above right of=0]                    {};%{$ac(ab)^*$};
+  \node[] (c) [below right of=0]                    {};%{$(ab)^*ac$};
+  \node[] (aa) [right of=a]                    {};%{$c(ab)^*$};
+  \node[] (ca) [right of=c]                    {};%{$b(ab)^*ac+c$};
+    \node[] (aac) [right of=aa]                    {};%{$(ab)^*$};
+    \node[] (aaca) [right of=aac]                   {};% {$b(ab)^*$};
+  \node[] (cac) [below right of=ca]                  {};%  {$\epsilon$};
+
+\end{tikzpicture}
+%\caption{Automate reconnaissant $c(ab)^*ac + aac(ab)^*$}
+\end{figure}
+
+Il faut ensuite déterminer ce qu'il nous resterait à lire après un $a$ pour être dans l'expression $e$. On note ce langage $a^{-1}e = a^{-1}(c(ab)^*ac + aac(ab)^*)$.
+Puisque $e$ est l'ensemble des mots de la forme $c(ab)^*ac$ ou $aac(ab)^*$, donc $a^{-1}e$ est l'ensemble des mots de la forme $a^{-1}c(ab)^*ac$ ou $a^{-1}aac(ab)^*$.
+
+La notation $a^{-1}c(ab)^*ac$ dénote l'ensemble des mots $u$ tels que $au$ appartienne au langage $c(ab)^*ac$. On voit bien qu'il y a une incompatibilité au niveau de la première lettre, ce langage est donc vide.
+
+En revanche, la notation $a^{-1}aac(ab)^*$ n'est pas vide. Il s'agit en effet de l'ensemble des mots $u$ tels que $au$ soit de la forme $aac(ab)^*$, c'est-à-dire $ac(ab)^*$. On intègre cette donnée à l'automate, en ajoutant un état et une transition disant que, quand on doit reconnaître $e$ et qu'on lit un $a$, il nous reste à lire un mot de la forme $ac(ab)^*$ :
+
+
+
+\begin{figure}[H]
+\centering
+
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.5cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+  \node[initial,state] (0) []                    {$e$};
+  \node[state] (a) [above right of=0]                    {$ac(ab)^*$};
+  \node[] (c) [below right of=0]                    {};%{$(ab)^*ac$};
+  \node[] (aa) [right of=a]                    {};%{$c(ab)^*$};
+  \node[] (ca) [right of=c]                    {};%{$b(ab)^*ac+c$};
+    \node[] (aac) [right of=aa]                   {};% {$(ab)^*$};
+    \node[] (aaca) [right of=aac]                   {};% {$b(ab)^*$};
+  \node[] (cac) [below right of=ca]                {};%    {$\epsilon$};
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+
+(0) edge      []        node {$a$} (a)
+;
+\end{tikzpicture}
+\end{figure}
+
+De même, on calcule $b^{-1}e = b^{-1}(c(ab)^*ac + aac(ab)^*) = b^{-1}(c(ab)^*ac + b^{-1}aac(ab)^*$. On voit que le langage est vide, puisqu'on cherche des mots qui commencent à la fois par $b$ et soit $c$ soit $a$. On n'ajoute donc pas d'état et de transition.
+
+On calcule aussi $c^{-1}e = c^{-1}(c(ab)^*ac + aac(ab)^*) = c^{-1}(c(ab)^*ac + c^{-1}aac(ab)^*$. La partie droite du résiduelle est vide, mais pas la partie gauche. On a en effet $c^{-1}(c(ab)^*ac + c^{-1}aac(ab)^* = (ab)^*ac$. On ajoute donc l'état et la transition correspondant :
+
+
+
+\begin{figure}[H]
+\centering
+
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.5cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+  \node[initial,state] (0) []                    {$e$};
+  \node[state] (a) [above right of=0]                    {$ac(ab)^*$};
+  \node[state] (c) [below right of=0]                    {$(ab)^*ac$};
+  \node[] (aa) [right of=a]                    {};%{$c(ab)^*$};
+  \node[] (ca) [right of=c]                    {};%{$b(ab)^*ac+c$};
+    \node[] (aac) [right of=aa]                   {};% {$(ab)^*$};
+    \node[] (aaca) [right of=aac]                   {};% {$b(ab)^*$};
+  \node[] (cac) [below right of=ca]                {};%    {$\epsilon$};
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+
+(0) edge      []        node {$a$} (a)
+(0) edge      []        node {$c$} (c)
+
+;
+\end{tikzpicture}
+\end{figure}
+
+On continue sur la partie haute de l'automate. On a 
+
+\begin{itemize}
+\item $a^{-1}ac(ab)^* = c(ab)^*$
+\item $b^{-1}ac(ab)^* = c^{-1}ac(ab)^* = \emptyset$
+\end{itemize}
+
+puis
+
+\begin{itemize}
+\item $c^{-1}c(ab)^* = (ab)^*$
+\item $a^{-1}c(ab)^* = b^{-1}c(ab)^* = \emptyset$
+\end{itemize}
+
+On met à jour l'automate : 
+
+
+\begin{figure}[H]
+\centering
+
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.5cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+  \node[initial,state] (0) []                    {$e$};
+  \node[state] (a) [above right of=0]                    {$ac(ab)^*$};
+  \node[state] (c) [below right of=0]                    {$(ab)^*ac$};
+  \node[state] (aa) [right of=a]                    {$c(ab)^*$};
+  \node[] (ca) [right of=c]                    {};%{$b(ab)^*ac+c$};
+    \node[state] (aac) [right of=aa]                   {$(ab)^*$};
+    \node[] (aaca) [right of=aac]                   {};% {$b(ab)^*$};
+  \node[] (cac) [below right of=ca]                {};%    {$\epsilon$};
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+
+(0) edge      []        node {$a$} (a)
+(0) edge      []        node {$c$} (c)
+(a) edge      []        node {$a$} (aa)
+(aa) edge      []        node {$c$} (aac)
+
+;
+\end{tikzpicture}
+\end{figure}
+
+On s'intéresse ensuite à $(ab)^*$. Si un mot de $(ab)^*$ commence par $a$, c'est que l'étoile a été utilisée au moins une fois. Dans ce cas, l'expression "visée" est en fait $ab(ab)^*$. Le résiduel $a^{-1}(ab)^*$ est donc $a^{-1}ab(ab)^* = b(ab)^*$. Par le même raisonnement, $b^{-1}(ab)^* = c^{-1}(ab)^* = \emptyset$ :
+
+
+\begin{figure}[H]
+\centering
+
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.5cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+  \node[initial,state] (0) []                    {$e$};
+  \node[state] (a) [above right of=0]                    {$ac(ab)^*$};
+  \node[state] (c) [below right of=0]                    {$(ab)^*ac$};
+  \node[state] (aa) [right of=a]                    {$c(ab)^*$};
+  \node[] (ca) [right of=c]                    {};%{$b(ab)^*ac+c$};
+    \node[state] (aac) [right of=aa]                   {$(ab)^*$};
+    \node[state] (aaca) [right of=aac]                   {$b(ab)^*$};
+  \node[] (cac) [below right of=ca]                {};%    {$\epsilon$};
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+
+(0) edge      []        node {$a$} (a)
+(0) edge      []        node {$c$} (c)
+(a) edge      []        node {$a$} (aa)
+(aa) edge      []        node {$c$} (aac)
+(aac) edge      [bend left]        node {$a$} (aaca)
+
+
+;
+\end{tikzpicture}
+\end{figure}
+
+Le seul résiduel non-vide de $b(ab)^*$ est $b^{-1}b(ab)^* = (ab)^*$. On revient donc sur l'état précédent : 
+
+
+\begin{figure}[H]
+\centering
+
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.5cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+  \node[initial,state] (0) []                    {$e$};
+  \node[state] (a) [above right of=0]                    {$ac(ab)^*$};
+  \node[state] (c) [below right of=0]                    {$(ab)^*ac$};
+  \node[state] (aa) [right of=a]                    {$c(ab)^*$};
+  \node[] (ca) [right of=c]                    {};%{$b(ab)^*ac+c$};
+    \node[state] (aac) [right of=aa]                   {$(ab)^*$};
+    \node[state] (aaca) [right of=aac]                   {$b(ab)^*$};
+  \node[] (cac) [below right of=ca]                {};%    {$\epsilon$};
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+
+(0) edge      []        node {$a$} (a)
+(0) edge      []        node {$c$} (c)
+(a) edge      []        node {$a$} (aa)
+(aa) edge      []        node {$c$} (aac)
+(aac) edge      [bend left]        node {$a$} (aaca)
+(aaca) edge      [bend left]        node {$b$} (aac)
+
+
+;
+\end{tikzpicture}
+\end{figure}
+
+On revient maintenant sur la partie basse de l'automate, en particulier l'état $(ab)^*ac$. On peut \textit{unfolder} manuellement l'étoile, en séparant les cas où elle est instanciée zéro ou au moins une fois, ce qui donne l'expression $ab(ab)^*ac + ac$. On peut maintenant calculer le résiduel $a^{-1}(ab)^*ac = a^{-1}(ab(ab)^*ac + ac) = b(ab)^*ac + c$. Les résiduels en $b$ et $c$ sont par contre vides : 
+
+
+\begin{figure}[H]
+\centering
+
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.5cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+  \node[initial,state] (0) []                    {$e$};
+  \node[state] (a) [above right of=0]                    {$ac(ab)^*$};
+  \node[state] (c) [below right of=0]                    {$(ab)^*ac$};
+  \node[state] (aa) [right of=a]                    {$c(ab)^*$};
+  \node[state] (ca) [right of=c]                    {$b(ab)^*ac+c$};
+    \node[state] (aac) [right of=aa]                   {$(ab)^*$};
+    \node[state] (aaca) [right of=aac]                   {$b(ab)^*$};
+  \node[] (cac) [below right of=ca]                {};%    {$\epsilon$};
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+
+(0) edge      []        node {$a$} (a)
+(0) edge      []        node {$c$} (c)
+(a) edge      []        node {$a$} (aa)
+(aa) edge      []        node {$c$} (aac)
+(aac) edge      [bend left]        node {$a$} (aaca)
+(aaca) edge      [bend left]        node {$b$} (aac)
+(ca) edge      [bend right]        node {$b$} (c)
+
+
+;
+\end{tikzpicture}
+\end{figure}
+
+En calculant les derniers résiduels, on arrive à 
+
+
+
+\begin{figure}[H]
+\centering
+
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.5cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+  \node[initial,state] (0) []                    {$e$};
+  \node[state] (a) [above right of=0]                    {$ac(ab)^*$};
+  \node[state] (c) [below right of=0]                    {$(ab)^*ac$};
+  \node[state] (aa) [right of=a]                    {$c(ab)^*$};
+  \node[state] (ca) [right of=c]                    {$b(ab)^*ac+c$};
+    \node[state] (aac) [right of=aa]                   {$(ab)^*$};
+    \node[state] (aaca) [right of=aac]                   {$b(ab)^*$};
+  \node[state] (cac) [below right of=ca]                  {$\epsilon$};
+
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+
+(0) edge      []        node {$a$} (a)
+(0) edge      []        node {$c$} (c)
+
+(a) edge      []        node {$a$} (aa)
+(c) edge      [bend right]        node {$a$} (ca)
+
+(aa) edge      []        node {$c$} (aac)
+(aac) edge      [bend left]        node {$a$} (aaca)
+(aaca) edge      [bend left]        node {$b$} (aac)
+(ca) edge      [bend right]        node {$b$} (c)
+(ca) edge      []        node {$c$} (cac)
+
+
+;
+\end{tikzpicture}
+\end{figure}
+
+Il ne nous manque plus que les états terminaux. On devrait pouvoir arrêter notre lecture ssi.  le langage qu'il nous reste à reconnaître contient le mot vide. Les états terminaux sont donc ceux dont le langage dénoté par l'expression rationnelle contient $\epsilon$, par exemple en utilisant la fonction $E$ donnée dans en \ref{glushkov}. Au final, l'automate est donc 
+
+
+\begin{figure}[H]
+\centering
+
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.5cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+  \tikzstyle{place}=[rectangle,draw=black,fill=white, minimum size=7mm]
+
+  \node[initial,state] (0) []                    {$e$};
+  \node[state] (a) [above right of=0]                    {$ac(ab)^*$};
+  \node[state] (c) [below right of=0]                    {$(ab)^*ac$};
+  \node[state] (aa) [right of=a]                    {$c(ab)^*$};
+  \node[state] (ca) [right of=c]                    {$b(ab)^*ac+c$};
+    \node[state,accepting] (aac) [right of=aa]                    {$(ab)^*$};
+    \node[state] (aaca) [right of=aac]                    {$b(ab)^*$};
+  \node[state,accepting] (cac) [below right of=ca]                    {$\epsilon$};
+
+  \path %(I) edge[loop above]              node {$a,b$} (I)
+
+(0) edge      []        node {$a$} (a)
+(0) edge      []        node {$c$} (c)
+
+(a) edge      []        node {$a$} (aa)
+(c) edge      [bend right]        node {$a$} (ca)
+
+(aa) edge      []        node {$c$} (aac)
+(aac) edge      [bend left]        node {$a$} (aaca)
+(aaca) edge      [bend left]        node {$b$} (aac)
+(ca) edge      [bend right]        node {$b$} (c)
+(ca) edge      []        node {$c$} (cac)
+
+
+;
+\end{tikzpicture}
+\caption{Automate reconnaissant $c(ab)^*ac + aac(ab)^*$}
+\end{figure}
+
+\end{example}
+
+On a fait l'exemple précédent \textit{avec les mains}, mais la dérivée est bien sûr formellement définie comme suit : 
+
+\[
+\begin{cases}
+a^{-1}\epsilon = \emptyset \\
+a^{-1}a = \epsilon \\
+a^{-1}b = \emptyset \\
+a^{-1}(e_1+e_2) = a^{-1}e_1 + a^{-1}e_2 \\
+a^{-1}(e_1.e_2) = (a^{-1}e_1)e_2 & \text{Si } e_1 \text{ n'accepte pas le mot vide, cad. si }\neg E(e_1) \\
+a^{-1}(e_1.e_2) = (a^{-1}e_1)e_2 + a^{-1}e_2 & \text{sinon}  \\
+a^{-1}e^* = (a^{-1}e)e^*
+\end{cases}
+\]
+
+\begin{example}
+En appliquant ces calculs à l'expression $c(ab)^*ac + aac(ab)^*$, on retrouve la construction de notre automate :
+
+
+\begin{itemize}
+    \item $a^{-1}(c(ab)^*ac + aac(ab)^*) = a^{-1}c(ab)^*ac + a^{-1}aac(ab)^* = a^{-1}aac(ab)^* = ac(ab)^*$
+    \begin{itemize}
+        \item $a^{-1} ac(ab)^* = c(ab)^*$
+        \begin{itemize}
+            \item $a^{-1}c(ab)^* = b^{-1}c(ab)^* = \emptyset$
+            \item $c^{-1}c(ab)^* = \textcolor{red}{(ab)^*}$
+            \begin{itemize}
+                \item $a^{-1}(ab)^* = b(ab)^*$
+                \begin{enumerate}
+                    \item[] $~~~~a^{-1}b(ab)^* = c^{-1}b(ab)^* = \emptyset$
+                    \item[] $~~~~b^{-1}b(ab)^* = \textcolor{red}{(ab)^*}$
+                \end{enumerate}
+                \item $b^{-1}(ab)^* = c^{-1}(ab)^* = \emptyset$
+            \end{itemize}
+        \end{itemize}
+        \item $b^{-1} ac(ab)^* = c^{-1} ac(ab)^* = \emptyset$
+    \end{itemize}
+    \item $b^{-1}(c(ab)^*ac + aac(ab)^*) = \emptyset$
+    \item $c^{-1}(c(ab)^*ac + aac(ab)^*) = c^{-1}c(ab)^*ac + c^{-1}aac(ab)^* = c^{-1}c(ab)^*ac = \textcolor{blue}{(ab)^*ac}$
+    \begin{itemize}
+        \item $a^{-1}(ab)^*ac = b(ab)^*ac + c$
+        \begin{itemize}
+            \item $a^{-1}(b(ab)^*ac + c) = \emptyset$
+            \item $b^{-1}(b(ab)^*ac + c) = \textcolor{blue}{(ab)^*ac}$
+            \item $c^{-1}(b(ab)^*ac + c) = \epsilon$
+        \end{itemize}
+        \item $b^{-1}(ab)^*ac = c^{-1}(ab)^*ac = \emptyset$
+    \end{itemize}
+\end{itemize}
+\end{example}
+
+
+Une grande difficulté, qu'on a évitée dans l'exemple ci-dessus, est l'identification d'expressions rationnelles équivalentes. En effet, si on applique la méthode à l'expression $(aa)^*+aa$, la dérivée par $aa$ va nous emmener sur $(aa)^* + \epsilon$, qui est une expression syntaxiquement différente, mais sémantiquement identique, en ce qu'elle dénote le même langage. Si on utilise deux états différents pour ces expressions, l'automate obtenu ne sera pas minimal. C'est sur la gestion de ce problème que différent les méthodes de Brzozowski et Antimirov, différences qui ne sont pas étudiées ici. 
+
+
+
+\paragraph*{Remarque} On a présenté dans cette section différents algorithmes comme des preuves de la "traductabilité" des expressions rationnelles en automates finis. Si on était vraiment rigoureux, les algorithmes ne suffiraient pas, il faudrait aussi prouver 1) qu'ils terminent sur toute entrée 2) qu'ils produisent bien un automate fini acceptant le langage décrit par l'expression donnée. Ces preuves sont autrement plus complexes que l'écriture des algorithmes\footnote{On entend souvent dire que la preuve d'un programme ou algorithme est au moins un ordre de grandeur plus complexe que l'écriture de ce dernier} et vont au-delà du programme du cours, mais il est toujours bon de garder son esprit critique face à ces choses. Cette remarque s'applique bien évidemment également à l'algorithme présenté dans les pages qui suivent pour la traduction inverse.
 
 
 
