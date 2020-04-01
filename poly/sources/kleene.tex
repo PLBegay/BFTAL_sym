@@ -337,7 +337,7 @@ Janusz A. Brzozowski introduit en 1964 la notion de dérivée partielle d'expres
 
 \begin{example}
 
-On veut obtenir un automate reconnaissant le langage dénoté par l'expression $c(ab)^*ac + aac(ab)^*$. Pour ça, on va utiliser des états dont les noms sont, souf forme d'expression rationnelle, le langage qu'il nous reste à lire une fois qu'on les a atteints. Ce "langage qu'il nous reste à lire" est ce qu'on appelle un \textbf{résiduel}.
+On veut obtenir un automate reconnaissant le langage dénoté par l'expression $c(ab)^*ac + aac(ab)^*$. Pour ça, on va utiliser des états dont les noms sont, sous forme d'expression rationnelle, le langage qu'il nous reste à lire une fois qu'on les a atteints. Ce "langage qu'il nous reste à lire" est ce qu'on appelle un \textbf{résiduel}.
 
 Au tout début de la lecture d'un mot, l'expression qu'il nous reste à reconnaître est bien évidemment $c(ab)^*ac + aac(ab)^*$ (qu'on écrira $e$). On a donc notre état initial :
 
@@ -364,11 +364,11 @@ Au tout début de la lecture d'un mot, l'expression qu'il nous reste à reconna�
 \end{figure}
 
 Il faut ensuite déterminer ce qu'il nous resterait à lire après un $a$ pour être dans l'expression $e$. On note ce langage $a^{-1}e = a^{-1}(c(ab)^*ac + aac(ab)^*)$.
-Puisque $e$ est l'ensemble des mots de la forme $c(ab)^*ac$ ou $aac(ab)^*$, donc $a^{-1}e$ est l'ensemble des mots de la forme $a^{-1}c(ab)^*ac$ ou $a^{-1}aac(ab)^*$.
+Puisque $e$ est l'ensemble des mots de la forme $c(ab)^*ac$ ou $aac(ab)^*$, $a^{-1}e$ est l'ensemble des mots de la forme $a^{-1}c(ab)^*ac$ ou $a^{-1}aac(ab)^*$.
 
 La notation $a^{-1}c(ab)^*ac$ dénote l'ensemble des mots $u$ tels que $au$ appartienne au langage $c(ab)^*ac$. On voit bien qu'il y a une incompatibilité au niveau de la première lettre, ce langage est donc vide.
 
-En revanche, la notation $a^{-1}aac(ab)^*$ n'est pas vide. Il s'agit en effet de l'ensemble des mots $u$ tels que $au$ soit de la forme $aac(ab)^*$, c'est-à-dire $ac(ab)^*$. On intègre cette donnée à l'automate, en ajoutant un état et une transition disant que, quand on doit reconnaître $e$ et qu'on lit un $a$, il nous reste à lire un mot de la forme $ac(ab)^*$ :
+En revanche, la notation $a^{-1}aac(ab)^*$ n'est pas vide. Il s'agit en effet de l'ensemble des mots $u$ tels que $au$ soit de la forme $aac(ab)^*$, ensemble dénoté par $ac(ab)^*$. On intègre cette donnée à l'automate, en ajoutant un état et une transition disant que, quand on doit reconnaître $e$ et qu'on lit un $a$, il nous reste à lire un mot de la forme $ac(ab)^*$ :
 
 
 
@@ -396,9 +396,9 @@ En revanche, la notation $a^{-1}aac(ab)^*$ n'est pas vide. Il s'agit en effet de
 \end{tikzpicture}
 \end{figure}
 
-De même, on calcule $b^{-1}e = b^{-1}(c(ab)^*ac + aac(ab)^*) = b^{-1}(c(ab)^*ac + b^{-1}aac(ab)^*$. On voit que le langage est vide, puisqu'on cherche des mots qui commencent à la fois par $b$ et soit $c$ soit $a$. On n'ajoute donc pas d'état et de transition.
+De même, on calcule $b^{-1}e = b^{-1}(c(ab)^*ac + aac(ab)^*) = b^{-1}(c(ab)^*ac + b^{-1}aac(ab)^*)$. On voit que le langage est vide, puisqu'on cherche des mots qui commencent à la fois par $b$ et soit $c$ soit $a$. On n'ajoute donc pas d'état ou de transition.
 
-On calcule aussi $c^{-1}e = c^{-1}(c(ab)^*ac + aac(ab)^*) = c^{-1}(c(ab)^*ac + c^{-1}aac(ab)^*$. La partie droite du résiduelle est vide, mais pas la partie gauche. On a en effet $c^{-1}(c(ab)^*ac + c^{-1}aac(ab)^* = (ab)^*ac$. On ajoute donc l'état et la transition correspondant :
+On calcule aussi $c^{-1}e = c^{-1}(c(ab)^*ac + aac(ab)^*) = c^{-1}(c(ab)^*ac + c^{-1}aac(ab)^*$. La partie droite du résiduel est vide, mais pas la partie gauche. On a en effet \newline $c^{-1}c(ab)^*ac + c^{-1}aac(ab)^* = (ab)^*ac$. On ajoute donc l'état et la transition correspondant :
 
 
 
@@ -540,7 +540,7 @@ Le seul résiduel non-vide de $b(ab)^*$ est $b^{-1}b(ab)^* = (ab)^*$. On revient
 \end{tikzpicture}
 \end{figure}
 
-On revient maintenant sur la partie basse de l'automate, en particulier l'état $(ab)^*ac$. On peut \textit{unfolder} manuellement l'étoile, en séparant les cas où elle est instanciée zéro ou au moins une fois, ce qui donne l'expression $ab(ab)^*ac + ac$. On peut maintenant calculer le résiduel $a^{-1}(ab)^*ac = a^{-1}(ab(ab)^*ac + ac) = b(ab)^*ac + c$. Les résiduels en $b$ et $c$ sont par contre vides : 
+On revient maintenant sur la partie basse de l'automate, en particulier l'état $(ab)^*ac$. On peut \textit{unfolder} manuellement l'étoile, en séparant les cas où elle est instanciée zéro ou au moins une fois, ce qui donne l'expression $ab(ab)^*ac + ac$. On peut maintenant calculer le résiduel \newline$a^{-1}(ab)^*ac = a^{-1}(ab(ab)^*ac + ac) = b(ab)^*ac + c$. Les résiduels en $b$ et $c$ sont par contre vides : 
 
 
 \begin{figure}[H]
@@ -568,7 +568,7 @@ On revient maintenant sur la partie basse de l'automate, en particulier l'état 
 (aa) edge      []        node {$c$} (aac)
 (aac) edge      [bend left]        node {$a$} (aaca)
 (aaca) edge      [bend left]        node {$b$} (aac)
-(ca) edge      [bend right]        node {$b$} (c)
+(c) edge      [bend right]        node {$a$} (ca)
 
 
 ;
@@ -616,7 +616,7 @@ En calculant les derniers résiduels, on arrive à
 \end{tikzpicture}
 \end{figure}
 
-Il ne nous manque plus que les états terminaux. On devrait pouvoir arrêter notre lecture ssi.  le langage qu'il nous reste à reconnaître contient le mot vide. Les états terminaux sont donc ceux dont le langage dénoté par l'expression rationnelle contient $\epsilon$, par exemple en utilisant la fonction $E$ donnée dans en \ref{glushkov}. Au final, l'automate est donc 
+Il ne nous manque plus que les états terminaux. On devrait pouvoir arrêter notre lecture ssi.  le langage qu'il nous reste à reconnaître contient le mot vide. Les états terminaux sont donc ceux dont l'expression rationnelle dénote un langage qui contient $\epsilon$. Cette condition peut se calculer en utilisant la fonction $E$ donnée dans en \ref{glushkov}. Au final, l'automate est donc 
 
 
 \begin{figure}[H]
@@ -709,7 +709,9 @@ En appliquant ces calculs à l'expression $c(ab)^*ac + aac(ab)^*$, on retrouve l
 \end{example}
 
 
-Une grande difficulté, qu'on a évitée dans l'exemple ci-dessus, est l'identification d'expressions rationnelles équivalentes. En effet, si on applique la méthode à l'expression $(aa)^*+aa$, la dérivée par $aa$ va nous emmener sur $(aa)^* + \epsilon$, qui est une expression syntaxiquement différente, mais sémantiquement identique, en ce qu'elle dénote le même langage. Si on utilise deux états différents pour ces expressions, l'automate obtenu ne sera pas minimal. C'est sur la gestion de ce problème que différent les méthodes de Brzozowski et Antimirov, différences qui ne sont pas étudiées ici. 
+Une grande difficulté, qu'on a évitée dans l'exemple ci-dessus, est l'identification d'expressions rationnelles équivalentes. En effet, si on applique la méthode des résiduels à l'expression $(aa)^*+aa$, la dérivée par $aa$ va nous emmener sur $(aa)^* + \epsilon$, qui est une expression syntaxiquement différente, mais sémantiquement identique, en ce qu'elle dénote le même langage. C'est sur la gestion de ce problème que différent les propositions de Brzozowski et Antimirov, différences qui ne sont pas étudiées ici. 
+
+A supposer qu'on arrive à éviter ce genre de problème, la méthode présentée ici produit systématiquement un automate déterministe et minimal reconnaissant le même langage que l'expression rationnelle donnée en argument.
 
 
 
@@ -794,7 +796,7 @@ On commence en calculer tous les $L_{i,j}^{\emptyset}$. Puisqu'on n'a pas le dro
    \end{itemize}
 \end{itemize}
 
-Maintenant qu'on a notre cas de base, il s'agit de passer aux étapes suivantes en ajoutant de nouveaux états. Si on a tous nos $L_{i,j}^X$ et qu'on veut s'autoriser à passer par l'état $q$, on va utiliser la formule 
+Maintenant qu'on a nos cas de base, il s'agit de passer aux étapes suivantes en ajoutant de nouveaux états. De façon générale, Si on a calculé tous les $L_{i,j}^X$ et qu'on veut s'autoriser à passer par l'état $q$, on va utiliser la formule 
 
 \[
 L_{i,j}^{X \cup \{q\}} = L_{i,j}^X \cup L_{i,q}^X(L_{q,q}^X)^*L_{q,j}^X
@@ -802,9 +804,9 @@ L_{i,j}^{X \cup \{q\}} = L_{i,j}^X \cup L_{i,q}^X(L_{q,q}^X)^*L_{q,j}^X
 
 L'idée est que, pour aller de $i$ à $j$ en ayant le droit d'utiliser les états de $X$ et $q$, on passe ou non par $q$. Le deuxième cas est pris en compte la partie gauche de l'union ensembliste.
 
-Supposons maintenant qu'on aille de $i$ à $j$ en passant au moins une fois par $q$. Dans ce cas, notre parcours commence par un chemin de $i$ à $q$ sans passer par $q$, cad. par la lecture d'un mot appartenant à $L_{i,q}^X$.
+Supposons maintenant qu'on aille de $i$ à $j$ en passant au moins une fois par $q$. Dans ce cas, notre parcours commence par un premier chemin de $i$ à $q$ sans passer par $q$, cad. par la lecture d'un mot appartenant à $L_{i,q}^X$.
 
-Le parcours peut passer plus d'une fois par $q$. On s'autoriste donc à faire des chemins de $q$ à $q$, ce qui correspond à la partie $(L_{q,q}^X)^*$ de la formule.
+Le parcours peut passer plus d'une fois par $q$. On s'autorise donc à aller de $q$ à $q$, ce qui correspond à la partie $(L_{q,q}^X)^*$ de la formule.
 
 Enfin, une fois qu'on a fait notre dernier passage par l'état $q$, il faut finir notre parcours en allant en $j$ : $L_{q,j}^X$.
 
@@ -881,7 +883,7 @@ On ajoute maintenant $0$ :
 De même, $L_{3,i}^{\{0,1,2\}} = \emptyset$ pour tout état $i$. On a donc $L_{i,j}^Q = L_{i,j}^{\{0,1,2\}}$ pour toute paire d'états $i$ et $j$. 
 
 
-Maintenant qu'on a calculé les langages reconnus par toute paire d'états, on combine ceux qui nous intéressent. Puisque les états initiaux sont $0$ et $1$ et que les terminaux sont $1$ et $3$, le langage reconnu par l'automate est l'union des mots allant de $0$ à $1$, de $0$ à $3$, de $1$ à $1$ et de $1$ à $3$ (on fait toues les combinaisons d'état initial / état terminal).
+Maintenant qu'on a calculé les langages reconnus par toute paire d'états, on combine ceux qui nous intéressent. Puisque les états initiaux sont $0$ et $1$ et que les terminaux sont $1$ et $3$, le langage reconnu par l'automate est l'union des mots allant de $0$ à $1$, de $0$ à $3$, de $1$ à $1$ et de $1$ à $3$ (on fait toutes les combinaisons d'état initial / état terminal).
 
 Attention cependant, $L_{i,j}^Q$ calcule l'ensemble des mots \underline{non-vides} allant de $i$ à $j$. Donc si un état est à la fois initial et terminal, il faut ajouter à la main le mot vide.
 
