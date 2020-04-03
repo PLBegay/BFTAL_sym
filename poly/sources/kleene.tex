@@ -396,9 +396,9 @@ En revanche, la notation $a^{-1}aac(ab)^*$ n'est pas vide. Il s'agit en effet de
 \end{tikzpicture}
 \end{figure}
 
-De même, on calcule $b^{-1}e = b^{-1}(c(ab)^*ac + aac(ab)^*) = b^{-1}(c(ab)^*ac + b^{-1}aac(ab)^*)$. On voit que le langage est vide, puisqu'on cherche des mots qui commencent à la fois par $b$ et soit $c$ soit $a$. On n'ajoute donc pas d'état ou de transition.
+De même, on calcule $b^{-1}e = b^{-1}(c(ab)^*ac + aac(ab)^*) = b^{-1}(c(ab)^*ac) + b^{-1}(aac(ab)^*)$. On voit que le langage est vide, puisqu'on cherche des mots qui commencent à la fois par $b$ et soit $c$ soit $a$. On n'ajoute donc pas d'état ou de transition.
 
-On calcule aussi $c^{-1}e = c^{-1}(c(ab)^*ac + aac(ab)^*) = c^{-1}(c(ab)^*ac + c^{-1}aac(ab)^*$. La partie droite du résiduel est vide, mais pas la partie gauche. On a en effet \newline $c^{-1}c(ab)^*ac + c^{-1}aac(ab)^* = (ab)^*ac$. On ajoute donc l'état et la transition correspondant :
+On calcule aussi $c^{-1}e = c^{-1}(c(ab)^*ac + aac(ab)^*) = c^{-1}(c(ab)^*ac) + c^{-1}(aac(ab)^*)$. La partie droite du résiduel est vide, mais pas la partie gauche. On a en effet \newline $c^{-1}c(ab)^*ac + c^{-1}aac(ab)^* = (ab)^*ac$. On ajoute donc l'état et la transition correspondant :
 
 
 
@@ -872,7 +872,7 @@ On ajoute maintenant $0$ :
 \begin{itemize}
 \item En partant de $0$ :
    \begin{itemize}
-	 \item $L_{0,0}^{\{1,2\} \cup \{0\}} = L_{0,0}^{\{1,2\}} \cup L_{0,0}^{\{1,2\}}(L_{0,0}^{\{0,2\}})^*L_{0,0}^{\{1,2\}} = a + aa^*a = a^+$
+	 \item $L_{0,0}^{\{1,2\} \cup \{0\}} = L_{0,0}^{\{1,2\}} \cup L_{0,0}^{\{1,2\}}(L_{0,0}^{\{1,2\}})^*L_{0,0}^{\{1,2\}} = a + aa^*a = a^+$
 	 \item $L_{0,1}^{\{0,1,2\}} = L_{0,1}^{\{1,2\}} \cup L_{0,0}^{\{1,2\}}(L_{0,0}^{\{1,2\}})^*L_{0,1}^{\{1,2\}} = ac^* + aa^*ac^* = a^+c^*$
 	 \item $L_{0,2}^{\{0,1,2\}} = L_{0,2}^{\{1,2\}} \cup L_{0,0}^{\{1,2\}}(L_{0,0}^{\{1,2\}})^*L_{0,2}^{\{1,2\}} = bd^* + aa^*bd^* = a^*bd^*$
 	 \item $L_{0,3}^{\{0,1,2\}} = L_{0,3}^{\{1,2\}} \cup L_{0,0}^{\{1,2\}}(L_{0,0}^{\{1,2\}})^*L_{0,3}^{\{1,2\}} = ac^*b + bd^*a + aa^*(ac^*b + bd^*a) = a^*(ac^*b + bd^*a)$
