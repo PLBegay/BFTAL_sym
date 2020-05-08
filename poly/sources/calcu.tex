@@ -1,7 +1,9 @@
 
-\chapter{Notion de calculabilité}
+\chapter{Notion(s) de calculabilité}
 
-On s'attache d'abord à contextualiser le reste du cours en évoquant le cadre plus large de la calculabilité et les problématiques qui méneront à la notion d'automate. Ce chapitre peut être complété par \href{https://www.college-de-france.fr/site/xavier-leroy/inaugural-lecture-2018-11-15-18h00.htm}{la leçon inaugurale de Xavier Leroy au Collège de France}.
+Les automates forment un langage de programmation, et donc une façon de penser et d'automatiser le calcul. On commence par introduire deux autres modèles bien connus, puis on discutera du contexte historique et scientifique ayant mené à ces notions.
+
+Ce chapitre ne se substitue pas à une authentique introduction à la calculabilité, et devrait d'ailleurs au strict minimum être complété par \href{https://www.college-de-france.fr/site/xavier-leroy/inaugural-lecture-2018-11-15-18h00.htm}{la magnifique leçon inaugurale de Xavier Leroy au Collège de France}. Il est très probable qu'il contienne des inexactitudes historiques, voire scientifiques. Plutôt que la précision ou l'exhaustivité, il a avant tout pour objectif de contextualiser ceux qui le précèdent, ainsi que de donner une idée, et pourquoi pas le goût, des questions qui se posent dans l'étude des modèles de calcul, ou \textbf{calculabilité}.
 
 \section{Différents modèles de calcul}
 
@@ -9,28 +11,45 @@ L'informatique a pour vocation automatiser ce qui peut l'être afin de faire ré
 
 D'un point de vue programmation, 2 principaux modèles historiques co-existent : les \textbf{machines de Turing} et le \textbf{$\lambda$-calcul}. Ces langages, qui remontent tout de même aux années 30, ne sont pas utilisables en pratique (\href{http://www.ens-lyon.fr/actualite/lecole/la-machine-de-turing-en-legos}{encore que}), mais posent les fondamentaux de ce qu'est un langage de programmation.
 
-\paragraph{Machines de Turing} Les machines de Turing disposent d'une notion d'état, et d'une mémoire infinie modifiable. La notion d'état sera discutée en longueur dans la section \ref{automates}, mais correspond en gros à une mémoire spéciale, propre à chaque programme, qui peut être modifiée et consultée facilement, notamment pour s'orienter dans le \textit{flow} du programme\footnote{Pensez à une variable booleene "premierefois" que vous avez sans doute déjà utilisée dans un \texttt{if} pour accéder ou non à un cas particulier}. Ces traits rapprochement fortement les machines de Turing de la programmation impérative (C, langage machine, le coeur de Python etc). Les machines de Turing sont dues à \textbf{Alan Turing}.
+\paragraph{Machines de Turing} Les machines de Turing disposent de la même notion d'état que les automates, mais aussi d'une mémoire infinie modifiable. Cette mémoire, généralement appelée ruban, contient initialement le mot donné en entrée. Comme les automates, les transitions des machines de Turing sont déterminées par l'état actuel ainsi que la lettre lue. Cependant, en plus de potentiellement changer l'état, les transitions indiquent comment se déplacer dans le mot (droite comme dans les automate, mais aussi aller à gauche ou rester sur place) et d'éventuelles réécriture. Les machines de Turing peuvent donc manipuler à loisir leur mémoire, quitte à réécrire le mot donné en entrée ou déborder d'un côté ou de l'autre. Ces traits les rapprochement fortement de la programmation impérative (C, langage machine, le coeur de Python etc). Les machines de Turing ont été conçues par l'anglais \textbf{Alan Turing}.
 
 \paragraph{$\lambda$-calcul} A la différence des machines de Turing, qui ont une approche quasiment mécanique (pour ne pas dire "bidouille") de l'exécution d'un programme, le $\lambda$-calcul est profondément mathématique. Tout n'y est que fonction, au point que ces dernières sont des objets comme les autres, notamment passables en arguments. On citera l'exemple classique d'une fonction qui reçoit une fonction de tri et une liste, et renvoie la liste triée selon la fonction fournie. Le $\lambda$-calcul est la base de la programmation fonctionnelle. Il a été crée par \textbf{Alonzo Church}.
 
 \paragraph{Remarque} Les types en programmation impérative n'ont souvent qu'une valeur de garde-fou contre des opérations totalement absurdes, alors qu'ils ont une fonction beaucoup plus structurante (certain.e.s diraient "contraignante") en programmation fonctionnelle. L'utilisation de fonctions comme arguments oblige par exemple à repenser les types et aller plus loin que les classiques \verb!bool!, \verb!int! et cie. On renverra encore une fois à la présentation de Xavier Leroy citée en introduction pour une meilleur vision d'ensemble.
 
-Ces deux modèles ne forment pas l'alpha et l'omega de la calculabilité, qui contient de nombreux modèles plus ou moins exotiques, comme les fonctions $\mu$-récursives ou les automates cellulaires (voir à ce sujet \href{https://www.youtube.com/watch?v=S-W0NX97DB0}{la vidéo de la chaîne ScienceEtonnante}).
+Ces deux modèles ne forment pas l'alpha et l'omega de la calculabilité, qui contient de nombreux modèles plus ou moins exotiques, comme les fonctions $\mu$-récursives ou les automates cellulaires (voir à ce sujet \href{https://www.youtube.com/watch?v=S-W0NX97DB0}{la très chouette vidéo de la chaîne ScienceEtonnante}).
 
-\paragraph{Thèse de Church (ou thèse de Church-Turing)} Church et Turing ont montré, dans les années 30, que les machines de Turing et le $\lambda$-calcul sont équivalents, dans le sens où toute fonction exprimable dans un modèle le sera dans l'autre. On dit que les modèles ont la même \textbf{expressivité}. Attention cependant, certaines fonctions très simples en $\lambda$-calcul seront un enfer à coder en machine de Turing, et inversement\footnote{Penser à la différence entre compétence et performance.}. Mais il reste remarquable que deux modèles fonctionnant de façons si orthogonales aient, au fond, la même puissance. 
+\section{Un peu d'Histoire : le programme de Hilbert} 
 
-Ce résultat est moins surprenant avec le recul, puisqu'on sait maintenant que tous la plupart des modèles de calcul non-triviaux sont équivalents, et forment la classe des modèles \textbf{Turing-complets}. Il est en effet possible de simuler, ou coder, les machines de Turing ou le $\lambda$-calcul dans les fonctions $\mu$-récursives ou les automates cellulaires, et inversement. Ce résultat s'étend à une armée de modèles, auxquels ils faut ajouter aujourd'hui des milliers de langages de programmation : Python, C, OCaml, Java, et même Makefile, Bash ou \LaTeX sont bel et bien aussi expressifs les uns que les autres.
+Bien que développés en isolation, ces deux modèles s'inscrivent dans un même mouvement intellectuel. A l'aube du $20^{eme}$ siècle, les fondements des mathématiques sont mis à mal (pour ne pas dire balayés) par \href{https://en.wikipedia.org/wiki/Foundations_of_mathematics#Foundational_crisis}{plusieurs paradoxes}, dont le plus connu est le paradoxe de Russel. Le mathématicien allemand David Hilbert pose alors les bases d'un grand plan de (re)fondation des mathématiques, aujourd'hui appelé "programme de Hilbert". L'idée était d'obtenir une formalisation de l'intégralité des mathématiques, formalisation qui se devait d'être \textbf{complète}, \textbf{cohérente} et \textbf{décidable}.
 
-La thèse de Church peut même s'étendre à l'épistémologie ou à la philosophie, puisqu'elle peut sembler suggérer l'existence d'une notion "naturelle" et indépassable de calcul. On conseillera la lecture de \cite{dowek} pour une introduction à ces problématiques.
+\subsection{Complétude et cohérence}
+Un système mathématique est dit \textbf{complet} s'il existe un système de règles précis dans lequel tout énoncé qui y est vrai peut être démontré. Par exemple, la logique du premier ordre admet plusieurs systèmes de preuve (déduction naturelle, calcul des séquents, ...), contenant des règles du type "De $A \wedge B$ on peut déduire $A$" ou "Si on a un prédicat $P(x)$ et une constante $a$ telle que $P(a)$ est vrai, alors on peut déduire $\exists x, P(x)$". Le mathématicien austro-hongrois Kurt Gödel montre en 1929 que la logique du premier ordre est complète. 
 
+Il existe donc un système de déduction entièrement formalisé dans lequel on peut démontrer tout énoncé vrai de logique du premier ordre (par exemple $(\exists y, \forall x, P(x,y)) \rightarrow \forall x, \exists y, P(x,y)$). En ce sens, le \textbf{théorème de complétude de Gödel} relie la sémantique (la vérité ou non) et la syntaxe (la déduction par application de règles) de la logique du premier ordre.
 
-Le $\lambda$-calcul est utilisé en NLP, mais sera étudié dans un autre cours. Les machines de Turing quant à elles n'ont, en soi, pas d'intérêt pour la linguistique, mais on peut les affaiblir pour les rendre paradoxalement plus pertinentes.
+Ce résultat, avec d'autres, va dans le sens de Hilbert. La logique du premier ordre est cependant trop faible pour exprimer l'arithmétique, qui constitue à l'époque le graal des mathématiques. Cette réalité sera douloureusement rappelée l'année suivante, en 1930, par Gödel, lorsqu'il présentera son \textit{magnum opus}, appelé aujourd'hui \textbf{théorème d'incomplétude de Gödel}. Ce théorème établit que n'\underline{importe quel système formel} assez puissant pour exprimer les nombres entiers sera incomplet. Quelle que soit la formalisation de l'arithmétique choisie, il y aura donc toujours au moins un résultat vrai qui n'y sera pas prouvable. La preuve de Gödel est très bien vulgarisée dans \href{https://www.youtube.com/watch?v=82jOF4Q6gBU}{cette vidéo}.
 
-\section{Décidabilité}
+Un système mathématique est dit \textbf{cohérent} si on ne peut pas y prouver une chose et son contraire (ou, de façon équivalente, si on ne peut y prouver l'énoncé "faux"). Sans aller jusqu'à casser la cohérence de quelque système mathématique que ce soit, la preuve du théorème d'incomplètude de Gödel a pour corollaire que toute formalisation de l'arithmétique sera incapable de prouver sa propre cohérence - ce qui ne veut pas dire qu'elle ne l'est pas !
 
-Au $XVII^{eme}$ siècle, Leibniz rêve d'une procédure permettant de déterminer automatiquement, \textit{via} un calcul, si une formule mathématique est vraie ou non. Leibniz se rendit compte que les bases formelles n'étaient alors pas disponibles, notamment la formalisation du calcul. Le problème réapparaît dans un cadre plus favorable, en 1928, lorsque Hilbert repose la question dans le cadre de son fameux programme de refondation des mathématiques. Le problème de la décision prend alors le doux nom d'\textbf{Entscheidungsproblem}. 
+Les travaux de Gödel n'enterrent pas le programme de Hilbert, mais lui portent un sacré coup. Il faut en effet revoir à la baisse les ambitions, et arrêter d'espérer une formalisation" absolue" des mathématiques. Dans une de ces cruelles ironies dont l'Histoire a le secret, Gödel a présenté ses travaux lors d'une conférence organisée pour le départ en retraite d'Hilbert.
 
-La réponse ne se fera pas (trop) attendre, et c'est un double non. Church et Turing publient en 1936, mais indépendament, des preuves qu'une telle procèdure, ou plutôt un tel programme, est impossible à écrire en machine de Turing et $\lambda$-calcul, et donc pour tout modèle de calcul équivalent. Le problème de la décision est \textbf{indécidable}, et il est loin d'être le seul.
+\subsection{Décidabilité et thèse de Church} 
+
+Au $17^{eme}$ siècle, Leibniz rêve d'une procédure permettant de déterminer automatiquement, \textit{via} un calcul, si une formule mathématique est vraie ou non. Leibniz se rendit compte que les bases formelles n'étaient alors pas disponibles, notamment la formalisation du calcul. Hilbert relance et précise cette ambition en espérant un système qui serait \textbf{décidable}, cad. dont la vérité de tout énoncé pourrait être déterminée par une série finie et établie de calculs. Dit autrement, Hilbert prévoyait l'existence d'un algorithme qui prendrait en entrée toute formule de sa formalisation, et renverrait "vrai" ssi. la formule est effectivement vraie. Ce problème portait alors le doux nom d'\textbf{Entscheidungsproblem} (problème de la décision).
+
+Toujours dans l'optique d'avoir une formalisation de bout en bout des mathématiques, la question de la décidabilité appelle à une définition précise de la notion de calcul. C'est dans ce cadre que, en 1936, Church propose le $\lambda$-calcul, dont il montre immédiatement qu'il est indécidable, et que Turing présente ses machine, ainsi qu'également une preuve de leur indécidabilité. L'existence de deux formalisations indécidables du calcul n'est en soi pas un problème, tant qu'il en existe une décidable. 
+
+Cependant, Church et Turing ont rapidement montré que leurs modèles sont équivalents, dans le sens où toute fonction exprimable dans un modèle le sera dans l'autre. On dit que les modèles ont la même \textbf{expressivité}. Certaines fonctions très simples en $\lambda$-calcul seront un enfer à coder en machine de Turing, et inversement\footnote{Penser à la différence entre compétence et performance.}, mais il reste pour le moins étonnant que deux modèles fonctionnant de façons si orthogonales aient, au fond, la même puissance. 
+
+De nombreux autres modèles seront également montrés équivalents, ce qui pose la question d'une notion "naturelle" et indépassable de calcul, hypothèse appelée \textbf{thèse de Church}. On ne s'attardera pas sur les problématiques épistémologiques ou philosophiques liées, qui sont introduites dans \cite{dowek}, sinon en disant que le programme de Hilbert s'en retrouve encore une fois mis à mal.
+
+La classe des modèles équivalents aux machines de Turing forme l'ensemble des modèles dits \textbf{Turing-complets}. En plus des machines de Turing et le $\lambda$-calcul, on y retrouve les automates cellulaires, les fonctions $\mu$-récursives, l'immense majorité des langages de programmation (Python, C, OCaml, Java, et même Makefile, Bash ou \LaTeX sont bel et bien aussi expressifs les uns que les autres) ou, de façon plus surprenante, \href{https://gaming.stackexchange.com/questions/20219/is-minecraft-turing-complete}{Minecraft} et \href{https://www.youtube.com/watch?v=uNjxe8ShM-8}{powerpoint}.
+
+Il est en fait étonnement compliqué de créer un système qui soit non-trivial sans pour autant être Turing-complet (on y revient en \ref{autoalors}), cad. sans être en fait un langage de programmation "normal".
+
+Pour le plaisir, on revient sur les preuves d'indécidabilité mentionnées plus haut. Puisque les machines de Turing, le $\lambda$-calcul et les langages de programmations "classiques" sont équivalents, on va utiliser des notations plus simples et modernes pour présenter d'abord une preuve de l'indécidabilité d'un problème précis :
+
 
 \begin{theorem}{\textbf(Indécidabilité du problème de l'arrêt)} Savoir si un programme termine est un problème indécidable.
 \end{theorem}
@@ -44,9 +63,10 @@ A partir de $A$, on peut constuire un autre programme appelé $B$, qui prend en 
 Maintenant, appliquons $B$ à lui même. On utilisant la définition de B, on obtient\\ \verb!B(B) := if (A B B) then (while true skip) else skip!, ce qui veut dire que $B(B)$ termine si et seulement si $B(B)$ ne termine pas. On obtient donc un paradoxe, signifiant que notre seule hypothèse, l'existence de $A$, est fausse.
 \end{proof}
 
-\paragraph{Remarque} La preuve contient une bizarrerie, à savoir l'application d'un programme à lui-même ($P(P)$ et $B(B)$). Une telle chose est proscrite par l'utilisation de types, qui rendent la preuve donnée caduque. Il est cependant toujours possible de prouver l'indécidabilité de l'arrêt pour des programmes typés, de façon plus tordue cependant.
+\paragraph{Remarque} La preuve contient une bizarrerie, à savoir l'application d'un programme à lui-même ($P(P)$ et $B(B)$). Une telle chose est proscrite par les types, dont l'utilisation rendrait la preuve donnée caduque. Il est cependant toujours possible de prouver l'indécidabilité de l'arrêt pour des programmes typés, de façon cependant plus tordue.
 
-Au-delà de ces deux problèmes particulièrement connus, il existe une véritable armée de problèmes indécidables, comme le montre spécifié par le théorème de Rice :
+
+Au-delà de ce problème particulièrement connu, il existe une véritable armée de problèmes indécidables, comme spécifié par le théorème de Rice :
 
 
 \begin{theorem}{\textbf(Théorème de Rice)} On appelle propriété sémantique non-triviale une propriété sur le comportement d'un programme telle qu'il existe au moins un exemple la respectant et un ne la respectant pas. Toute propriété sémantique non-triviale est indécidable.
@@ -62,6 +82,36 @@ résoudre le problème de l'arrêt, pourtant indécidable. Il n'existe donc pas 
 
 \paragraph{Remarque} Une telle preuve, où on montre que la décidabilité d'un problème $P_1$ permettrait de résoudre un problème $P_2$ pourtant indécidable, s'appelle une preuve par réduction, puisqu'on y réduit la décidabilité de $P_2$ à celle de $P_1$.
 
-Intuitivement, tous ces problèmes sont indécidables sur tout modèle Turing-complet car ces derniers sont trop puissants, ou expressifs\footnote{Comme le disent tous les oncles Ben du monde, un grand pouvoir (expressif) implique une grande indécidabilité}. Commence alors un jeu consistant à affaiblir les modèles pour qu'on puisse décider des propriétés à leur sujet, sans pour autant qu'ils en deviennent trivial. Ce cours va s'intéresser à la famille des automates, particulièrement adaptée à l'analyse linguistique.%De cette recherche découle notamment un modèle qui 1) est plus faible 2) concerne les langages, et donc les linguistes : les automates finis. 
+Si ces recherches et résultats remettent encore une fois en question le programme de Hilbert tel qu'il fût initialement pensé et formulé, y voir un échec serait quelque peu pessimiste. En effet, si on a \textit{perdu} un modèle absolu des mathématiques - qui ont tout de même gagné des fondations plus stables dans toute cette affaire, on y a gagné l'automatisation, la mise en oeuvre, le \textit{déploiement} des maths, qu'on appelle aujourd'hui \textbf{informatique}. Si certaines questions ou bases ont plusieurs siècles (on conseillera à ce sujet la lecture de \cite{montaigne}, ainsi que la visite du Musée des arts et métiers à Paris ou du \textit{Computer History Museum} en Californie), les progrès de l'informatique tout au long du $20^{eme}$ siècle sont absolument phénoménaux, et le sont restés à date d'écriture. 
 
-Puisqu'on veut les analyser, on va d'abord définir la notion de langages - et donc de mots dans la section \ref{langages}. On étudiera dans la section \ref{regex} un outil pour les décrire et manipuler, les expressions régulières. On pourra ensuite s'intéresser aux automates les plus simples dans la section \ref{automates}, ainsi qu'à la notion connexe de grammaires formelles en \ref{grammaires}. Enfin, on étudiera en \ref{hierarchie} la façon dont ces différents outils s'imbriquent, et on \textit{teasera} la suite du cours, en évoquant des extensions des automates.
+
+
+\section{Et les automates alors ?}
+\label{autoalors}
+
+
+
+Intuitivement, les propriétés sémantiques sont indécidables sur tout modèle Turing-complet car ces derniers sont trop puissants, ou expressifs. Dans certains cas, on est prêts à sacrifier un peu d'expressivité en échange de plus de décidabilité.
+Commence alors un jeu consistant à affaiblir les modèles pour qu'on puisse décider des propriétés à leur sujet, sans pour autant qu'ils en deviennent trivial. 
+La hierarchie de Chomsky, étudiée en \ref{chom}, en est un bon exemple. 
+
+\subsection{Type 3 et automates finis}
+
+On a déjà vu que les grammaires de type 3 sont équivalentes aux automates finis. Ces derniers sont tellement faibles que de nombreuses (l'intégralité ?) des propriétés sémantiques y sont décidables. En particulier, la terminaison est garantie par construction (une opération par lettre du mot en entrée).¨Pour ce qui est de l'équivalence entre deux automates finis, on commence par les déterminiser et minimiser. Si les deux automates obtenus ont le même nombre d'état, il s'agit de trouver les paires d'états qui se correspondent (c'est ce qu'on appelle une \textbf{bisimulation}). De nombreux algorithmes plus ou moins efficaces existent, mais le nombre d'états et donc de possibilités étant fini, on peut fondamentalement tout tester en un temps lui-même fini.
+
+\subsection{Type 2 et automates à pile}
+
+Les grammaires de type 2 sont équivalentes aux \textbf{automates à pile} (\textit{pushdown automata}). Il s'agit d'automates finis étendus avec une pile, et dans lesquels les transitions ou acceptations dépendent non seulement de l'état actuel, mais aussi du symbole au sommet de la pile. Par exemple, le langage $\{a^nb^n ~|~ n \in \mathbf{N}\}$ sera accepté par un automate à deux états. On boucle sur le premier en enpilant un symbole à chaque lecture de $a$. La lecture d'un $b$ fait passer sur le second état, sur lequel une boucle en $b$ enlèvele symbole au sommet de la pile. On accepte ssi. la pile est vide. 
+
+Comme pour les automates finis, la terminaison des automates à pile est garantie par construction. La décidabilité de l'équivalence entre automates à pile déterministes a été montrée en 1997 par Géraud Sénizergues (qui a remporté le prix Turing pour cette découverte), tandis que l'équivalence entre automates à pile non-déterministes a été montrée indécidable. Enfin, il a été montré qu'un "automate à deux piles" est Turing-complet (moralement, on peut simuler le ruban infinie d'une machine de Turing à l'aide de deux piles). 
+
+\subsection{Type 1 et automates linéairement bornés}
+
+Les grammaires de type 1 sont quant à elles équivalentes aux \textbf{automates linéairement bornés}. Il s'agit de machines de Turing, au détail près que le ruban est borné, linéairement pour chaque entrée. Par exemple, pour un problème donné, on s'accordera une mémoire de $3 \times l + 28$ cellules, où $l$ est la longueur du mot donné en entrée.
+\href{https://cs.stackexchange.com/questions/22925/why-is-the-halting-problem-decidable-for-lba}{L'arrêt d'un automate linéairement borné est décidable}, contrairement à l'équivalence, l'\textit{emptiness} (le fait de déterminer, pour un automate donné, si le langage qu'il reconnaît est vide) ou la finitude (déterminer si l'automate reconnaît un nombre fini de mots).
+
+\subsection{Type 0 et machines de Turing}
+
+Comme on pouvait s'y attendre en grimpant des grammaires de type 3 à celles de type 0, cette dernière catégorie est équivalente aux machines de Turing, et donc à tout modèle Turing-complet. 
+
+La hierarchie de Chomsky est bien loin de constituer l'intégralité des classes de modèles de calculs (et on ne mentionne même pas \href{https://www.math.ucdavis.edu/~greg/zoology/diagram.pdf}{les quelques classes de complexité} auxquelles associer ces problèmes), mais permet de découvrir un amusant premier dégradé. Bien qu'étant la source de l'Informatique, la recherche en calculabilité est encore aujourd'hui très riche, tant en modèles et problèmes abscons, ainsi qu'en questions les concernants.
