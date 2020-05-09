@@ -84,7 +84,6 @@
 \makeatother 
 \usepackage{mathpartir}
 %\usepackage{enumitem}
-\usepackage{code}
 %\usepackage{supertabular} 
 %\usepackage{soul}
 \usepackage[all]{xy}
@@ -108,8 +107,6 @@
 \usepackage{subcaption} 
 
 %\input{mac}
-\input{defs} 
-\input{ldefs} 
 
 \newtheorem{theorem}{Theorem}
 \newtheorem{lemma}[theorem]{Lemma}
@@ -327,9 +324,9 @@
   \node[initial, state] (0)                    {$0,9$};
   \node[state] (15)      [above right of=0]                {$1,5$};
   \node[state] (6)      [right of=0]                {$6$};
-  \node[state] (7)      [below right of=0]                {$3$};
+  \node[state] (7)      [below right of=0]                {$7$};
   \node[state,accepting] (8)      [below left of=7]                {$8$};
-  \node[state,accepting] (10)      [below right of=7]                {$5$};
+  \node[state,accepting] (10)      [below right of=7]                {$10$};
   \node[state] (26)      [above right of=15]                {$2,6$};
   \node[state] (2)      [above right of=26]                {$2$};
  \node[state] (23)      [right of=2]   
@@ -873,9 +870,6 @@ Le langage engendré est en effet celui des mots `doublés` (avec un \# qui sert
 
 
 
-\bibliographystyle{abbrv}
-\bibliography{main}  % main.bib is disused
-%\end{multicols}
 
 
 
